@@ -25,7 +25,7 @@ const NavBar = () => {
 
   return (
     <>
-      <nav className=" w-full mt-[1px]   text-black  ">
+      <nav className=" w-full  bg-white  text-black  ">
         <div className="container px-[12px]  py-[10px] flex justify-between items-center max-w-[1400px] mx-auto  ">
           <div className="text-2xl font-medium ">StyleNest</div>
 
@@ -66,7 +66,8 @@ const NavBar = () => {
       </nav>
         <CartDrawer toggleCartDrawer={toggleCartDrawer} drawerOpen={drawerOpen} />
 
-        {/* Mobile navigation */}
+      {/* Mobile navigation */}
+      
         <div  className={` fixed right-0  top-10 ${
           navDrawerOpen ? "translate-x-0" : "translate-x-full"
         } w-[300px] sm:w-[350px] xl:w-1/4 shadow-lg flex flex-col transform transition-transform duration-300  h-full bg-white `}
@@ -95,3 +96,4 @@ const NavBar = () => {
 };
 
 export default NavBar;
+
