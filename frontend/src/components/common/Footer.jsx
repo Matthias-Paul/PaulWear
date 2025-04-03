@@ -95,7 +95,7 @@ const Footer = () => {
        
           </div> 
         </div>
-        <div className="w-full text-center text-sm text-gray-500   mt-12 border-t mx-auto px-[12px] border-gray-500  pt-5 " >
+        <div className="w-full text-center text-sm text-gray-500   mt-12 border-t mx-auto px-[12px] border-gray-500  pt-5 pb-1 " >
                <p>        &#169; { year }, CompileTab, All Right Deserved.     </p>
 
         </div>    
