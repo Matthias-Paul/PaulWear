@@ -4,7 +4,7 @@ const Hero = () => {
   return (
     <>
       <div className="relative w-full " >
-           <img className="w-full  pt-[92px]  max-h-[1500px]  object-cover flex-shrink-0  " alt="Hero-image" src="https://res.cloudinary.com/drkxtuaeg/image/upload/v1743594490/three-multicultural-women-street_1_aczerz.jpg" />
+           <img className="w-full  pt-[92px]  max-h-[1500px]  object-cover flex-shrink-0  " alt="Hero-image" src={pic} />
            <div className="absolute pt-[92px] font-bold px-[12px] inset-0 flex flex-col text-white justify-center items-center text-center " >
               <h1 className=" text-2xl  max-w-[900px] md:text-6xl leading-[40px] sm:leading-[90px] tracking-tighting uppercase  "> Discover your perfect style at styleNest </h1>
               <p className=" text-sm  sm:text-2xl    "> Shop the latest trends and find fashion that fit your lifestyle. </p>
@@ -14,7 +14,8 @@ const Hero = () => {
               </Link>
               </button>
 
-           </div> 
+           </div> grey
+           
       </div>  
     </>
   )

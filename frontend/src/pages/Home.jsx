@@ -12,11 +12,11 @@ const Home = () => {
 
          <GenderCollectionSection />
          <NewArrival />
-
-            {/* Best sellers */}
             
-            <h2 className="  text-2xl sm:text-3xl font-bold text-center my-4 " > Best seller  </h2>
-            < ProductsDetails/>
+            Best sellers
+            
+            <h2 className="  text-2 sm:text-3xl font-bold text-center my-4 " > Best seller  </h2>
+            < ProductsDetails />
        
         </div>
       </div>  
