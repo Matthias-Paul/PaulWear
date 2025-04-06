@@ -226,7 +226,7 @@ const ProductsDetails = () => {
             {" "}
             You Might Want To Check This Out Too
           </h2>
-          <ProductGrid similarProducts={similarProducts} />
+          <ProductGrid products={similarProducts} />
         </div>
       </div>
     </>

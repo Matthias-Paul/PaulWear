@@ -14,7 +14,7 @@ const Hero = () => {
               </Link>
               </button>
 
-           </div> grey
+           </div> 
            
       </div>  
     </>
