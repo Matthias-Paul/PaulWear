@@ -1,6 +1,7 @@
 import pic from "../assets/pic.jpg";
 import Hero from "../components/layout/Hero";
 import FeaturedCollection from "../components/products/FeaturedCollection";
+import FeaturesSection from "../components/products/FeaturesSection";
 import GenderCollectionSection from "../components/products/GenderCollectionSection";
 import NewArrival from "../components/products/NewArrival";
 import ProductGrid from "../components/products/ProductGrid";
@@ -80,7 +81,7 @@ const Home = () => {
             <ProductGrid products={placeholderProducts} />
           </div>
           <FeaturedCollection />
-
+          <FeaturesSection/>
         </div>
       </div>
     </>

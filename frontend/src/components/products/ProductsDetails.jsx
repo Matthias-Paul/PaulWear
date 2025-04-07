@@ -1,5 +1,4 @@
 import pic from "../../assets/pic.jpg";
-import pic2 from "../../assets/pic2.jpg";
 import toast from "react-hot-toast";
 import ProductGrid from "./ProductGrid";
 
@@ -83,7 +82,7 @@ const ProductsDetails = () => {
           <div className="md:w-1/2  ">
             <div className=" mb-4  ">
               <img
-                className="rounded-md w-full h-[550px] sm:h-[700px] object-cover flex-shrink-0  "
+                className="rounded-md w-full h-[600px] sm:h-[700px] object-cover flex-shrink-0  "
                 src={mainImage}
                 alt="main product image"
               />
@@ -245,10 +244,10 @@ const selectedProduct = {
   colors: ["Red", "Black"],
   images: [
     {
-      url: pic,
+      url: "https://res.cloudinary.com/drkxtuaeg/image/upload/v1743594335/pexels-godisable-jacob-226636-952629_hiidb5.jpg",
     },
     {
-      url: pic2,
+      url: "https://res.cloudinary.com/drkxtuaeg/image/upload/v1743594356/pexels-pixabay-157675_dwkqad.jpg  ",
     },
   ],
 };

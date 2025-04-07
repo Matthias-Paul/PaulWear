@@ -27,7 +27,7 @@ const NavBar = () => {
     <>
       <nav className=" w-full  bg-white  text-black  ">
         <div className="container px-[12px]  py-[10px] flex justify-between items-center max-w-[1400px] mx-auto  ">
-          <div className="text-2xl font-medium ">StyleNest</div>
+           <Link to="/" > <div className="text-2xl font-medium ">StyleNest</div> </Link>
 
           <div className="hidden md:flex items-center font-medium text-sm uppercase gap-x-5  ">
             <Link to="" className=" text-gray-700 hover:text-black ">
