@@ -10,25 +10,25 @@ const similarProducts = [
         _id: 1,
         name: "Product 1",
         price: 100,
-        image: "https://res.cloudinary.com/drkxtuaeg/image/upload/v1743594344/pexels-marleneleppanen-1183266_icenis.jpg"
+        image:pic,
     },
     {
         _id: 2,
         name: "Product 2",
         price: 100,
-        image: "https://res.cloudinary.com/drkxtuaeg/image/upload/v1743594351/pexels-mostafasanadd-878358_fv24sy.jpg"
+        image:pic,
     },
     {
         _id: 3,
         name: "Product 3",
         price: 100,
-        image: "https://res.cloudinary.com/drkxtuaeg/image/upload/v1743594341/pexels-moose-photos-170195-1036623_tsxl4g.jpg"
+        image:pic,
     },
     {
         _id: 4,
         name: "Product 4",
         price: 100,
-        image: "https://res.cloudinary.com/drkxtuaeg/image/upload/v1743594338/pexels-unpetitvoyou-1750272-3317133_bvmdap.jpg"
+        image:pic,
     }
 ]
 
@@ -43,10 +43,10 @@ const selectedProduct = {
     colors: ["Red", "Black"],
     images: [
         {
-            url: "https://res.cloudinary.com/drkxtuaeg/image/upload/v1743594335/pexels-godisable-jacob-226636-952629_hiidb5.jpg"
+        url:pic,
         },
         {
-            url: "https://res.cloudinary.com/drkxtuaeg/image/upload/v1743594357/pexels-lazarus-ziridis-351891426-31426543_omjzm8.jpg"
+        url:pic2,
         }
     ]
 }
