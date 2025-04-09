@@ -32,25 +32,6 @@ const similarProducts = [
     }
 ]
 
-const selectedProduct = {
-    name: "Stylish Jacket",
-    price: 120,
-    original: 150,
-    description: "This is a stylish jacket perfect for any occasion",
-    brand: "FashionBrand",
-    material: "Leather",
-    sizes: ["S", "M", "L", "XL"],
-    colors: ["Red", "Black"],
-    images: [
-        {
-        url:pic,
-        },
-        {
-        url:pic2,
-        }
-    ]
-}
-
 
 const ProductsDetails = () => {
   const [mainImage, setMainImage] = useState(selectedProduct?.images[0]?.url);

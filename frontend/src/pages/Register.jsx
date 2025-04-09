@@ -3,13 +3,14 @@ import pic from "../assets/pic.jpg";
 
 import { useState } from "react";
 import { Link } from "react-router-dom"
-const Login = () => {
+const Register = () => {
+    const [name, setName] = useState("");
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-    const handleFormSubmit = (e)=>{
+  const handleFormSubmit = (e)=>{
     e.preventDefault()
-
   }
 
   return (
@@ -25,8 +26,23 @@ const Login = () => {
               Hey there!{" "}
             </h2>
             <p className=" text-center mb-4 ">
-              Enter your username and password to login
+              Enter your name, username and password to register
             </p>
+               <div className="mb-6">
+              <label id="name" className="block text-sm font-semibold mb-1 ">
+                {" "}
+                Name{" "}
+              </label>
+              <input
+                id="name"
+                placeholder="Enter Your Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="border px-2  py-3 w-full border-gray-400 rounded-md "
+                type="text"
+              />
+            </div>
+
             <div className="mb-6">
               <label id="email" className="block text-sm font-semibold mb-1 ">
                 {" "}
@@ -58,12 +74,12 @@ const Login = () => {
             </div>
 
             <button type="submit" className="w-full bg-black hover:bg-gray-800 text-white cursor-pointer my-6 text-lg  rounded-lg font-semibold p-3  " >
-              Sign In
+              Sign Up
             </button>
             <p className="mt-[-12px] text-md text-center " >
-              Don't have an account?
-              <Link to="/register" className="text-blue-500 ml-1 " >
-                  Register
+              Already have an account?
+              <Link to="/login" className="text-blue-500 ml-1 " >
+                  Log In
               </Link>
             </p>
           </form>
@@ -76,4 +92,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
