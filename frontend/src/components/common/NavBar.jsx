@@ -30,7 +30,7 @@ const NavBar = () => {
            <Link to="/" > <div className="text-2xl font-medium ">StyleNest</div> </Link>
 
           <div className="hidden md:flex items-center font-medium text-sm uppercase gap-x-5  ">
-            <Link to="" className=" text-gray-700 hover:text-black ">
+            <Link to="/collections/all" className=" text-gray-700 hover:text-black ">
               Men{" "}
             </Link>
             <Link to="" className=" text-gray-700 hover:text-black ">
