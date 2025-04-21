@@ -26,7 +26,7 @@ const NavBar = () => {
   return (
     <>
       <nav className=" w-full  bg-white  text-black  ">
-        <div className="container px-[12px]  py-[10px] flex justify-between items-center max-w-[1400px] mx-auto  ">
+        <div className="container px-[12px] border-b-[0.5px] border-gray-400  py-[10px] flex justify-between items-center max-w-[1400px] mx-auto  ">
            <Link to="/" > <div className="text-2xl font-medium ">StyleNest</div> </Link>
 
           <div className="hidden md:flex items-center font-medium text-sm uppercase gap-x-5  ">
@@ -82,7 +82,7 @@ const NavBar = () => {
             <nav>
               <h1  className="font-semibold mb-4 text-start text-xl " >Menu </h1>
               
-              <Link onClick={toggleNavDrawer} to=" " className=" mb-4 text-start block text-gray-600 hover:text-black  "  > Men </Link>
+              <Link onClick={toggleNavDrawer} to="/collections/all" className=" mb-4 text-start block text-gray-600 hover:text-black  "  > Men </Link>
               <Link onClick={toggleNavDrawer} to=" " className="mb-4 text-start block text-gray-600 hover:text-black  "  > Women </Link>
               <Link onClick={toggleNavDrawer} to=" " className=" text-start mb-4 block text-gray-600 hover:text-black  "  > Top Wear </Link>
               <Link onClick={toggleNavDrawer} to=" " className=" mb-4 text-start block text-gray-600 hover:text-black  "  > Bottom Wear </Link>

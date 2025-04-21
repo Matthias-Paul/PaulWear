@@ -94,25 +94,25 @@ const CollectionPage = () => {
 
   return (
     <>
-      <div className="container px-[12px] flex flex-col lg:flex-row  pt-[90px]  pb-[50px] max-w-[1400px] mx-auto  ">
+      <div className="container relative px-[12px] flex flex-col lg:flex-row  pt-[90px]  pb-[50px] max-w-[1400px] mx-auto  ">
         {/* mobile button */}
         <button
           ref={toggleButtonRef}
           onClick={toggleSidebar}
-          className="flex border rounded-sm border-gray-300 mb-2 cursor-pointer justify-center items-center lg:hidden p-2 "
+          className="flex border rounded-sm border-gray-300 my-2  cursor-pointer justify-center items-center lg:hidden p-2 "
         >
           <FaFilter className="w-6 h-4" /> Filters
         </button>
         {/* filter sidebar */}
         <div
           ref={sidebarRef}
-          className={`fixed  left-0 top-[90px] w-70 z-50 inset-y-0 bg-white overflow-y-auto transition-transform duration-300 lg:static lg:translate-x-0  ${
-            isSidebarOpen ? " pl-[12px] translate-x-0" : "-translate-x-full"
+          className={`absolute  left-0 top-[88px]  w-50 z-50 px-3 inset-y-0 bg-white overflow-y-auto transition-transform duration-300  lg:translate-x-0  ${
+            isSidebarOpen ? " fixed px-[12px] translate-x-0" : "   -translate-x-full"
           }`}
         >
           <FilterSidebar />
         </div>
-        <div className="flex-grow pl-4   lg:w-2/3">
+        <div className="flex-grow lg:pl-50 w-full lg:w-2/3 ">
           <h1 className="   text-lg xl:text-2xl text-center mt-2 uppercase mb-4">
             {" "}
             All Collections{" "}

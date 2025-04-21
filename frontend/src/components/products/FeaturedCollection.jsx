@@ -5,7 +5,7 @@ import pic from "../../assets/pic.jpg"
 const FeaturedCollection = () => {
   return (
     <>
-      <div className="py-12 gap-x-[35px] w-full max-w-[1400px] flex flex-col-reverse md:flex-row mx-auto bg-green-50 container rounded-3xl items-center  ">
+      <div className="py-12 px-[12px] gap-x-[35px] w-full max-w-[1400px] flex flex-col-reverse md:flex-row mx-auto bg-green-50 container rounded-md items-center  ">
         {/* left content */}
         <div className="md:w-1/2 text-center md:text-left  ">
           <h2 className="text-lg text-gray-700 mb-2 font-semibold">
@@ -31,7 +31,7 @@ const FeaturedCollection = () => {
         {/* right content */}
 
         <div className="md:w-1/2" >
-            <img className="w-full   object-cover flex-shrink-0 h-full max-h-[600px] rounded-tr-2xl rounded-bl-2xl  " alt="featured-image" src={pic} />
+            <img className="w-full   object-cover flex-shrink-0 h-full max-h-[6500px] rounded-tr-2xl rounded-bl-2xl  " alt="featured-image" src="https://res.cloudinary.com/drkxtuaeg/image/upload/v1744397245/pexels-renaldicted-11254398_qiwvgq.jpg" />
              
         </div>
       </div>

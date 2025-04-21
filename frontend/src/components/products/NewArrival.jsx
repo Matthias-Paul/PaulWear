@@ -60,7 +60,7 @@ const handleMouseUpOrLeave = () => {
     <>
       <div className=" container mx-auto text-center relative mb-4   "  >
         <h1  className=" text-2xl sm:text-3xl font-bold my-4 "> Check out our new arrivals </h1> 
-        <p className="text-gray-600 text-sm mb-5 "> Discover new arrivals from top brands, featuring stylish designs, innovative features, and unbeatable prices, every day! </p>
+        <p className="text-gray-600 text-sm md:text-lg mb-5 "> Discover new arrivals from top brands, featuring stylish designs, innovative features, and unbeatable prices, every day! </p>
        
         {/* scroll button */}
 
@@ -90,7 +90,7 @@ const handleMouseUpOrLeave = () => {
                         <div className="flex  w-full min-w-[100%] sm:min-w-[50%] lg:min-w-[33%]  relative   " key={product?._id} >
                                 <img draggable={false} className="w-full rounded-md h-[500px]  flex-shrink-0 object-cover   " alt={product?.name} src={product?.image} />
                                 <div className="rounded-b-lg absolute font-medium text-start p-2 bg-opacity-50 text-white backdrop-blur-md bottom-0 right-0 left-0 ">
-                                    <Link to={`/products/${product?._id}`}>
+                                    <Link to={`/product/${product?._id}`}>
                                     <h1 className=" text-lg "> {product?.name} </h1>
                                     <div className="" >${product?.price} </div>
                                     </Link>

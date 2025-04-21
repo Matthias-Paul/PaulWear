@@ -83,7 +83,7 @@ const MyOrdersPage = () => {
   return (
     <>
       <div className="mx-auto w-full " >
-        <h1 className="text-xl md:text-2xl font-bold mb-6" > My Orders </h1>
+        <h1 className="text-xl md:text-2xl font-bold my-6" > My Orders </h1>
 
         { orders?.length > 0 ? (
             <div className={` shadow-md overflow-hidden  overflow-x-auto  relative rounded-sm lg:rounded-md `} >
@@ -103,8 +103,8 @@ const MyOrdersPage = () => {
               <tbody>
                    { orders?.map((order, index)=>(
                         <tr key={order?._id} className={`border-b  cursor-pointer hover:border-gray-400 ${index === orders?.length -1  ? "border-b-0": ""} `} >
-                       <td className="py-2 px-4 sm:py-4 sm:px-4 " > 
-                        <img src={order?.orderItems[0]?.image} className="w-12 h-12 xl:w-15 xl:h-15 rounded-lg sm:rounded-md object-cover flex-shrink-0 " alt={order?.orderItems[0]?.name} />
+                       <td className="py-2 px-4 sm:py-3 sm:px-4 " > 
+                        <img src={order?.orderItems[0]?.image} className="w-12 h-12  rounded-lg sm:rounded-md object-cover flex-shrink-0 " alt={order?.orderItems[0]?.name} />
                          </td >
                          <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             #{order?._id}

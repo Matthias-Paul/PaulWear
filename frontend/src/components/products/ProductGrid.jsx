@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 const ProductGrid = ({ products }) => {
   return (
     <>
-      <div className="grid grid-cols-1   gap-x-[25px] mt-12 gap-y-[25px] sm:grid-cols-2 lg:grid-cols-4  ">
+      <div className="grid grid-cols-1   gap-x-[25px] pt-12 gap-y-[25px] sm:grid-cols-2 lg:grid-cols-4  ">
         {products?.map((product) => (
           <div key={product._id} className="bg-white  block  ">
             <Link
-              to={`/products/${product._id}`}
+              to={`/product/${product._id}`}
               key={product?._id}
               className="   "
             >

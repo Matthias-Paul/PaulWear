@@ -22,11 +22,11 @@ const Footer = () => {
             <form className="flex  ">
                <div className="relative">
               <input
-                className="w-full text-black pl-[6px] rounded-xl mt-5  p-1 pr-19 border-2 border-gray-300 shadow-md outline-none resize-none"
+                className="w-full text-black pl-[6px] rounded-lg mt-5  p-1 pr-19 border-2 border-gray-300 shadow-md outline-none resize-none"
                 placeholder="Enter Your Email..."
                
               />
-              <button className="absolute mt-[10px] right-0 py-full bg-black p-[7px] rounded-r-xl top-1/2 transform -translate-y-1/2 text-white text-[13px]  cursor-pointer  transition-all" 
+              <button className="absolute mt-[10px] right-0 py-full bg-black p-[7px] rounded-r-lg top-1/2 transform -translate-y-1/2 text-white text-[13px]  cursor-pointer  transition-all" 
                type="submit">
                 Subscribe
               </button>

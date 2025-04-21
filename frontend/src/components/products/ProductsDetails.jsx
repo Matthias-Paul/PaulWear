@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import ProductGrid from "./ProductGrid";
 
 import { useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom"
 const similarProducts = [
 
     {
@@ -40,6 +40,7 @@ const ProductsDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
+  const navigate = useNavigate()
   useEffect(() => {
     if (selectedProduct?.images?.url > 0) {
       setMainImage(selectedProduct?.images[0]?.url);
@@ -56,12 +57,13 @@ const ProductsDetails = () => {
       toast.error("Please select a color and size before adding to cart!");
     }
 
+    // navigate("/checkout")
     // setIsButtonDisabled(true)
   };
 
   return (
     <>
-      <div className="mx-auto mt-10 max-w-[1400px]  bg-white ">
+      <div className="mx-auto pt-[135px] px-[12px] max-w-[1400px]  bg-white ">
         <div className="mx-auto max-w-6xl" >
         <div className="flex flex-col md:flex-row ">
           {/* Left thumb nails */}
@@ -147,7 +149,7 @@ const ProductsDetails = () => {
                       filter: "brightness(0.5)",
                     }}
                     className={`w-8 h-8 cursor-pointer ${
-                      selectedColor === color ? " border-3 border-black" : ""
+                      selectedColor === color ? " border-4 border-black" : ""
                     } rounded-full border border-gray-500 `}
                     
                   ></button>

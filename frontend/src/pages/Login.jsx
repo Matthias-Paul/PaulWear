@@ -14,7 +14,7 @@ const Login = () => {
 
   return (
     <>
-      <div className="py-[100px] h-full max-w-[1400px] relative mx-auto  flex w-full ">
+      <div className="py-[100px] lg:h-[900px] max-w-[1400px] relative mx-auto  flex w-full ">
         <div className=" flex w-full px-[12px] justify-start items-center ">
           <form onSubmit={handleFormSubmit} className="w-full  border-gray-200 lg:w-1/2  px-5 sm:px-15 md:px-40 lg:px-20 rounded-lg pb-5 bg-white ">
             <div className="flex  justify-center text-xl mb-4 font-medium  ">
@@ -68,7 +68,7 @@ const Login = () => {
             </p>
           </form>
           <div className=" hidden absolute top-0 bottom-0 right-0 lg:flex w-1/2  " >
-            <img className="w-full h-full flex-shrink-0 object-cover " src={pic} /> 
+            <img className="w-full h-full flex-shrink-0 object-cover " src="https://res.cloudinary.com/drkxtuaeg/image/upload/v1743594443/pexels-ogproductionz-17243573_em61x8.jpg" /> 
           </div>
         </div>
       </div>

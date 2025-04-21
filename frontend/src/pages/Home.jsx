@@ -67,7 +67,7 @@ const Home = () => {
           <GenderCollectionSection />
           <NewArrival />
           <div className="mx-auto max-w-6xl ">
-            <h2 className="  text-2xl sm:text-3xl font-bold text-center my-4 ">
+            <h2 className="  text-2xl sm:text-3xl font-bold text-center mt-4 mb-[-90px] ">
               {" "}
               Best seller{" "}
             </h2>
