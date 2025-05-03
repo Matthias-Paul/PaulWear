@@ -12,7 +12,7 @@ const NewArrival = () => {
         const [canScrollLeft, setCanScrollLeft] = useState(false)
 
          const scroll = (direction)=>{
-            const scrollAmount = direction ==="left"? -300 : 300
+            const scrollAmount = direction ==="left"? -320 : 320
             scrollRef.current.scrollBy({left: scrollAmount, behaviour:"smooth" }) 
          }   
 
@@ -29,14 +29,21 @@ const NewArrival = () => {
 
         }
 useEffect(() => {
-    const container = scrollRef.current;
-    if (container) {
-        container.addEventListener("scroll", updateScrollButtons);
-        return () => {
-            container.removeEventListener("scroll", updateScrollButtons);
-        };
-    }
+  const container = scrollRef.current;
+  if (!container) return;
+
+  updateScrollButtons();
+
+  container.addEventListener("scroll", updateScrollButtons);
+
+  window.addEventListener("resize", updateScrollButtons);
+
+  return () => {
+    container.removeEventListener("scroll", updateScrollButtons);
+    window.removeEventListener("resize", updateScrollButtons);
+  };
 }, []);
+
 
      const handleMouseDown = (e) => {
     setIsDragging(true);

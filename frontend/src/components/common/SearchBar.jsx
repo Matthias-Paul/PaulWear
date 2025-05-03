@@ -42,11 +42,11 @@ const SearchBar = () => {
           <form
         
             onSubmit={handleSearch}
-            className={`flex transition-all ${
-              isOpen ? "absolute w-full top-12 z-50 left-0" : "w-auto"
+            className={`flex  transition-all ${
+              isOpen ? "absolute w-full  top-10.5 sm:top-12 z-50 left-0" : "w-auto"
             } duration-300 items-center justify-center   `}
           >
-            <div ref={editRef}  className="w-full relative sm:w-1/2 mx-[12px] ">
+            <div ref={editRef}  className="w-full  relative md:w-1/2 mx-[12px] ">
               <input
                 
                 type="text"
