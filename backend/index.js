@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 8000;
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],   
+    origin: ["http://localhost:5173", "https://stylenest-ax2d.onrender.com"],   
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   })
@@ -29,9 +29,20 @@ const _dirname = path.resolve()
 
 
 
-app.get("/", (req, res)=>{
-    res.send("home page")
-})
+// app.get("/", (req, res)=>{
+//     res.send("home page")
+// })
+
+
+
+
+
+
+
+
+
+
+
 
 
 
