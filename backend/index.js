@@ -45,7 +45,6 @@ const _dirname = path.resolve()
 
 
 
-
 app.use(express.static(path.join(_dirname, "/frontend/dist")))
 
 

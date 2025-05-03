@@ -53,11 +53,11 @@ const OrderManagement = () => {
             <table className="  text-left min-w-[800px] md:min-w-full  text-gray-500 " >
               <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
                 <tr>
-                  <th className="py-2 px-4 sm:py-3 " > Order ID </th>
-                  <th className="py-2 px-4 sm:py-3 " > Customer </th>
-                  <th className="py-2 px-4 sm:py-3 " > Total Price </th>
-                  <th className="py-2 px-4 sm:py-3 " > Status </th>
-                  <th className="py-2 px-4 sm:py-3 " > Actions </th>
+                  <th className="py-3 px-4  " > Order ID </th>
+                  <th className="py-3 px-4  " > Customer </th>
+                  <th className="py-3 px-4  " > Total Price </th>
+                  <th className="py-3 px-4  " > Status </th>
+                  <th className="py-3 px-4  " > Actions </th>
 
 
                 </tr>
@@ -66,17 +66,17 @@ const OrderManagement = () => {
               <tbody>
                    { orders?.map((order, index)=>(
                         <tr key={order?._id} className={`border-b cursor-pointer hover:border-gray-400 ${index === orders?.length -1  ? "border-b-0": ""} `} >
-                         <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                         <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             {order?._id}
                          </td >
-                         <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                         <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             {order?.users?.name}
                          </td >
 
-                         <td className="py-2 px-4 sm:py-4 sm:px-4" > 
+                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
                             ${order?.totalPrice}                      
                          </td >
-                        <td className="py-2 px-4 sm:py-4 sm:px-4" > 
+                        <td className="py-3 px-4 sm:py-4 sm:px-4" > 
                         <select name="role" value={order.status} onChange={(e) => handleStatusChange(order._id, e.target.value) } className=" focus:ring-blue-500 focus:border-blue-500   w-full block cursor-pointer bg-gray-50 text-sm p-2 rounded border border-gray-400 mt-1 " >
                             <option value="processing" > Processing </option>
                             <option value="shipped" > Shipped </option>
@@ -85,7 +85,7 @@ const OrderManagement = () => {
                         </select>                      
                          </td >
 
-                         <td className="py-2 px-4 sm:py-4 sm:px-4" > 
+                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
                             
                             <button className="bg-green-500 hover:bg-green-600 rounded py-2 px-2 cursor-pointer text-white  " onClick={()=> handleStatusChange(order._id, "delivered")}  >
                                 Mark as Delivered

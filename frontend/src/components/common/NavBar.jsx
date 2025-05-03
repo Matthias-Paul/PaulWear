@@ -27,7 +27,7 @@ const NavBar = () => {
     <>
       <nav className=" w-full  bg-white  text-black  ">
         <div className="container px-[12px] border-b-[0.5px] border-gray-400  py-[10px] flex justify-between items-center max-w-[1400px] mx-auto  ">
-           <Link to="/" > <div className="text-2xl font-medium ">StyleNest</div> </Link>
+           <Link to="/" > <div className=" text-xl sm:text-2xl font-medium ">StyleNest</div> </Link>
 
           <div className="hidden md:flex items-center font-medium text-sm uppercase gap-x-5  ">
             <Link to="/collections/all" className=" text-gray-700 hover:text-black ">
@@ -45,7 +45,7 @@ const NavBar = () => {
             </Link>
           </div>
 
-             <div className="flex items-center gap-x-5  " >
+             <div className="flex items-center gap-x-3 sm:gap-x-5  " >
                     <Link to="/admin" className=" bg-black text-sm  rounded px-2 cursor-pointer text-white " >
                           Admin
                     </Link>

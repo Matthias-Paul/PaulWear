@@ -5,7 +5,7 @@ import NavBar from "./NavBar"
 const Header = () => {
   return (
    <>
-   <div  className=" fixed z-100 w-full ">
+   <div  className=" fixed z-1000 w-full ">
     <TopBar />
     <NavBar />
     </div>      

@@ -4,6 +4,7 @@ import { FaUser, FaBoxOpen, FaClipboardList, FaStore, FaSignOutAlt } from "react
 const AdminSidebar = () => {
     const navigate = useNavigate()
 
+
     const handleLogout =()=>{
 
 
@@ -23,7 +24,7 @@ const AdminSidebar = () => {
             <h2 className="text-xl font-semibold text-center w-full mb-9  " >  Admin Dashboard </h2>   
 
             <nav className="flex flex-col gap-y-6 " >
-                <NavLink to="/admin/users" className={ ({isActive }) => isActive? " border border-gray-400  bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2 ":  " text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2  border border-gray-400 " } >
+                <NavLink  to="/admin/users" className={ ({isActive }) => isActive? " border border-gray-400  bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2 ":  " text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2  border border-gray-400 " } >
                     <FaUser />
                     <span className="font-semibold text-md " > Users </span>
                 </NavLink>

@@ -73,10 +73,10 @@ const AdminHomePage = () => {
             <table className="  text-left min-w-[800px] md:min-w-full  text-gray-500 " >
               <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
                 <tr>
-                  <th className="py-2 px-4 sm:py-3 " > Order ID </th>
-                  <th className="py-2 px-4 sm:py-3 " > User </th>
-                  <th className="py-2 px-4 sm:py-3 " > Total Price </th>
-                  <th className="py-2 px-4 sm:py-3 " > Status </th>
+                  <th className="py-3 px-4  " > Order ID </th>
+                  <th className="py-3 px-4  " > User </th>
+                  <th className="py-3 px-4  " > Total Price </th>
+                  <th className="py-3 px-4  " > Status </th>
 
                 </tr>
   
@@ -84,17 +84,17 @@ const AdminHomePage = () => {
               <tbody>
                    { orders?.map((order, index)=>(
                         <tr key={order?._id} className={`border-b cursor-pointer hover:border-gray-400 ${index === orders?.length -1  ? "border-b-0": ""} `} >
-                         <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                         <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             {order?._id}
                          </td >
-                         <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                         <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             {order?.users?.name}
                          </td >
 
-                         <td className="py-2 px-4 sm:py-4 sm:px-4" > 
+                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
                             ${order?.totalPrice}                      
                          </td >
-                        <td className="py-2 px-4 sm:py-4 sm:px-4" > 
+                        <td className="py-3 px-4 sm:py-4 sm:px-4" > 
                             {order?.status}                      
                          </td >
 

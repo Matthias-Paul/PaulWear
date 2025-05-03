@@ -56,10 +56,10 @@ const ProductManagement = () => {
             <table className="  text-left min-w-[611px] sm:min-w-[800px] md:min-w-full  text-gray-500 " >
               <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
                 <tr>
-                  <th className="py-2 px-4 sm:py-3 " > Name </th>
-                  <th className="py-2 px-4 sm:py-3 " > Price </th>
-                  <th className="py-2 px-4 sm:py-3 " > SKU </th>
-                  <th className="py-2 px-4 sm:py-3 " > Actions </th>
+                  <th className="py-3 px-4  " > Name </th>
+                  <th className="py-3 px-4  " > Price </th>
+                  <th className="py-3 px-4  " > SKU </th>
+                  <th className="py-3 px-4  " > Actions </th>
 
                 </tr>
   
@@ -67,17 +67,17 @@ const ProductManagement = () => {
               <tbody>
                    { products?.map((product, index)=>(
                         <tr key={product?._id} className={`border-b cursor-pointer hover:border-gray-400 ${index === products?.length -1  ? "border-b-0": ""} `} >
-                         <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                         <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             {product?.name}
                          </td >
-                         <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                         <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             ${product?.price}
                          </td >
 
-                         <td className="py-2 px-4 sm:py-4 sm:px-4" > 
+                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
                             {product?.sku}
                          </td >
-                        <td className="py-2 sm:py-4   " > 
+                        <td className="py-3 sm:py-4   " > 
                             <Link to={`/admin/products/${product._id}/edit`} >
                             <button  className="py-1 px-2 rounded bg-yellow-500 hover:bg-yellow-600 text-white cursor-pointer  "  >
                                 Edit
