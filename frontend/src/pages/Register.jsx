@@ -1,4 +1,3 @@
-import pic from "../assets/pic.jpg";
 
 
 import { useState } from "react";

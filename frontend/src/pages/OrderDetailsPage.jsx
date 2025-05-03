@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import pic from "../assets/pic.jpg"
 
@@ -69,7 +69,87 @@ const OrderDetailsPage = () => {
                             </div>    
 
                             {/* customer, payment, shipping info */}
+                                <div className="grid mb-13 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-6  " >
+                                        <div>
+                                            <h3 className="text:lg  mb-2 font-semibold    " > 
+                                                    Payment Info
+                                            </h3>
+                                            <p> Payment Method: { orderDetails.paymentMethod} </p>
+                                            <p> Status: { orderDetails.isPaid ? "Paid" : "Unpaid"} </p>
 
+                                         </div>   
+                                          <div>
+                                            <h3 className="text:lg  mb-2 font-semibold    " > 
+                                                    Shipping Info
+                                            </h3>
+                                            <p> Shipping Method: { orderDetails.shippingMethod} </p>
+                                            <p> { ` ${orderDetails.shippingAddress.city}, ${orderDetails.shippingAddress.country} ` } </p>
+
+                                         </div>  
+
+                                </div>
+
+                                {/* products list  */}
+
+
+         { orderDetails?.orderItems ? (
+            <div className={` shadow-md overflow-hidden  overflow-x-auto  relative rounded-sm lg:rounded-md `} >
+            <table className="w-full  text-left min-w-[800px]  text-gray-500 " >
+              <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
+                <tr>
+                  <th className="py-2 px-4 sm:py-3 " > Name </th>
+                  <th className="py-2 px-4 sm:py-3 " > Unit Price </th>
+                  <th className="py-2 px-4 sm:py-3 " > Quantity </th>
+                  <th className="py-2 px-4 sm:py-3 " > Total </th>
+
+                </tr>
+  
+              </thead>
+              <tbody>
+                   { orderDetails?.orderItems?.map((item, index)=>(
+                        <tr key={item?.productId} className={`border-b cursor-pointer hover:border-gray-400 ${index === orderDetails?.orderItems?.length -1  ? "border-b-0": ""} `} >
+                       <td className="py-2 px-4 flex items-center  sm:py-3 sm:px-4 " > 
+                        <img src={item?.image} className="w-12 h-12 mr-2 rounded-lg sm:rounded-md object-cover flex-shrink-0 " alt={item?.name} />
+                            <Link to={`/product/${item.productId}`} className="text-blue-500 hover:underline" >
+                                {item?.name}
+                            </Link>
+                         </td >
+                         <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                            ${item?.price}
+                         </td >
+
+                         <td className="py-2 px-4 sm:py-4 sm:px-4" > 
+                            {item?.quantity}                      
+                         </td >
+                        <td className="py-2 px-4 sm:py-4 sm:px-4" > 
+                            ${item?.price * item?.quantity}                      
+                         </td >
+
+                        </tr>
+  
+                    )
+                )}
+              </tbody>
+              
+            </table>  
+  
+          </div>
+        
+
+          ):(
+
+            <div className="py-4 text-gray-500 text-xl px-4 text-center" >
+            You have no order details 
+          </div>
+          )
+
+        }
+
+                    <div className="mt-5" >    
+                        <Link to={`/my-orders`}  className="text-blue-500 pt-4 hover:underline" >
+                                Back to my orders
+                        </Link>
+                    </div>
                         </div>
                     )
                 }

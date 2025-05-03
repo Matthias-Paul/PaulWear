@@ -1,9 +1,11 @@
 import pic from "../assets/pic.jpg"
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"
 
 
 const MyOrdersPage = () => {
-  const [orders, setOrders ] = useState()
+  const [orders, setOrders ] = useState([])
+  const navigate = useNavigate()
 
   useEffect(()=>{
     const mockUsers = [
@@ -80,14 +82,22 @@ const MyOrdersPage = () => {
 
   console.log(orders)
 
+  const handleRowClick = (orderId) =>{
+
+    navigate(`/order/${orderId}`)
+
+
+  }
+
+
   return (
     <>
-      <div className="mx-auto w-full " >
+      <div className="mx-auto pt-[90px] px-[12px] pb-10 w-full " >
         <h1 className="text-xl md:text-2xl font-bold my-6" > My Orders </h1>
 
         { orders?.length > 0 ? (
             <div className={` shadow-md overflow-hidden  overflow-x-auto  relative rounded-sm lg:rounded-md `} >
-            <table className="w-full  text-left min-w-[800px]  text-gray-500 " >
+            <table className="w-full text-left min-w-[800px]  text-gray-500 " >
               <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
                 <tr>
                   <th className="py-2 px-4 sm:py-3 " > Image </th>
@@ -102,7 +112,7 @@ const MyOrdersPage = () => {
               </thead>
               <tbody>
                    { orders?.map((order, index)=>(
-                        <tr key={order?._id} className={`border-b  cursor-pointer hover:border-gray-400 ${index === orders?.length -1  ? "border-b-0": ""} `} >
+                        <tr key={order?._id} onClick={()=> handleRowClick(order?._id) } className={`border-b  cursor-pointer hover:border-gray-400 ${index === orders?.length -1  ? "border-b-0": ""} `} >
                        <td className="py-2 px-4 sm:py-3 sm:px-4 " > 
                         <img src={order?.orderItems[0]?.image} className="w-12 h-12  rounded-lg sm:rounded-md object-cover flex-shrink-0 " alt={order?.orderItems[0]?.name} />
                          </td >

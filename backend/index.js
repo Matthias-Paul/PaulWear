@@ -1,0 +1,50 @@
+import express from "express"
+import cors from "cors"
+import cookieParser from "cookie-parser"
+import dotenv from "dotenv";
+import path from "path";
+
+
+
+dotenv.config();
+
+
+const app = express();
+const PORT = process.env.PORT || 8000;
+
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],   
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+  })
+);
+
+
+app.use(express.json());
+app.use(cookieParser());
+
+const _dirname = path.resolve()
+
+
+
+
+app.get("/", (req, res)=>{
+    res.send("home page")
+})
+
+
+
+app.use(express.static(path.join(_dirname, "/frontend/dist")))
+
+
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(_dirname, "/frontend/dist/index.html"));
+});
+
+
+
+app.listen(PORT, () => {
+  console.log(` App running on port ${PORT}`);
+});
+  
