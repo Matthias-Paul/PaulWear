@@ -56,7 +56,7 @@ const Login = () => {
               />
             </div>
 
-            <button type="submit" className="w-full bg-black mb-[-10px] hover:bg-gray-800 text-white cursor-pointer text-lg  rounded-lg font-semibold p-3  " >
+            <button type="submit" className="w-full bg-black mb-[-10px] mt-6 hover:bg-gray-800 text-white cursor-pointer text-lg  rounded-lg font-semibold p-3  " >
               Sign In
             </button>
             {/* google auth button */}
