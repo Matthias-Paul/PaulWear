@@ -12,7 +12,7 @@ const OAuth = () => {
 
   const loginMutation = useMutation({
     mutationFn: async ()=>{
- const provider = new GoogleAuthProvider();
+    const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
 
       const resultsFromGoogle = await signInWithPopup(auth, provider);

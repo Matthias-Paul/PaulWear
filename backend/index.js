@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 8000;
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://stylenest-ax2d.onrender.com"],   
+    origin: ["https://stylenest-ax2d.onrender.com"],   
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   })
