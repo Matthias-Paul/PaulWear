@@ -1,5 +1,4 @@
-
-
+import OAuth from "../components/common/OAuth"
 import { useState } from "react";
 import { Link } from "react-router-dom"
 const Register = () => {
@@ -75,6 +74,10 @@ const Register = () => {
             <button type="submit" className="w-full bg-black hover:bg-gray-800 text-white cursor-pointer my-6 text-lg  rounded-lg font-semibold p-3  " >
               Sign Up
             </button>
+
+             {/* google auth button */}
+            < OAuth />
+            
             <p className="mt-[-12px] text-md text-center " >
               Already have an account?
               <Link to="/login" className="text-blue-500 ml-1 " >

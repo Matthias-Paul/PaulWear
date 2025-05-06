@@ -3,11 +3,12 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv";
 import path from "path";
+import connectDatabase from "./config/database.js"
+import authRoute from "./routes/auth.route.js"
 
-
-
+                                                                                                                                                              
 dotenv.config();
-
+connectDatabase()
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -33,7 +34,7 @@ const _dirname = path.resolve()
 //     res.send("home page")
 // })
 
-
+app.use("/api", authRoute)
 
 
 

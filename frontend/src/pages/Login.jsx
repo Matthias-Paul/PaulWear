@@ -1,6 +1,5 @@
 import pic from "../assets/pic.jpg";
-
-
+import OAuth from "../components/common/OAuth"
 import { useState } from "react";
 import { Link } from "react-router-dom"
 const Login = () => {
@@ -57,9 +56,12 @@ const Login = () => {
               />
             </div>
 
-            <button type="submit" className="w-full bg-black hover:bg-gray-800 text-white cursor-pointer my-6 text-lg  rounded-lg font-semibold p-3  " >
+            <button type="submit" className="w-full bg-black mb-[-10px] hover:bg-gray-800 text-white cursor-pointer text-lg  rounded-lg font-semibold p-3  " >
               Sign In
             </button>
+            {/* google auth button */}
+            < OAuth />
+
             <p className="mt-[-12px] text-md text-center " >
               Don't have an account?
               <Link to="/register" className="text-blue-500 ml-1 " >
