@@ -50,6 +50,10 @@ const NavBar = () => {
                           Admin
                     </Link>
  
+                    <Link to="/vendor" className=" bg-black text-sm  rounded px-2 cursor-pointer text-white " >
+                          Vendor
+                    </Link>
+
                     <Link to="/profile" className=" hover:text-black " >
                             <HiOutlineUser className="w-5 h-5 text-gray-700 "  />
                     </Link>

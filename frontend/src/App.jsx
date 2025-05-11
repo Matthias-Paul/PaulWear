@@ -3,6 +3,7 @@ import { Toaster } from "react-hot-toast";
 
 import UserLayout from "./components/layout/UserLayout.jsx"
 import AdminLayout from "./components/admin/AdminLayout.jsx"
+import VendorLayout from "./components/vendor/VendorLayout.jsx"
 
 import Home from "./pages/Home"
 import Login from "./pages/Login.jsx";
@@ -20,6 +21,10 @@ import UserManagement from "./components/admin/UserManagement"
 import ProductManagement from "./components/admin/ProductManagement"
 import EditProductPage from "./components/admin/EditProductPage"
 import OrderManagement from "./components/admin/OrderManagement"
+import VendorHomePage from "./pages/VendorHomePage.jsx"
+import VendorProductManagement from "./components/vendor/VendorProductManagement"
+import VendorEditProductPage from "./components/vendor/VendorEditProductPage"
+import VendorOrderManagement from "./components/vendor/VendorOrderManagement"
 
 
 function App() {
@@ -44,6 +49,17 @@ function App() {
 
 
           </Route>
+
+        <Route path="/vendor" element={ <VendorLayout />} > 
+          {/* vendor route */}
+
+             <Route index element={ <VendorHomePage />}    />
+             <Route path="products" element={ <VendorProductManagement />}    />
+             <Route path="products/:id/edit" element={ <VendorEditProductPage />} />
+             <Route path="orders" element={ <VendorOrderManagement />}    />
+
+        </Route>
+
        
 
         <Route path="/admin" element={ <AdminLayout />} > 

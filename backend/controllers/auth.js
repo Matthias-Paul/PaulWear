@@ -34,7 +34,7 @@ const errors = validationResult(req);
             return res.status(400).json({
                 success: false,
                 message: "Email is already in use.",
-            });
+            });    
         }
 
         const user = new User({
@@ -91,7 +91,13 @@ const errors = validationResult(req);
 
         res.status(201).json({
             success: true,
-            user,
+            user:{
+                name:user.name,
+                email:user.email,
+                role:user.role,  
+                createdAt:user.createdAt,    
+                updatedAt:user.updatedAt  
+            },
             message: "Signup successful!",
         });      
 
@@ -146,6 +152,7 @@ export const loginUser = async(req, res, next)=>{
         return res.status(200).json({
             success:true,  
             user:{
+                name:user.name,
                 email:user.email,
                 role:user.role,  
                 createdAt:user.createdAt,    
@@ -179,6 +186,7 @@ try {
         return res.status(200).json({
             success:true,  
             user:{
+                name:user.name,
                 email:user.email,
                 role:user.role,  
                 createdAt:user.createdAt,    
@@ -218,7 +226,7 @@ try {
                         Explore curated collections, fresh arrivals, and must-have picks — all at your fingertips.
                         </p>
                         <div style="text-align: center; margin: 30px 0;">
-                        <a href="https://stylenest-ax2d.onrender.com/login" style="background-color: #111827; color: #ffffff; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-size: 15px; font-weight: 500;">
+                        <a href="https://stylenest-ax2d.onrender.com" style="background-color: #111827; color: #ffffff; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-size: 15px; font-weight: 500;">
                             Start Shopping
                         </a>
                         </div>
@@ -239,6 +247,7 @@ try {
         return res.status(201).json({
             success:true,  
             user:{
+                name:newUser.name,
                 email:newUser.email,
                 role:newUser.role,  
                 createdAt:newUser.createdAt,    

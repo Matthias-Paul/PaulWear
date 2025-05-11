@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import path from "path";
 import connectDatabase from "./config/database.js"
 import authRoute from "./routes/auth.route.js"
+import productRoute from "./routes/product.route.js"
+import cartRoute from "./routes/cart.route.js"
 
                                                                                                                                                               
 dotenv.config();
@@ -15,7 +17,7 @@ const PORT = process.env.PORT || 8000;
 
 app.use(
   cors({
-    origin: ["https://stylenest-ax2d.onrender.com"],   
+    origin: ["http://localhost:5173", "https://stylenest-ax2d.onrender.com"],   
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
   })
@@ -35,6 +37,8 @@ const _dirname = path.resolve()
 // })
 
 app.use("/api", authRoute)
+app.use("/api", productRoute)
+app.use("/api", cartRoute)
 
 
 

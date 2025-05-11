@@ -12,7 +12,7 @@ const UserManagement = () => {
             _id:122233,
             name:"Michael Joseph",
             email:"Joseph@gmail.com",
-            role:"User"
+            role:"Customer"
         },
     ]
 
@@ -82,6 +82,7 @@ const UserManagement = () => {
                         <label  className="text-gray-700 block  " >  Role </label>
                         <select name="role" value={formData.role} onChange={handleChange} className="w-full p-2 rounded border border-gray-400 mt-1 " >
                             <option value="customer" > Customer </option>
+                            <option value="vendor" > Vendor </option>
                             <option value="admin" > Admin </option>
 
                         </select>    
@@ -119,6 +120,7 @@ const UserManagement = () => {
                          <td className="py-2 px-4 sm:py-4 sm:px-4" > 
                             <select name="role" value={user.role} onChange={ (e)=> handleRoleChange(user._id, e.target.value)} className="w-full p-2  rounded border border-gray-400 mt-1 " >
                                 <option value="customer" > Customer </option>
+                                <option value="vendor" > Vendor </option>
                                 <option value="admin" > Admin </option>
 
                             </select> 

@@ -1,6 +1,6 @@
 import pic from "../../assets/pic.jpg";
 import toast from "react-hot-toast";
-import ProductGrid from "./ProductGrid";
+import ProductDetailGrid from "./ProductDetailGrid";
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
@@ -228,12 +228,12 @@ const ProductsDetails = () => {
      
         </div>
 
-        <div className="mt-12   ">
+        <div className="mt-6   ">
           <h2 className=" text-2xl mx-[25px] text-center mb-4 font-medium  ">
             {" "}
             You Might Want To Check This Out Too
           </h2>
-          <ProductGrid products={similarProducts} />
+          <ProductDetailGrid products={similarProducts} />
         </div>
       </div>
     </>

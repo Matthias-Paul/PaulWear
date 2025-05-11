@@ -60,7 +60,7 @@ const OAuth = () => {
         className="w-full bg-black hover:bg-gray-800 flex items-center justify-center  text-white cursor-pointer my-6 text-lg  rounded-lg font-semibold p-3 "
       >
         <FcGoogle className="w-7 h-7 mr-2 inline" />
-        <span> sign in with Google </span>
+        <span> Continue with Google </span>
       </button>
     </div>
   );
