@@ -51,14 +51,44 @@ export const addCart = async(req, res, next)=>{
                 cart.products.push({
                     productId,
                     name: product.name,
-                    
+                    image: product.images[0].url,
+                    price: product.price,
+                    size: product.size,
+                    quantity: product.quantity
                 })
             }
 
-        
-        }
+            cart.totalPrice = cart.products.reduce((acc, item)=> acc + item.price * item.quantity, 0)
+            await cart.save()
 
-        
+            return res.status(200).json({
+                success: true,  
+                cart
+            });
+        }else{
+            const newCart = await Cart.create({
+                userId: userId ? userId : undefined,
+                guestId: guestId ? guestId : "quest_" + new Date().getTime(),
+                products: [
+                    {
+                        productId,
+                        name: product.name,
+                        image: product.images[0].url,
+                        price: product.price,
+                        size: product.size,
+                        color,
+                        quantity
+                    },
+                ],
+                totalPrice: product.price * quantity
+
+            })
+
+            return res.status(201).json({
+                success: true,  
+                newCart
+            });
+        }
 
     } catch (error) {
          return res.status(500).json({

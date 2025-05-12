@@ -25,11 +25,15 @@ const OAuth = () => {
         body: JSON.stringify({
           name: resultsFromGoogle.user.displayName,
           email: resultsFromGoogle.user.email,
+          googleUID: resultsFromGoogle.user.uid,
+
         }),
       });
-        if (!res.ok) {
-            throw new Error("Failed to log in");
-        }
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to log in");
+      }
 
       const data = await res.json();
         

@@ -175,10 +175,10 @@ export const loginUser = async(req, res, next)=>{
 
 export const googleAuth  =async(req, res, next)=>{
 
-      const { name, email } = req.body;
-  
-try {
-    const user = await User.findOne({ email });
+      const { name, email, googleUID } = req.body;
+    
+    try {    
+    const user = await User.findOne({ googleUID });
     if(user){
         const token = await generateToken(user.id, user.role, res); 
         console.log(token)
@@ -195,14 +195,23 @@ try {
             message:"Login Successful"
         })
     }else{
+        const existingUser = await User.findOne({ email });
+            if (existingUser) {
+            return res.status(400).json({   
+                success: false,
+                message: "Email is already in use.",
+            });    
+        }
+
       const password = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
 
       const newUser = new User({
-        name,
+        name: name.toLowerCase().split(" ").join("-") + "-" + Math.floor(Math.random() * 10000),
         email,  
         password,
+        googleUID     
       });   
-     
+            
       await newUser.save();
        const token = await generateToken(newUser.id, newUser.role, res); 
        console.log(token)
@@ -260,16 +269,16 @@ try {
 
 
 
-} catch (error) {
+    } catch (error) {
      console.log(error.message)
 
     
-    return res.status(500).json({
-        statusCode: 500,
-        success: false,
-        message:"Internal Server Error"
-    })
-}
+        return res.status(500).json({
+            statusCode: 500,
+            success: false,
+            message:"Internal Server Error"
+        })
+    }
 
 
 
