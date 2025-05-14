@@ -7,6 +7,7 @@ import connectDatabase from "./config/database.js"
 import authRoute from "./routes/auth.route.js"
 import productRoute from "./routes/product.route.js"
 import cartRoute from "./routes/cart.route.js"
+import checkoutRoute from "./routes/checkout.route.js"
 
                                                                                                                                                               
 dotenv.config();
@@ -39,6 +40,7 @@ const _dirname = path.resolve()
 app.use("/api", authRoute)
 app.use("/api", productRoute)
 app.use("/api", cartRoute)
+app.use("/api", checkoutRoute)
 
 
 

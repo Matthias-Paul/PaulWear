@@ -16,7 +16,7 @@ const cartItemSchema = new mongoose.Schema({
         default: 1
     }
 
-}, {timestamps: true})
+}, {_id: false})
   
 
 const cartSchema = new mongoose.Schema({
@@ -36,7 +36,7 @@ const cartSchema = new mongoose.Schema({
     },
 
 
-}, { timestamps: true })
+}, { timestamps: true } )
 
 
 const Cart = mongoose.model("Cart", cartSchema)
