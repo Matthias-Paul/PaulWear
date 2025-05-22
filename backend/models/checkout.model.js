@@ -19,6 +19,12 @@ const checkoutItemSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    quantity: { 
+        type: Number,
+        required: true
+    },
+    size: String,   
+    color: String
 },{ _id: false})
 
 const checkoutSchema = new mongoose.Schema({
@@ -57,10 +63,10 @@ const checkoutSchema = new mongoose.Schema({
     isPaid: {
         type: Boolean,
         default: false
-    },
+    }, 
     paidAt: {
         type: Date
-    },
+    },    
     paymentStatus: {
         type: String,
         enum: ["pending", "paid", "failed"],

@@ -17,7 +17,7 @@ export const createCheckout = async(req, res)=>{
         }); 
     }
 
-
+      
     try {
         const { checkoutItems, totalPrice, shippingAddress, paymentMethod } = matchedData(req)
 
@@ -26,8 +26,9 @@ export const createCheckout = async(req, res)=>{
                 success: false,
                 message: "Unauthorized access.",
             });
-        }
-
+        }     
+        console.log(checkoutItems)         
+   
         const productIds = checkoutItems.map(item => item.productId);
 
         const existingProducts = await Product.find({ _id: { $in: productIds } }).select('_id');
@@ -60,14 +61,127 @@ export const createCheckout = async(req, res)=>{
     } catch (error) {
         console.log(error)
         return res.status(500).json({
-        success: false,
-        message: "Internal Server Error",
+            success: false,
+            message: "Internal Server Error",
         });
     }
 }
 
+export const payCheckout = async (req, res) => {
 
+    try {
+        const { paymentStatus, paymentDetails } = req.body;
 
+        if (!paymentStatus || !paymentDetails) {
+            return res.status(400).json({
+                success: false,
+                message: "Payment status and payment details are required.",
+            });       
+        }
+
+        if (paymentStatus !== "paid") {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid payment status. Only 'paid' is accepted.",
+            });
+        }
+        const checkout = await Checkout.findById(req.params.id);
+
+        if (!checkout) {
+            return res.status(404).json({
+                success: false,
+                message: "Checkout not found.",
+            });
+        }
+        // Prevent paying again
+        if (checkout.isPaid) {
+            return res.status(400).json({
+                success: false,
+                message: "This checkout has already been paid.",
+            });
+        }
+   
+        checkout.isPaid = true;
+        checkout.paymentStatus = paymentStatus;
+        checkout.paymentDetails = paymentDetails;
+        checkout.paidAt = Date.now();
+
+        await checkout.save();
+
+        return res.status(200).json({
+            success: true,
+            checkout,
+            message: "Checkout payment successful.",
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    }
+};
+
+export const finalizeCheckout = async (req, res) => {
+
+    try {
+        const checkout = await Checkout.findById(req.params.id);
+
+        if (!checkout) {
+            return res.status(404).json({
+                success: false,
+                message: "Checkout not found.",
+            });
+        }
+
+        if (checkout.isFinalized) {
+            return res.status(400).json({
+                success: false,
+                message: "Checkout already finalized.",
+            });
+        }
+
+        if (!checkout.isPaid) {
+            return res.status(400).json({
+                success: false,
+                message: "Checkout is not paid.",
+            });
+        }
+
+        const finalOrder = await Order.create({
+            user: checkout.user,
+            orderItems: checkout.checkoutItems, 
+            shippingAddress: checkout.shippingAddress,
+            paymentMethod: checkout.paymentMethod,
+            totalPrice: checkout.totalPrice,
+            isPaid: true,
+            paidAt: checkout.paidAt,
+            isDelivered: false,
+            paymentStatus: "paid",
+            paymentDetails: checkout.paymentDetails,
+        });
+
+        checkout.isFinalized = true;
+        checkout.finalizedAt = Date.now();
+        await checkout.save();
+
+        await Checkout.findByIdAndDelete(checkout._id);
+
+        return res.status(201).json({
+            success: true,
+            order: finalOrder,
+            message: "Order finalized from checkout successfully.",
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error",
+        });
+    }
+};
 
 
 

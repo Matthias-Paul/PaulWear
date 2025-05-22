@@ -187,8 +187,8 @@ export const googleAuth  =async(req, res, next)=>{
             success:true,  
             user:{
                 name:user.name,
-                email:user.email,
-                role:user.role,  
+                email:user.email,   
+                role:user.role,    
                 createdAt:user.createdAt,    
                 updatedAt:user.updatedAt  
             },      

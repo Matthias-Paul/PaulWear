@@ -1,7 +1,6 @@
 import express from "express"
 import Product from "../models/product.model.js"
 import { validationResult, matchedData } from "express-validator"
-import { addCart } from "../controllers/cart.js"
 
 
 export const createProduct = async(req, res, next)=>{
@@ -22,7 +21,7 @@ export const createProduct = async(req, res, next)=>{
         if(!req.user){
             return res.status(403).json({
                 success: false,
-                message: "Unthorized user.",
+                message: "Unauthorized user.",
             });
         }
         
@@ -236,7 +235,7 @@ export const deleteProduct = async(req, res, next)=>{
         if(!req.user){
             return res.status(403).json({
                 success: false,
-                message: "Unthorized user.",
+                message: "Unauthorized user.",
             });
         }
         const { id } = req.params
@@ -527,4 +526,35 @@ export const newArrivals = async(req, res, next)=>{
 }
      
 
+export const getVendorProducts = async (req, res) => {
+  try {
+    if (!req.user || !req.user._id || req.user.role !== "vendor") {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized access",
+      });
+    }
 
+    const vendorProducts = await Product.find({ user: req.user._id }).sort({ createdAt: -1});
+
+    if (!vendorProducts || vendorProducts.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "You have no products",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      vendorProducts,
+    });
+
+  } catch (error) {
+    console.log(error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};

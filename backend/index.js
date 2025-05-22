@@ -8,6 +8,8 @@ import authRoute from "./routes/auth.route.js"
 import productRoute from "./routes/product.route.js"
 import cartRoute from "./routes/cart.route.js"
 import checkoutRoute from "./routes/checkout.route.js"
+import orderRoute from "./routes/order.route.js"
+import uploadRoute from "./routes/upload.route.js"
 
                                                                                                                                                               
 dotenv.config();
@@ -41,6 +43,8 @@ app.use("/api", authRoute)
 app.use("/api", productRoute)
 app.use("/api", cartRoute)
 app.use("/api", checkoutRoute)
+app.use("/api", orderRoute)
+app.use("/api", uploadRoute)
 
 
 
