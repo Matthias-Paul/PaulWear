@@ -184,6 +184,8 @@ export const editVendorOrders = async (req, res, next) => {
 
       if (status.toLowerCase() === "delivered") {
         updateOrder.isDelivered = true;
+      }else {
+        updateOrder.isDelivered = false;
       }
     }
 
