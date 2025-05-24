@@ -10,6 +10,8 @@ import cartRoute from "./routes/cart.route.js"
 import checkoutRoute from "./routes/checkout.route.js"
 import orderRoute from "./routes/order.route.js"
 import uploadRoute from "./routes/upload.route.js"
+import subscribeRoute from "./routes/subscriber.route.js"
+import adminRoute from "./routes/admin.route.js"
 
                                                                                                                                                               
 dotenv.config();
@@ -45,6 +47,8 @@ app.use("/api", cartRoute)
 app.use("/api", checkoutRoute)
 app.use("/api", orderRoute)
 app.use("/api", uploadRoute)
+app.use("/api", subscribeRoute)
+app.use("/api", adminRoute)
 
 
 

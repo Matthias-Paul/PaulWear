@@ -1,6 +1,6 @@
 import express from "express"
 import multer from "multer"
-import cloudinary from "cloudinary"
+import { v2 as cloudinary } from 'cloudinary';  // its neccessary for you to import v2 of cloudinary
 import streamifier from "streamifier"
 import dotenv from "dotenv";
 import Product from "../models/product.model.js"
@@ -8,12 +8,11 @@ import Order from "../models/order.model.js"
 import Checkout from "../models/checkout.model.js"
 import { validationResult, matchedData } from "express-validator"
 
-
+    
 dotenv.config();
-
-
+     
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
@@ -30,7 +29,7 @@ export const upload = multer({
     else cb(new Error("Only image files are allowed!"), false);
   },
 });
-
+  
 
 
 export const uploadImage = async( req, res)=>{
@@ -57,7 +56,7 @@ export const uploadImage = async( req, res)=>{
                 streamifier.createReadStream(fileBuffer).pipe(stream)
             })
         }
-
+                        
         const result = await streamUpload(req.file.buffer)
 
         return res.status(200).json({
@@ -70,8 +69,11 @@ export const uploadImage = async( req, res)=>{
         console.log(error)
         return res.status(500).json({
             success: false,
+            error:error.message,
             message: "Internal Server Error",
         });
-    }
-
-}
+    }   
+      
+}     
+   
+   

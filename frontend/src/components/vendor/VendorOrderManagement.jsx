@@ -42,7 +42,7 @@ const VendorOrderManagement = () => {
 
   return (
     <>
-      <div className=" mt-[80px]  md:mt-3 mx-auto   ">
+      <div className=" mt-[80px] pr-[12px] md:pr-0 md:mt-3 mx-auto   ">
             <h1 className="text-2xl font-bold mb-6 mt-3  " > Order Management  </h1>
 
 

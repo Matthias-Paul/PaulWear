@@ -1,7 +1,6 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 const orderItemSchema = new mongoose.Schema({
-
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref:"Product",
@@ -25,54 +24,63 @@ const orderItemSchema = new mongoose.Schema({
         type: Number,
         required: true
     }
-}, { _id: false})
+}, { _id: false });
 
 const orderSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"User",
-        required:true
+        ref: "User",
+        required: true
     },
-    orderItems: [ orderItemSchema ],
+    vendor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    orderGroupId: {  
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Checkout"
+    },
+    orderItems: [orderItemSchema],
     shippingAddress: {
-        address: {
-            type: String,
-            required: true
+        address: { 
+            type: String, 
+            required: true 
         },
-        postalCode: {
-            type: String,
-            required: true
+        postalCode: { 
+            type: String, 
+            required: true 
         },
-        city: {
-            type: String,
-            required: true
+        city: { 
+            type: String, 
+            required: true 
         },
-        country: {
-            type: String,
-            required: true
+        country: { 
+            type: String, 
+            required: true 
         }
     },
-    paymentMethod: {
-        type: String,
-        required: true
+    paymentMethod: { 
+        type: String, 
+        required: true 
     },
-    totalPrice: {
-        type: Number,
-        required: true
+    totalPrice: { 
+        type: Number, 
+        required: true 
     },
-    isPaid: {
-        type: Boolean,
-        default: false
+    isPaid: { 
+        type: Boolean, 
+        default: false 
     },
-    paidAt: {
-        type: Date
+    paidAt: { 
+        type: Date 
     },
-    isDelivered: {
-        type: Boolean,
-        default: false
+    isDelivered: { 
+        type: Boolean, 
+        default: false 
     },
-    deliveredAt: {
-        type: Date
+    deliveredAt: { 
+        type: Date 
     },
     paymentStatus: {
         type: String,
@@ -84,10 +92,8 @@ const orderSchema = new mongoose.Schema({
         enum: ["processing", "shipped", "delivered", "cancelled"],
         default: "processing"
     },
+}, { timestamps: true });
 
-}, { timestamps: true })
-
-const Order = mongoose.model("Order", orderSchema)
+const Order = mongoose.model("Order", orderSchema);
 
 export default Order;
-

@@ -303,3 +303,29 @@ export const validateCheckout = [
     .withMessage("Invalid payment status"),
 ];
 
+
+export const validateSubscriber = [
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Email must be a valid email address")
+    .normalizeEmail()
+];
+
+
+export const editVendorOrderValidation = [
+  param("orderId")
+    .notEmpty()
+    .withMessage("Order ID is required.")
+    .isMongoId()
+    .withMessage("Invalid Order ID."),
+
+  body("status")
+    .notEmpty()
+    .withMessage("Status is required.")
+    .isIn(["processing", "shipped", "delivered", "cancelled"])
+    .withMessage("Invalid  status")
+    .isString()
+    .withMessage("Status must be a string."),
+]

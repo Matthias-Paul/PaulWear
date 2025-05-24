@@ -123,66 +123,94 @@ export const payCheckout = async (req, res) => {
     }
 };
 
+
 export const finalizeCheckout = async (req, res) => {
+  try {
+    const checkout = await Checkout.findById(req.params.id);
 
-    try {
-        const checkout = await Checkout.findById(req.params.id);
-
-        if (!checkout) {
-            return res.status(404).json({
-                success: false,
-                message: "Checkout not found.",
-            });
-        }
-
-        if (checkout.isFinalized) {
-            return res.status(400).json({
-                success: false,
-                message: "Checkout already finalized.",
-            });
-        }
-
-        if (!checkout.isPaid) {
-            return res.status(400).json({
-                success: false,
-                message: "Checkout is not paid.",
-            });
-        }
-
-        const finalOrder = await Order.create({
-            user: checkout.user,
-            orderItems: checkout.checkoutItems, 
-            shippingAddress: checkout.shippingAddress,
-            paymentMethod: checkout.paymentMethod,
-            totalPrice: checkout.totalPrice,
-            isPaid: true,
-            paidAt: checkout.paidAt,
-            isDelivered: false,
-            paymentStatus: "paid",
-            paymentDetails: checkout.paymentDetails,
-        });
-
-        checkout.isFinalized = true;
-        checkout.finalizedAt = Date.now();
-        await checkout.save();
-
-        await Checkout.findByIdAndDelete(checkout._id);
-
-        return res.status(201).json({
-            success: true,
-            order: finalOrder,
-            message: "Order finalized from checkout successfully.",
-        });
-
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error",
-        });
+    if (!checkout) {
+      return res.status(404).json({
+        success: false,
+        message: "Checkout not found.",
+      });
     }
+
+    if (checkout.isFinalized) {
+      return res.status(400).json({
+        success: false,
+        message: "Checkout already finalized.",
+      });
+    }
+
+    if (!checkout.isPaid) {
+      return res.status(400).json({
+        success: false,
+        message: "Checkout is not paid.",
+      });
+    }
+
+    let checkoutTotal = 0; // New: Total for all items
+    const createdOrders = [];
+
+    for (const item of checkout.checkoutItems) {
+      const product = await Product.findById(item.productId); 
+
+      if (!product) {
+        console.log(`Product not found for item: ${item}`);
+        continue;
+      }
+
+      const itemTotal = item.price * item.quantity; // Individual item total
+      checkoutTotal += itemTotal; // Add to checkout total
+
+      const newOrder = await Order.create({
+        user: checkout.user,
+        vendor: product.user,
+        orderItems: [
+          {
+            productId: product._id,
+            name: product.name,
+            image: product.images[0]?.url || "",
+            size: item.size,
+            color: item.color,
+            quantity: item.quantity,
+            price: item.price,
+          }
+        ],
+        shippingAddress: checkout.shippingAddress,
+        paymentMethod: checkout.paymentMethod,
+        totalPrice: itemTotal, // Per order total (single item in this case)
+        isPaid: true,
+        paidAt: checkout.paidAt,
+        isDelivered: false,
+        paymentStatus: "paid",
+        paymentDetails: checkout.paymentDetails,
+      });
+
+      createdOrders.push(newOrder);
+    }
+
+    // Mark checkout as finalized and store the total (optional: you can add checkoutTotal field in Checkout schema if needed)
+    checkout.isFinalized = true;
+    checkout.finalizedAt = Date.now();
+    checkout.totalPrice = checkoutTotal; // Optional: Save this in checkout if schema has it
+    await checkout.save();
+
+    // Delete the checkout after finalizing
+    await Checkout.findByIdAndDelete(checkout._id);
+
+    return res.status(201).json({
+      success: true,
+      message: "Orders finalized from checkout successfully.",
+      totalAmount: checkoutTotal, // Total for the entire checkout
+      orders: createdOrders,
+    });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
 };
-
-
-
-

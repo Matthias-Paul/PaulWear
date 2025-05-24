@@ -36,13 +36,11 @@ const OrderManagement = () => {
 
     ]
 
-    const handleStatusChange = (orderId, status)=>{
-        console.log({id:orderId, status})
-    }
+    
 
   return (
     <>
-      <div className=" mt-[80px]  md:mt-3 mx-auto   ">
+      <div className=" mt-[80px] pr-[12px] md:pr-0  md:mt-3 mx-auto   ">
             <h1 className="text-2xl font-bold mb-6 mt-3  " > Order Management  </h1>
 
 
@@ -57,7 +55,7 @@ const OrderManagement = () => {
                   <th className="py-3 px-4  " > Customer </th>
                   <th className="py-3 px-4  " > Total Price </th>
                   <th className="py-3 px-4  " > Status </th>
-                  <th className="py-3 px-4  " > Actions </th>
+              
 
 
                 </tr>
@@ -77,21 +75,8 @@ const OrderManagement = () => {
                             ${order?.totalPrice}                      
                          </td >
                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
-                        <select name="role" value={order.status} onChange={(e) => handleStatusChange(order._id, e.target.value) } className=" focus:ring-blue-500 focus:border-blue-500   w-full block cursor-pointer bg-gray-50 text-sm p-2 rounded border border-gray-400 mt-1 " >
-                            <option value="processing" > Processing </option>
-                            <option value="shipped" > Shipped </option>
-                            <option value="delivered" > Delivered </option>
-                            <option value="cancelled" > Cancelled </option>
-                        </select>                      
+                          {order?.status}                   
                          </td >
-
-                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
-                            
-                            <button className="bg-green-500 hover:bg-green-600 rounded py-2 px-2 cursor-pointer text-white  " onClick={()=> handleStatusChange(order._id, "delivered")}  >
-                                Mark as Delivered
-                            </button>    
-                         </td >
-
                         </tr>
   
                     )

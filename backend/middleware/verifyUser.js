@@ -11,7 +11,7 @@ export const verifyUser = async (req, res, next) => {
     if (!userToken) {
       return res.status(401).json({
         success: false,
-        message: "Unauthorized: No token provided",
+        message: "Unauthorized: No token provided. Please log in!",
       });
     }
 

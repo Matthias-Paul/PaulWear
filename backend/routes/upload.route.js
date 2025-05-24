@@ -8,5 +8,4 @@ const router = express.Router()
 router.post("/upload", verifyUser, upload.single("image") , multerErrorHandler ,  uploadImage)
 
 export default router
-
-
+ 
