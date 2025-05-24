@@ -184,10 +184,12 @@ export const editVendorOrders = async (req, res, next) => {
 
       if (status.toLowerCase() === "delivered") {
         updateOrder.isDelivered = true;
+        updateOrder.deliveredAt = Date.now()
       }else {
         updateOrder.isDelivered = false;
+        updateOrder.deliveredAt = null;
       }
-    }
+    }   
 
     await updateOrder.save();
 

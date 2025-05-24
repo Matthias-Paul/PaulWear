@@ -1,15 +1,65 @@
 import pic from "../assets/pic.jpg";
 import OAuth from "../components/common/OAuth"
 import { useState } from "react";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query";
+import { signInSuccess } from "../redux/slice/userSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loginUser } = useSelector((state) => state.user);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-    const handleFormSubmit = (e)=>{
-    e.preventDefault()
 
+  const loginMutation = useMutation({
+    mutationFn: async ()=>{
+  
+      // Send user details to the backend
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          email,
+          password
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to log in");
+      }
+
+      const data = await res.json();
+        
+      return data;
+    },
+     onSuccess: (data) => {
+      toast.success("Log in successful! Redirecting to home page...");
+      dispatch(signInSuccess(data.user))
+      console.log("login user:", data.user);
+      setEmail("")
+      setPassword("")
+      setTimeout(() => navigate("/"), 1000);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+
+  })
+
+
+  const handleFormSubmit = (e)=>{
+    e.preventDefault()
+    loginMutation.mutate({ email, password });
+    
   }
+   
 
   return (
     <>
@@ -56,8 +106,13 @@ const Login = () => {
               />
             </div>
 
-            <button type="submit" className="w-full bg-black mb-[-10px] mt-6 hover:bg-gray-800 text-white cursor-pointer text-lg  rounded-lg font-semibold p-3  " >
-              Sign In
+            <button
+              type="submit"
+              disabled={loginMutation.isPending }
+              className={`w-full text-lg mb-[-15px] mt-6 rounded-lg font-semibold p-3 
+                ${loginMutation.isPending  ? "bg-gray-800 cursor-not-allowed text-white " : "bg-black hover:bg-gray-800 cursor-pointer text-white"}`}
+            >
+              {loginMutation.isPending ? "Signing In..." : "Sign In"}
             </button>
             {/* google auth button */}
             < OAuth />

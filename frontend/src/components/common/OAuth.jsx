@@ -1,14 +1,18 @@
-
+import { useDispatch, useSelector } from "react-redux";
 import { FcGoogle } from "react-icons/fc";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { app } from "../../../firebase";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
+import { signInSuccess } from "../../redux/slice/userSlice.js";
+
 import toast from "react-hot-toast";
 
 const OAuth = () => {
+  const { loginUser } = useSelector((state) => state.user);
   const auth = getAuth(app);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const loginMutation = useMutation({
     mutationFn: async ()=>{
@@ -18,7 +22,7 @@ const OAuth = () => {
       const resultsFromGoogle = await signInWithPopup(auth, provider);
 
       // Send user details to the backend
-      const res = await fetch("https://stylenest-ax2d.onrender.com/api/googleAuth", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/googleAuth`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -41,8 +45,8 @@ const OAuth = () => {
     },
      onSuccess: (data) => {
       toast.success("Log in successful! Redirecting to home page...");
-    //   dispatch(loggedInSuccess(data.user))
-    
+      dispatch(signInSuccess(data.user))
+      console.log("login user:", data.user);
       setTimeout(() => navigate("/"), 1000);
     },
     onError: (error) => {

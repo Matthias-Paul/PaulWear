@@ -16,7 +16,8 @@ const MyOrdersPage = () => {
         orderItems:[
           {
           name:"Product 1",
-          image:pic
+          image:pic,
+          quantity:2
         }
       ],
         totalPrice:100,
@@ -29,7 +30,8 @@ const MyOrdersPage = () => {
         orderItems:[
           {
           name:"Product 2",
-          image:pic
+          image:pic,
+          quantity:2
         }
       ],
         totalPrice:100,
@@ -42,7 +44,8 @@ const MyOrdersPage = () => {
         orderItems:[
           {
           name:"Product 3",
-          image:pic
+          image:pic,
+          quantity:2
         }
       ],
         totalPrice:1300,
@@ -55,7 +58,8 @@ const MyOrdersPage = () => {
         orderItems:[
           {
           name:"Product 4",
-          image:pic
+          image:pic,
+          quantity:2
         }
       ],
         totalPrice:200,
@@ -68,7 +72,8 @@ const MyOrdersPage = () => {
         orderItems:[
           {
           name:"Product 5",
-          image:pic
+          image:pic,
+          quantity:2
         }
       ],
         totalPrice:100,
@@ -101,10 +106,10 @@ const MyOrdersPage = () => {
               <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
                 <tr>
                   <th className="py-2 px-4 sm:py-3 " > Image </th>
-                  <th className="py-2 px-4 sm:py-3 " > Order Id </th>
+                  <th className="py-2 px-4 sm:py-3 " > Name </th>
                   <th className="py-2 px-4 sm:py-3 " > Created </th>
                   <th className="py-2 px-4 sm:py-3 " > Shipping Address </th>
-                  <th className="py-2 px-4 sm:py-3 " > Items</th>
+                  <th className="py-2 px-4 sm:py-3 " > Quantity</th>
                   <th className="py-2 px-4 sm:py-3 " > Price </th>
                   <th className="py-2 px-4 sm:py-3 " > Status </th> 
                 </tr>
@@ -117,7 +122,7 @@ const MyOrdersPage = () => {
                         <img src={order?.orderItems[0]?.image} className="w-12 h-12  rounded-lg sm:rounded-md object-cover flex-shrink-0 " alt={order?.orderItems[0]?.name} />
                          </td >
                          <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
-                            #{order?._id}
+                            {order?.orderItems[0]?.name}
                          </td >
                          <td className="py-2 px-4 sm:py-4 sm:px-4" > 
                             { order.createdAt.toLocaleDateString()}{"  "}
@@ -129,7 +134,7 @@ const MyOrdersPage = () => {
                         
                          </td >
                          <td className="py-2 px-4 sm:py-4 sm:px-4" > 
-                            {  order?.orderItems?.length }                      
+                            {  order?.orderItems[0]?.quantity }                      
                          </td >
                          <td className="py-2 px-4 sm:py-4 sm:px-4" > 
                             ${order?.totalPrice}                      

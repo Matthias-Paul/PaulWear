@@ -1,16 +1,68 @@
 import OAuth from "../components/common/OAuth"
 import { useState } from "react";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { useMutation } from "@tanstack/react-query";
+import { signInSuccess } from "../redux/slice/userSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import toast from "react-hot-toast";
+
+
 const Register = () => {
-    const [name, setName] = useState("");
-  
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loginUser } = useSelector((state) => state.user);
+
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+const registerMutation = useMutation({
+    mutationFn: async ()=>{
+  
+      // Send user details to the backend
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to sign up");
+      }
+
+      const data = await res.json();
+        
+      return data;
+    },
+     onSuccess: (data) => {
+      toast.success("Sign up successful! Redirecting to home page...");
+      dispatch(signInSuccess(data.user))
+      console.log("login user:", data.user);
+      setName("")
+      setEmail("")
+      setPassword("")
+      setTimeout(() => navigate("/"), 1000);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+
+  })
+
+
   const handleFormSubmit = (e)=>{
     e.preventDefault()
+    registerMutation.mutate({ name, email, password });
+    
   }
-
+        
   return (
     <>
       <div className="py-[100px] lg:h-[900px] max-w-[1400px] relative mx-auto  flex w-full ">
@@ -71,8 +123,13 @@ const Register = () => {
               />
             </div>
 
-            <button type="submit" className="w-full bg-black hover:bg-gray-800 text-white cursor-pointer  text-lg mb-[-15px] mt-6 rounded-lg font-semibold p-3  " >
-              Sign Up
+            <button
+              type="submit"
+              disabled={registerMutation.isPending }
+              className={`w-full text-lg mb-[-15px] mt-6 rounded-lg font-semibold p-3 
+                ${registerMutation.isPending  ? "bg-gray-800 cursor-not-allowed text-white " : "bg-black hover:bg-gray-800 cursor-pointer text-white"}`}
+            >
+              {registerMutation.isPending ? "Signing Up..." : "Sign Up"}
             </button>
 
              {/* google auth button */}

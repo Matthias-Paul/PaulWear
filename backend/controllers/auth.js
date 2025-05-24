@@ -88,13 +88,13 @@ const errors = validationResult(req);
 
         const token = await generateToken(user.id, user.role, res); 
         console.log(token)
-
+        
         res.status(201).json({
-            success: true,
+            success: true,            
             user:{
                 name:user.name,
                 email:user.email,
-                role:user.role,  
+                role:user.role,     
                 createdAt:user.createdAt,    
                 updatedAt:user.updatedAt  
             },
