@@ -4,11 +4,14 @@ import SearchBar from "./SearchBar"
 import CartDrawer from "../layout/CartDrawer"
 import { useState } from "react"
 import { IoMdClose } from "react-icons/io" 
+import { useSelector } from "react-redux";
 
 
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [navDrawerOpen, setNavDrawerOpen] = useState(false)
+  const { loginUser } = useSelector((state) => state.user);
+
 
     const toggleCartDrawer = () => {
         
@@ -46,14 +49,22 @@ const NavBar = () => {
           </div>
 
              <div className="flex items-center gap-x-3 sm:gap-x-5  " >
-                    <Link to="/admin" className=" bg-black text-sm  rounded px-2 cursor-pointer text-white " >
+                   {
+                    loginUser?.role ==="admin"? (
+                      <Link to="/admin" className=" bg-black text-sm  rounded px-2 cursor-pointer text-white " >
                           Admin
                     </Link>
- 
-                    <Link to="/vendor" className=" bg-black text-sm  rounded px-2 cursor-pointer text-white " >
+                    ): ""
+                   }
+                    
+                    {
+                    loginUser?.role ==="vendor"? (
+                      <Link to="/vendor" className=" bg-black text-sm  rounded px-2 cursor-pointer text-white " >
                           Vendor
-                    </Link>
-
+                      </Link>
+                    ): ""
+                   }
+ 
                     <Link to="/profile" className=" hover:text-black " >
                             <HiOutlineUser className="w-5 h-5 text-gray-700 "  />
                     </Link>

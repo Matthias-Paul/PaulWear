@@ -20,6 +20,7 @@ const userSlice = createSlice({
     },
     logOutSuccess: (state) => {
       state.loginUser = null;
+      state.guestId = `guest_${new Date().getTime()}`
     }
   },
 });

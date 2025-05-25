@@ -101,8 +101,8 @@ const MyOrdersPage = () => {
         <h1 className="text-xl md:text-2xl font-bold my-6" > My Orders </h1>
 
         { orders?.length > 0 ? (
-            <div className={` shadow-md overflow-hidden  overflow-x-auto  relative rounded-sm lg:rounded-md `} >
-            <table className="w-full text-left min-w-[800px]  text-gray-500 " >
+            <div className={` shadow-md  overflow-x-auto  relative rounded-sm lg:rounded-md `} >
+            <table className="w-full text-left min-w-[800px] md:min-w-full  text-gray-500 " >
               <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
                 <tr>
                   <th className="py-2 px-4 sm:py-3 " > Image </th>
