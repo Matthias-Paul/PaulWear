@@ -1,9 +1,11 @@
 import pic from "../../assets/pic.jpg";
 import toast from "react-hot-toast";
 import ProductDetailGrid from "./ProductDetailGrid";
-
+import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
+import { useQuery } from "@tanstack/react-query";
+
 const similarProducts = [
 
     {
@@ -34,7 +36,9 @@ const similarProducts = [
 
 
 const ProductsDetails = () => {
-  const [mainImage, setMainImage] = useState(selectedProduct?.images[0]?.url);
+  const { id } = useParams()
+  const [selectedProduct, setSelectedProduct] = useState("");
+  const [mainImage, setMainImage] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -61,6 +65,32 @@ const ProductsDetails = () => {
     // setIsButtonDisabled(true)
   };
 
+const fetchProductDetails = async () => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/${id}`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch product details");
+    }
+    return res.json();
+  };
+
+  const { data } = useQuery({
+    queryKey: ["selectedProduct", id],
+    queryFn: fetchProductDetails,
+  });
+
+  useEffect(() => {
+    if (data) {
+      setSelectedProduct(data.product)
+      console.log("productDetails:", data.product);
+      setMainImage(data.product.images?.[0]?.url); 
+    }
+  }, [data]);
+
+
+
   return (
     <>
       <div className="mx-auto pt-[135px] px-[12px] max-w-[1400px]  bg-white ">
@@ -71,11 +101,11 @@ const ProductsDetails = () => {
           <div className="hidden md:flex flex-col gap-y-4 mr-6">
             {selectedProduct?.images?.map((image) => (
               <img
-              key={image.url}
+              key={image?.url}
 
                 onClick={() => setMainImage(image?.url)}
                 className={` ${
-                  mainImage === image.url
+                  mainImage === image?.url
                     ? "border-black border-3"
                     : "border-none"
                 } w-20 h-20 cursor-pointer rounded-lg border object-cover flex-shrink-0 `}
@@ -139,19 +169,17 @@ const ProductsDetails = () => {
             <div className="mb-4">
               <p className="text-gray-700  ">Color: </p>
               <div className="mt-2 flex gap-2  ">
-                {selectedProduct.colors.map((color) => (
-                  <button
-                  key={color}
-
+                {selectedProduct?.colors?.map((color) => (
+                 <button
+                    key={color}
                     onClick={() => setSelectedColor(color)}
                     style={{
-                      backgroundColor: color.toLocaleLowerCase(),
+                      backgroundColor: color.toLowerCase(),
                       filter: "brightness(0.5)",
                     }}
                     className={`w-8 h-8 cursor-pointer ${
-                      selectedColor === color ? " border-4 border-black" : ""
-                    } rounded-full border border-gray-500 `}
-                    
+                      selectedColor === color ? "border-4 border-black" : ""
+                    } rounded-full border border-gray-500`}
                   ></button>
                 ))}
               </div>
@@ -160,7 +188,7 @@ const ProductsDetails = () => {
             <div className="mb-4">
               <p className="text-gray-700  ">Size: </p>
               <div className="mt-2 flex gap-2  ">
-                {selectedProduct.sizes.map((size) => (
+                {selectedProduct?.sizes?.map((size) => (
                   <button
                   key={size}
  

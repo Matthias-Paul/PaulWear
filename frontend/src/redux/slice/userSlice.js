@@ -14,9 +14,12 @@ const userSlice = createSlice({
     },  
     deleteUserSuccess: (state) => {
       state.loginUser = null;
-    },
+    },  
     updateUserSuccess: (state, action) => {
       state.loginUser = action.payload;
+    },
+    generateNewGuestId: (state) => {
+      state.guestId = `guest_${new Date().getTime()}`;
     },
     logOutSuccess: (state) => {
       state.loginUser = null;
@@ -29,6 +32,7 @@ export const {
   signInSuccess,
   deleteUserSuccess,
   updateUserSuccess,
+  generateNewGuestId,   
   logOutSuccess,
   
 } = userSlice.actions;  

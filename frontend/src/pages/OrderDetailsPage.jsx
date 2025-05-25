@@ -1,48 +1,36 @@
 import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import pic from "../assets/pic.jpg"
+import { useQuery } from "@tanstack/react-query";
 
 const OrderDetailsPage = () => {
     const { id } = useParams()
     const [orderDetails, setOrderDetails] = useState(null)
 
-    useEffect(()=>{
+  
+  const fetchOrderDetails = async () => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/${id}`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch order details");
+    }
+    return res.json();
+  };
 
-        const mockOrdersDetails ={
-            _id:id,
-            createdAt: new Date(),
-            isPaid:true,
-            isDelivered:false,
-            paymentMethod:"PayPal",
-            shippingMethod:"Standard",
-            shippingAddress: {
-                city:"New York",
-                country:"USA"
-            },
-            orderItems:[
-            {
-                productId:1,
-                name:"T-shirt",
-                price:190,
-                quantity:2,
-                image:pic
-            },
-            {
-                productId:2,
-                name:"Skirt",
-                price:130,
-                quantity:1,
-                image:pic
-            }
-      ],
-            
+  const { data } = useQuery({
+    queryKey: ["orderDetails", id],
+    queryFn: fetchOrderDetails,
+  });
 
-        }
-            setOrderDetails(mockOrdersDetails)
+  useEffect(() => {
+    if (data) {
+      setOrderDetails(data.orderDetails)
+      console.log("orderDetails:", data.orderDetails);
+    }
+  }, [data]);
 
-    },[id])
-
-    console.log(id)
   return (
     <>
       <div className=" pt-[90px] px-[12px] mx-auto max-w-[1000px] mb-20 " >

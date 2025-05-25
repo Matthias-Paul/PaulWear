@@ -200,7 +200,7 @@ export const googleAuth  =async(req, res, next)=>{
             return res.status(400).json({   
                 success: false,
                 message: "Email is already in use.",
-            });    
+            });       
         }
 
       const password = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
