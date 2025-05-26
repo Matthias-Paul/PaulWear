@@ -93,13 +93,13 @@ const NewArrival = () => {
 
   return (
     <>
-      <div className=" container mx-auto text-center relative mb-4   "  >
+      <div className=" container px-3 mx-auto text-center relative mb-4   "  >
         <h1  className=" text-2xl sm:text-3xl font-bold my-4 ">Latest Products </h1> 
         <p className="text-gray-600 text-sm md:text-lg mb-5 "> Don’t miss the freshest additions from our sellers, updated regularly! </p>
        
         {/* scroll button */}
 
-        <div className="absolute top-28 right-0  flex gap-x-2 " >
+        <div className="absolute top-28 right-0 mr-3  flex gap-x-2 " >
         <button onClick={()=> scroll("left")} disabled={!canScrollLeft} 
         className={`p-2 cursor-pointer rounded border ${canScrollLeft? "bg-white text-black ": "bg-gray-200 text-gray-400  cursor-not-allowed "}  `}>
             < FiChevronLeft   />
