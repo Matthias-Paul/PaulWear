@@ -2,6 +2,7 @@ import pic from "../../assets/pic.jpg"
 import {FiChevronLeft, FiChevronRight} from "react-icons/fi"
 import { Link } from "react-router-dom"
 import { useRef, useState, useEffect } from "react"
+import { useQuery } from "@tanstack/react-query";
 
 const NewArrival = () => {
         const scrollRef = useRef(null)
@@ -10,6 +11,33 @@ const NewArrival = () => {
         const [scrollLeft, setScrollLeft] = useState(false)
         const [canScrollRight, setCanScrollRight] = useState(false)
         const [canScrollLeft, setCanScrollLeft] = useState(false)
+        const [newArrivals, setNewArrivals] = useState(null)
+
+        
+        const fetchNewArrivals = async () => {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/new-arrivals`, {
+            method: "GET",
+            credentials: "include",
+            });
+            if (!res.ok) {
+            throw new Error("Failed to fetch new arrivals");
+            }
+            return res.json();
+        };
+
+        const { data } = useQuery({
+            queryKey: ["newArrivals"],
+            queryFn: fetchNewArrivals,
+        });
+
+        useEffect(() => {
+            if (data) {
+            setNewArrivals(data.newArrivals);
+            console.log("newArrivals:", data.newArrivals);
+            }
+        }, [data]);
+
+
 
          const scroll = (direction)=>{
             const scrollAmount = direction ==="left"? -320 : 320
@@ -28,46 +56,46 @@ const NewArrival = () => {
             }
 
         }
-useEffect(() => {
-  const container = scrollRef.current;
-  if (!container) return;
+                useEffect(() => {
+                const container = scrollRef.current;
+                if (!container) return;
 
-  updateScrollButtons();
+                updateScrollButtons();
 
-  container.addEventListener("scroll", updateScrollButtons);
+                container.addEventListener("scroll", updateScrollButtons);
 
-  window.addEventListener("resize", updateScrollButtons);
+                window.addEventListener("resize", updateScrollButtons);
 
-  return () => {
-    container.removeEventListener("scroll", updateScrollButtons);
-    window.removeEventListener("resize", updateScrollButtons);
-  };
-}, []);
+                return () => {
+                    container.removeEventListener("scroll", updateScrollButtons);
+                    window.removeEventListener("resize", updateScrollButtons);
+                };
+                }, []);
 
 
-     const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.pageX - scrollRef.current.offsetLeft);
-    setScrollLeft(scrollRef.current.scrollLeft); 
-};
+                    const handleMouseDown = (e) => {
+                    setIsDragging(true);
+                    setStartX(e.pageX - scrollRef.current.offsetLeft);
+                    setScrollLeft(scrollRef.current.scrollLeft); 
+                };
 
-const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    const x = e.pageX - scrollRef.current.offsetLeft;
-    const walk = x - startX;
-    scrollRef.current.scrollLeft = scrollLeft - walk;
-};
+                const handleMouseMove = (e) => {
+                    if (!isDragging) return;
+                    const x = e.pageX - scrollRef.current.offsetLeft;
+                    const walk = x - startX;
+                    scrollRef.current.scrollLeft = scrollLeft - walk;
+                };
 
-const handleMouseUpOrLeave = () => {
-    setIsDragging(false);
-};
+                const handleMouseUpOrLeave = () => {
+                    setIsDragging(false);
+                };
 
 
   return (
     <>
       <div className=" container mx-auto text-center relative mb-4   "  >
-        <h1  className=" text-2xl sm:text-3xl font-bold my-4 "> Check out our new arrivals </h1> 
-        <p className="text-gray-600 text-sm md:text-lg mb-5 "> Discover new arrivals from top brands, featuring stylish designs, innovative features, and unbeatable prices, every day! </p>
+        <h1  className=" text-2xl sm:text-3xl font-bold my-4 ">Latest Products </h1> 
+        <p className="text-gray-600 text-sm md:text-lg mb-5 "> Don’t miss the freshest additions from our sellers, updated regularly! </p>
        
         {/* scroll button */}
 
@@ -93,9 +121,9 @@ const handleMouseUpOrLeave = () => {
 
             className={`container w-full mt-23  mb-10 overflow-x-scroll flex gap-x-5  mx-auto ${isDragging ? "cursor-dragging":  "cursor-default" }   `} >
                 {
-                    newArrivalProducts?.map((product)=>(
+                    newArrivals?.map((product)=>(
                         <div className="flex  w-full min-w-[100%] sm:min-w-[50%] lg:min-w-[33%]  relative   " key={product?._id} >
-                                <img draggable={false} className="w-full rounded-md h-[500px]  flex-shrink-0 object-cover   " alt={product?.name} src={product?.image} />
+                                <img draggable={false} className="w-full rounded-md h-[500px]  flex-shrink-0 object-cover   " alt={product?.name} src={product?.images[0].url} />
                                 <div className="rounded-b-lg absolute font-medium text-start p-2 bg-opacity-50 text-white backdrop-blur-md bottom-0 right-0 left-0 ">
                                     <Link to={`/product/${product?._id}`}>
                                     <h1 className=" text-lg "> {product?.name} </h1>
@@ -113,48 +141,5 @@ const handleMouseUpOrLeave = () => {
     </>
   )
 }
-const newArrivalProducts = [
-    {
-        _id:1,
-        name:"Stylish Jacket",
-        image:pic,
-        price:120,
-    },
-        {
-        _id:2,
-        name:"Stylish Jacket",
-        image:pic,
-        price:120,
-    },
-        {
-        _id:3,
-        name:"Stylish Jacket",
-        image:pic,
-        price:120,
-    },
-        {
-        _id:4,
-        name:"Stylish Jacket",
-        image:pic,
-        price:120,
-    },
-        {
-        _id:5,
-        name:"Stylish Jacket",
-        image:pic,
-        price:120,
-    },
-        {
-        _id:6,
-        name:"Stylish Jacket",
-        image:pic,
-        price:120,
-    },
-        {
-        _id:7,
-        name:"Stylish Jacket",
-        image:pic,
-        price:120,
-    },
-]
+
 export default NewArrival

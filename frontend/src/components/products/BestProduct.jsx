@@ -1,6 +1,5 @@
 import pic from "../../assets/pic.jpg";
 import toast from "react-hot-toast";
-import ProductDetailGrid from "./ProductDetailGrid";
 import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
@@ -8,10 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 
 
 
-const ProductsDetails = () => {
-  const { id } = useParams();
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [similarProducts, setSimilarProducts] = useState([]);
+const BestProduct = () => {
+ const [selectedProduct, setSelectedProduct] = useState(null);
   const [mainImage, setMainImage] = useState(null);
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
@@ -34,8 +31,8 @@ const ProductsDetails = () => {
     // setIsButtonDisabled(true);
   };
 
-  const fetchSimilarProducts = async () => {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/similar/${id}`, {
+  const fetchBestSeller = async () => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/best-seller`, {
       method: "GET",
       credentials: "include",
     });
@@ -45,44 +42,21 @@ const ProductsDetails = () => {
     return res.json();
   };
 
-  const { data: similarProductData } = useQuery({
-    queryKey: ["similarProducts", id],
-    queryFn: fetchSimilarProducts,
+  const { data: bestProductData } = useQuery({
+    queryKey: ["bestProduct"],
+    queryFn: fetchBestSeller,
   });
 
   useEffect(() => {
-    if (similarProductData) {
-      setSimilarProducts(similarProductData.similarProduct);
-      console.log("similarProducts:", similarProductData.similarProduct);
+    if (bestProductData) {
+      setSelectedProduct(bestProductData.bestSeller);
+      setMainImage(bestProductData.bestSeller.images?.[0]?.url || pic);
+      console.log("bestProducts:", bestProductData.bestSeller);
     }
-  }, [similarProductData]);
-
-  const fetchProductDetails = async () => {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/${id}`, {
-      method: "GET",
-      credentials: "include",
-    });
-    if (!res.ok) {
-      throw new Error("Failed to fetch product details");
-    }
-    return res.json();
-  };
-
-  const { data } = useQuery({
-    queryKey: ["selectedProduct", id],
-    queryFn: fetchProductDetails,
-  });
-
-  useEffect(() => {
-    if (data) {
-      setSelectedProduct(data.product);
-      console.log("productDetails:", data.product);
-      setMainImage(data.product.images?.[0]?.url || pic);
-    }
-  }, [data]);
-
-  console.log(selectedColor);
-
+  }, [bestProductData]);
+  
+ 
+  
 
   return (
     <>
@@ -249,22 +223,6 @@ const ProductsDetails = () => {
      
         </div>
 
-        <div className="mt-6   ">
-          <h2 className="text-xl sm:text-2xl mx-[25px] text-center mb-4 font-medium  ">
-            {" "}
-            Check Out Similar Products
-          </h2>
-          {
-            similarProducts.length > 1 ?(
-              <div>    
-                <ProductDetailGrid products={similarProducts} />
-
-              </div>  
-            ):(
-              <div className="text-center font-medium text-[16px] pb-7  " > No similar product found   </div>
-            )
-          }
-        </div>
       </div>
     </>
   );
@@ -273,4 +231,4 @@ const ProductsDetails = () => {
 
 
 
-export default ProductsDetails;
+export default BestProduct;

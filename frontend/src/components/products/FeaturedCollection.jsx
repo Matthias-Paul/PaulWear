@@ -5,7 +5,7 @@ import pic from "../../assets/pic.jpg"
 const FeaturedCollection = () => {
   return (
     <>
-      <div className="py-12 px-[12px] gap-x-[35px] w-full max-w-[1400px] flex flex-col-reverse md:flex-row mx-auto bg-green-50 container rounded-md items-center  ">
+      <div className="py-12 px-[12px] mt-14 gap-x-[35px] w-full max-w-[1400px] flex flex-col-reverse md:flex-row mx-auto bg-green-50 container rounded-md items-center  ">
         {/* left content */}
         <div className="md:w-1/2 text-center md:text-left  ">
           <h2 className="text-lg text-gray-700 mb-2 font-semibold">

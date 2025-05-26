@@ -406,7 +406,7 @@ export const getSingleProduct =async(req, res, next)=>{
 
 
         return res.status(200).json({
-            success: true, 
+            success: true,    
             product 
         }); 
 

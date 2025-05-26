@@ -33,18 +33,18 @@ const NavBar = () => {
            <Link to="/" > <div className=" text-xl sm:text-2xl font-medium ">StyleNest</div> </Link>
 
           <div className="hidden md:flex items-center font-medium text-sm uppercase gap-x-5  ">
+            <Link to="/" className=" text-gray-700 hover:text-black ">
+              Home{" "}
+            </Link>
             <Link to="/collections/all" className=" text-gray-700 hover:text-black ">
-              Men{" "}
+              Shop{" "}
             </Link>
             <Link to="" className=" text-gray-700 hover:text-black ">
-              Women{" "}
-            </Link>
-            <Link to="" className=" text-gray-700 hover:text-black ">
-              Top wear{" "}
+              Store{" "}
             </Link>
 
             <Link to="" className=" text-gray-700 hover:text-black ">
-              Bottom wear{" "}
+              About{" "}
             </Link>
           </div>
 

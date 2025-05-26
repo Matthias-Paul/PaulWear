@@ -7,14 +7,14 @@ const ProductDetailGrid = ({ products }) => {
         {products?.map((product) => (
           <div key={product._id} className="bg-white rounded-md flex flex-col w-full sm:w-[264px] ">
             <Link
-              to={`/product/${product._id}`}
+              to={`/product/${product?._id}`}
               key={product?._id}
               className="   "
             >
               <div className="w-full  mb-4 ">
-                <img className="object-cover mb-2 rounded-md flex-shrink-0 h-110 " src={product?.image} alt={product?.name} />
-                <div className="text-sm  " > {product.name} </div>
-                <div className="text-sm  text-gray-500 tracking-tighter font-medium  " > ${product.price} </div>
+                <img className="object-cover mb-2 rounded-md flex-shrink-0 h-110 " src={product?.images[0].url} alt={product?.name} />
+                <div className="text-sm  " > {product?.name} </div>
+                <div className="text-sm  text-gray-500 tracking-tighter font-medium  " > ${product?.price} </div>
 
               </div>
             </Link>
