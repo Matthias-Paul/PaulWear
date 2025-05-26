@@ -101,10 +101,10 @@ const NavBar = () => {
             <nav>
               <h1  className="font-semibold mb-4 text-start text-xl " >Menu </h1>
               
-              <Link onClick={toggleNavDrawer} to="/collections/all" className=" mb-4 text-start block text-gray-600 hover:text-black  "  > Men </Link>
-              <Link onClick={toggleNavDrawer} to=" " className="mb-4 text-start block text-gray-600 hover:text-black  "  > Women </Link>
-              <Link onClick={toggleNavDrawer} to=" " className=" text-start mb-4 block text-gray-600 hover:text-black  "  > Top Wear </Link>
-              <Link onClick={toggleNavDrawer} to=" " className=" mb-4 text-start block text-gray-600 hover:text-black  "  > Bottom Wear </Link>
+              <Link onClick={toggleNavDrawer} to="/" className=" mb-4 text-start block text-gray-600 hover:text-black  "  > Home </Link>
+              <Link onClick={toggleNavDrawer} to="/collections/all" className="mb-4 text-start block text-gray-600 hover:text-black  "  > Shop </Link>
+              <Link onClick={toggleNavDrawer} to=" " className=" text-start mb-4 block text-gray-600 hover:text-black  "  > Store</Link>
+              <Link onClick={toggleNavDrawer} to=" " className=" mb-4 text-start block text-gray-600 hover:text-black  "  > About </Link>
 
             </nav>  
 
