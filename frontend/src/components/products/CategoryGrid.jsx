@@ -7,7 +7,7 @@ const CategoryGrid = () => {
   return (
     <>
         <div>
-        <div className="grid grid-cols-1 gap-x-[10px] pt-7 gap-y-[10px] sm:grid-cols-2 lg:grid-cols-4  ">
+        <div className="grid px-1 grid-cols-1 gap-x-[10px] pt-7 gap-y-[10px] sm:grid-cols-2 lg:grid-cols-4  ">
           
           <div  className=" p-2  block  ">
             <Link to={`/category/fashion-apparel`}>
