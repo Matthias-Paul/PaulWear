@@ -17,17 +17,19 @@ const productSchema = new mongoose.Schema({
     discountPrice: {
         type:Number
     },
-    countInStock: {
-        type:Number,
-        required: true,
+    countInStock: {    
+        type:Number,  
+        required: true,    
         default:0
     },
-    sku: {
-        type:String,
+    sku: {    
+        type:String,       
         unique:true,
         index: true,
-        required: true
-    },
+        required: true     
+    },          
+
+
     category: {
         type:String,
         enum: ["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions","Others"],

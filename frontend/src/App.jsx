@@ -27,6 +27,7 @@ import VendorProductManagement from "./components/vendor/VendorProductManagement
 import VendorEditProductPage from "./components/vendor/VendorEditProductPage";
 import VendorOrderManagement from "./components/vendor/VendorOrderManagement";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import VendorApplicationForm from "./pages/VendorApplicationForm.jsx";
 
 function App() {
   return (
@@ -50,6 +51,8 @@ function App() {
               <Route path="order-confirmation" element={<OrderConfirmationPage />} />
               <Route path="order/:id" element={<OrderDetailsPage />} />
               <Route path="my-orders" element={<MyOrdersPage />} />
+              <Route path="vendor-application" element={<VendorApplicationForm />} />
+
             </Route>
           </Route>
 

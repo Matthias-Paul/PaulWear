@@ -2,6 +2,7 @@ import MyOrdersPage from "./MyOrdersPage"
 import { useDispatch, useSelector } from "react-redux";
 import { logOutSuccess } from "../redux/slice/userSlice.js";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom"
 
 const Profile = () => {
 
@@ -41,6 +42,12 @@ const Profile = () => {
                     <div className="md:w-[220px] lg:w-1/4 mb-[-95px] z-100 lg:mb-0 mx-[12px] md:mx-0 pt-[115px] shadow-md md p-6 rounded-lg " >
                             <h1 className=" text-2xl lg:text-3xl truncate font-semibold mb-3 " > {loginUser?.name} </h1>
                             <p className="text-gray-600 text-lg mb-4 truncate " > { loginUser?.email} </p>
+                            {
+                              loginUser.role ==="customer" &&(
+                               <Link to="/vendor-application" > <button   className="rounded w-full py-2 bg-green-600 hover:bg-green-500 my-4 text-white cursor-pointer "  >  Become A Vendor  </button> </Link>
+                              )
+                            }
+                            
                             <button onClick={handleLogOut} className="rounded w-full py-2 bg-red-600 hover:bg-red-500 text-white cursor-pointer     " > Log Out </button>
                     </div>   
                      {/*Right sections: orders table  */}
