@@ -25,7 +25,7 @@ const NewArrival = () => {
             return res.json();
         };
 
-        const { data } = useQuery({
+        const { data, isLoading } = useQuery({
             queryKey: ["newArrivals"],
             queryFn: fetchNewArrivals,
         });
@@ -113,6 +113,11 @@ const NewArrival = () => {
   
             {/* Scrollable content */}
 
+            {
+                isLoading && (
+                    <div className=" text-gray-500 text-xl px-4 text-center" > Loading latest products... </div>
+                )
+            }
             <div ref={scrollRef}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -128,6 +133,16 @@ const NewArrival = () => {
                                     <Link to={`/product/${product?._id}`}>
                                     <h1 className=" text-lg "> {product?.name} </h1>
                                     <div className="" >${product?.price} </div>
+                                     <div className="mt-3 flex items-center gap-2">
+                                        <img
+                                        src={product?.vendorStoreLogo}
+                                        alt={product?.vendorStoreName}
+                                        className="h-6 w-6 rounded-full flex-shrink-0 object-cover"
+                                        />
+                                        <span className="text-md text-white  truncate ">
+                                        {product?.vendorStoreName}
+                                        </span>
+                                    </div>
                                     </Link>
                                      </div>
 

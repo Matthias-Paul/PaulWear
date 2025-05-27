@@ -4,13 +4,14 @@ import { FaFilter } from "react-icons/fa";
 import FilterSidebar from "../components/products/FilterSidebar";
 import SortOptions from "../components/products/SortOptions";
 import ProductGrid from "../components/products/ProductGrid";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 
 const CollectionPage = () => {
-  const [products, setProducts] = useState([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
   const toggleButtonRef = useRef(null);
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -28,99 +29,92 @@ const CollectionPage = () => {
   };
 
   useEffect(() => {
-    // add event listener
     document.addEventListener("mousedown", handleClickOutside);
-
-    // close event listener
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Fetching function with pagination
+  const fetchProducts = async ({ pageParam = 1 }) => {
+    const res = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/product?${searchParams.toString()}&page=${pageParam}&limit=10`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    if (!res.ok) throw new Error("Failed to fetch products");
+    return res.json();
+  };
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: ["products", searchParams.toString()],
+    queryFn: fetchProducts,
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.products.length < 10) return undefined;
+      return pages.length + 1;
+    },
+  });
 
   useEffect(() => {
-    const fetchProducts = [
-      {
-        _id: 1,
-        name: "cloth 1",
-        price: 100,
-        image: pic,
-      },
-      {
-        _id: 2,
-        name: "cloth 2",
-        price: 100,
-        image: pic,
-      },
-      {
-        _id: 3,
-        name: "cloth 3",
-        price: 100,
-        image: pic,
-      },
-      {
-        _id: 4,
-        name: "cloth 4",
-        price: 100,
-        image: pic,
-      },
-      {
-        _id: 5,
-        name: "cloth 5",
-        price: 100,
-        image: pic,
-      },
-      {
-        _id: 6,
-        name: "cloth 6",
-        price: 100,
-        image: pic,
-      },
-      {
-        _id: 7,
-        name: "cloth 7",
-        price: 100,
-        image: pic,
-      },
-      {
-        _id: 8,
-        name: "cloth 8",
-        price: 100,
-        image: pic,
-      },
-    ];
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
+        hasNextPage &&
+        !isFetchingNextPage
+      ) {
+        fetchNextPage();
+      }
+    };
 
-    setProducts(fetchProducts);
-  }, []);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Flatten paginated data into a single array
+  const products = data?.pages.flatMap((page) => page.products) || [];
 
   return (
     <>
-      <div className="container relative px-[12px] flex flex-col lg:flex-row  pt-[90px]  pb-[50px] max-w-[1400px] mx-auto  ">
+      <div className="container relative px-[12px] flex flex-col lg:flex-row pt-[90px] pb-[50px] max-w-[1400px] mx-auto">
         {/* mobile button */}
         <button
           ref={toggleButtonRef}
           onClick={toggleSidebar}
-          className="flex border rounded-sm border-gray-300 my-2  cursor-pointer justify-center items-center lg:hidden p-2 "
+          className="flex border rounded-sm border-gray-300 my-2 cursor-pointer justify-center items-center lg:hidden p-2"
         >
           <FaFilter className="w-6 h-4" /> Filters
         </button>
+
         {/* filter sidebar */}
         <div
           ref={sidebarRef}
-          className={`absolute  left-0 top-[88px]  w-50 z-50 px-3 inset-y-0 bg-white overflow-y-auto transition-transform duration-300  lg:translate-x-0  ${
-            isSidebarOpen ? " fixed px-[12px] translate-x-0" : "   -translate-x-full"
+          className={`absolute left-0 top-[88px] w-50 z-50 px-3 inset-y-0 bg-white overflow-y-auto transition-transform duration-300 lg:translate-x-0 ${
+            isSidebarOpen ? "fixed px-[12px] translate-x-0" : " -translate-x-full"
           }`}
         >
           <FilterSidebar />
         </div>
-        <div className="flex-grow lg:pl-50 w-full lg:w-2/3 ">
-          <h1 className="   text-lg xl:text-2xl text-center mt-2 uppercase mb-4">
-            {" "}
-            All Collections{" "}
+
+        <div className="flex-grow lg:pl-50 w-full lg:w-2/3">
+          <h1 className="text-lg xl:text-2xl text-center my-3 uppercase">
+            All Products
           </h1>
+
+
           {/* sort options */}
           <SortOptions />
+
+            
           {/* product grid */}
-          <ProductGrid products={products} />
+          <ProductGrid products={products} isLoading={isLoading || isFetchingNextPage} />
+
+        
         </div>
       </div>
     </>

@@ -40,7 +40,7 @@ const NavBar = () => {
               Shop{" "}
             </Link>
             <Link to="" className=" text-gray-700 hover:text-black ">
-              Store{" "}
+              Stores{" "}
             </Link>
 
             <Link to="" className=" text-gray-700 hover:text-black ">
@@ -103,7 +103,7 @@ const NavBar = () => {
               
               <Link onClick={toggleNavDrawer} to="/" className=" mb-4 text-start block text-gray-600 hover:text-black  "  > Home </Link>
               <Link onClick={toggleNavDrawer} to="/collections/all" className="mb-4 text-start block text-gray-600 hover:text-black  "  > Shop </Link>
-              <Link onClick={toggleNavDrawer} to=" " className=" text-start mb-4 block text-gray-600 hover:text-black  "  > Store</Link>
+              <Link onClick={toggleNavDrawer} to=" " className=" text-start mb-4 block text-gray-600 hover:text-black  "  > Stores</Link>
               <Link onClick={toggleNavDrawer} to=" " className=" mb-4 text-start block text-gray-600 hover:text-black  "  > About </Link>
 
             </nav>  

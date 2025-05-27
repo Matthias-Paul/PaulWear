@@ -68,7 +68,7 @@ const ProductsDetails = () => {
     return res.json();
   };
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["selectedProduct", id],
     queryFn: fetchProductDetails,
   });
@@ -88,7 +88,10 @@ const ProductsDetails = () => {
     <>
       <div className="mx-auto pt-[135px] px-[12px] max-w-[1400px]  bg-white ">
         <div className="mx-auto max-w-6xl" >
-        <div className="flex flex-col md:flex-row ">
+
+          {
+            selectedProduct ? (
+               <div className="flex flex-col md:flex-row ">
           {/* Left thumb nails */}
 
           <div className="hidden md:flex flex-col gap-y-4 mr-6">
@@ -159,6 +162,16 @@ const ProductsDetails = () => {
               {" "}
               {selectedProduct?.description}{" "}
             </p>
+
+            <div className="mb-4" >
+                <p className="text-gray-700  ">Category: </p>
+              <p className=" text-gray-600 mb-4  ">
+                {" "}
+                {selectedProduct?.category}{" "}
+              </p>
+
+            </div>  
+
             <div className="mb-4">
               <p className="text-gray-700  ">Color: </p>
               <div className="mt-2 flex gap-2  ">
@@ -229,23 +242,35 @@ const ProductsDetails = () => {
               Add To Cart{" "}
             </button>
 
-            <div className=" mt-6 text-gray-700 ">
-              <h2 className=" text-xl font-bold mb-4 "> Characteristics: </h2>
+            <div className=" mt-4 text-gray-700 ">
+              <h2 className=" text-xl font-bold mb-2 "> Vendor Info: </h2>
               <table className="w-full text-left text-gray-600   ">
                 <tbody>
                   <tr>
-                    <td className="py-1"> Brand </td>
-                    <td className="py-1"> {selectedProduct?.brand} </td>
+                    <td className="py-1">Store Name </td>
+                    <td className="py-1"> {selectedProduct?.vendorStoreName} </td>
                   </tr>
                   <tr>
-                    <td className="py-1"> Material </td>
-                    <td className="py-1"> {selectedProduct?.material} </td>
+                    <td className="py-1"> Email </td>
+                    <td className="py-1"> {selectedProduct?.vendorStoreEmail} </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
+            ):(
+              isLoading ? (
+            <div className=" text-gray-500 text-xl px-4 text-center" > Loading product details... </div>
+          ):(
+          <div className=" text-gray-500 text-xl px-4 text-center" >
+            No product details found!
+          </div>
+          )
+
+            )
+          }
+       
      
         </div>
 
@@ -261,7 +286,9 @@ const ProductsDetails = () => {
 
               </div>  
             ):(
+
               <div className="text-center font-medium text-[16px] pb-7  " > No similar product found   </div>
+            
             )
           }
         </div>

@@ -1,6 +1,7 @@
 import { validationResult, matchedData } from "express-validator";
 import User from "../models/user.model.js";
 import transporter from "../utils/emailTransporter.js";
+import Vendor from "../models/vendors.model.js";
 
 
 
@@ -137,53 +138,6 @@ export const addUser = async(req, res)=>{
 }
 
 
-
-export const editUser= async(req, res)=>{
-
-    const {id} = req.params
-    const {role } = req.body
-
-    try {
-        if (!req.user || req.user.role !== "admin") {
-            return res.status(403).json({
-                success: false,
-                message: "Unauthorized access.",
-            });
-        } 
-
-        if(!id || !role){
-            return res.status(400).json({
-                success: false,
-                message: "Id and role is required",
-            });
-        }
-
-        const updatedUser = await User.findById(id);
-            if (!updatedUser) {
-            return res.status(400).json({
-                success: false,
-                message: "User not found",
-            });    
-        }
-
-        updatedUser.role = role
-        await updatedUser.save()
-
-            return res.status(200).json({
-                success: true,
-                updatedUser,
-                message: "User updated successfully",
-            });
-
-    } catch (error) {
-        console.error( error.message);
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error",
-        });
-    }
-}
-
 export const deleteUser= async(req, res)=>{
 
     const {id} = req.params
@@ -225,3 +179,139 @@ export const deleteUser= async(req, res)=>{
         });
     }
 }
+
+
+
+export const validateVendor = async (req, res) => {
+  try {
+    if (!req.user || req.user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized access.",
+      });
+    }
+
+    const { id } = req.params;
+    const { status } = req.body;
+
+    const validStatuses = ["approved", "rejected"];
+    if (!status || !validStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Status must be 'approved' or 'rejected'.",
+      });
+    }
+
+    const vendor = await Vendor.findById(id);
+    if (!vendor) {
+      return res.status(404).json({
+        success: false,
+        message: "Vendor not found!",
+      });
+    }
+
+    if (!vendor.email) {
+      return res.status(400).json({
+        success: false,
+        message: "Vendor email not found, cannot send notification.",
+      });
+    }
+
+    if (status === "approved") {
+      vendor.status = "approved";
+      await vendor.save();
+
+       const user = await User.findById(vendor.user);
+        if (user) {
+            user.role = "vendor";
+            await user.save();
+        }
+      const acceptVendorMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: vendor.email,
+        subject: "Congratulations! Your Vendor Application Has Been Approved",
+        html: `
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f9f9f9; padding: 40px 20px;">
+      <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
+        <div style="background-color: #111827; padding: 30px; text-align: center;">
+          <h1 style="color: #ffffff; font-size: 24px; margin: 0;">Vendor Application Approved!</h1>
+        </div>
+        <div style="padding: 30px 24px;">
+          <p style="font-size: 16px; color: #333333; margin-bottom: 16px;">Hello ${vendor?.storeName || "there"},</p>
+          <p style="font-size: 15px; color: #555555; line-height: 1.6; margin-bottom: 16px;">
+            Great news! Your application to become a vendor on <strong>StyleNest</strong> has been approved.
+          </p>
+          <p style="font-size: 15px; color: #555555; line-height: 1.6; margin-bottom: 16px;">
+            You can now set up your store, list your products, and start selling to a wide audience across campuses and beyond.
+          </p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="https://stylenest-ax2d.onrender.com/vendor" style="background-color: #111827; color: #ffffff; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-size: 15px; font-weight: 500;">
+              Go to Vendor Dashboard
+            </a>
+          </div>
+          <p style="font-size: 14px; color: #888888; margin-top: 40px;">Welcome to the StyleNest vendor community!</p>
+          <p style="font-size: 14px; color: #888888;"><strong>— The StyleNest Team</strong></p>
+        </div>
+        <div style="background-color: #f1f1f1; text-align: center; padding: 16px; font-size: 12px; color: #999999;">
+          &copy; ${new Date().getFullYear()} StyleNest. All rights reserved.
+        </div>
+      </div>
+    </div>
+  `,
+      };
+
+      await transporter.sendMail(acceptVendorMailOptions);
+
+    } else if (status === "rejected") {
+      const rejectVendorMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: vendor.email,
+        subject: "Update on Your Vendor Application",
+            html: `
+                <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f9f9f9; padding: 40px 20px;">
+                <div style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);">
+                    <div style="background-color: #111827; padding: 30px; text-align: center;">
+                    <h1 style="color: #ffffff; font-size: 24px; margin: 0;">Vendor Application Update</h1>
+                    </div>
+                    <div style="padding: 30px 24px;">
+                    <p style="font-size: 16px; color: #333333; margin-bottom: 16px;">Hello there,</p>
+                    <p style="font-size: 15px; color: #555555; line-height: 1.6; margin-bottom: 16px;">
+                        Thank you for applying to become a vendor on <strong>StyleNest</strong>. After careful review, we regret to inform you that your application has not been approved at this time.
+                    </p>
+                    <p style="font-size: 15px; color: #555555; line-height: 1.6; margin-bottom: 16px;">
+                        This could be due to incomplete information, verification issues, or not meeting certain requirements. We encourage you to review your application details and try again in the future.
+                    </p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="https://stylenest-ax2d.onrender.com" style="background-color: #111827; color: #ffffff; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-size: 15px; font-weight: 500;">
+                        Contact Support
+                        </a>
+                    </div>
+                    <p style="font-size: 14px; color: #888888; margin-top: 40px;">We appreciate your interest in StyleNest and hope to hear from you again.</p>
+                    <p style="font-size: 14px; color: #888888;"><strong>— The StyleNest Team</strong></p>
+                    </div>
+                    <div style="background-color: #f1f1f1; text-align: center; padding: 16px; font-size: 12px; color: #999999;">
+                    &copy; ${new Date().getFullYear()} StyleNest. All rights reserved.
+                    </div>
+                </div>
+                </div>
+            `,
+      };
+
+      await transporter.sendMail(rejectVendorMailOptions);
+
+      await vendor.deleteOne(); // or await vendor.remove();
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Vendor status updated successfully.",
+    });
+
+  } catch (error) {
+    console.error("Error validating vendor:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};

@@ -19,7 +19,7 @@ const OrderDetailsPage = () => {
     return res.json();
   };
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["orderDetails", id],
     queryFn: fetchOrderDetails,
   });
@@ -36,12 +36,12 @@ const OrderDetailsPage = () => {
       <div className=" pt-[90px] px-[12px] mx-auto max-w-[1000px] mb-20 " >
                 <h2 className="font-bold mb-5 text-xl md:text-2xl mt-6 " > Order Details </h2>
                 {
-                  !orderDetails  ? (<p className="  " > No Order Details Found. </p>) : (
+                  !orderDetails  ? (<p className="  " > Loading order details... </p>) : (
                         <div className="p-4 sm:p-6 rounded border border-gray-400  " > 
                             <div className="flex flex-col sm:flex-row justify-between mb-7  " >
                                 <div className="  " >
                                     <h3 className="text:lg  md:text-xl font-semibold    " > 
-                                        Order ID: #{orderDetails._id}
+                                        Order ID: #{orderDetails?._id}
                                     </h3>
                                     <p className="text-gray-600  " > { new Date(orderDetails.createdAt).toLocaleDateString()  } </p>
                                 </div>  
@@ -125,10 +125,14 @@ const OrderDetailsPage = () => {
         
 
           ):(
-
-            <div className="py-4 text-gray-500 text-xl px-4 text-center" >
-            You have no order details 
+            isLoading ? (
+            <div className=" text-gray-500 text-xl px-4 text-center" > Loading your order details... </div>
+          ):(
+          <div className=" text-gray-500 text-xl px-4 text-center" >
+            No order details found!
           </div>
+          )
+
           )
 
         }

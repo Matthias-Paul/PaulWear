@@ -71,10 +71,9 @@ export const validateProduct = [
     .notEmpty().withMessage("SKU is required"),
 
   body("category")
+    .isIn(["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions","Others"])
+    .withMessage("Invalid  category")
     .notEmpty().withMessage("Category is required"),
-
-  body("brand")
-    .optional().isString().withMessage("Brand must be a string"),
 
   body("sizes")
     .isArray({ min: 1 }).withMessage("At least one size is required"),
@@ -82,11 +81,6 @@ export const validateProduct = [
   body("colors")
     .isArray({ min: 1 }).withMessage("At least one color is required"),
 
-  body("collections")
-    .notEmpty().withMessage("Collection is required"),
-
-  body("material")
-    .notEmpty().withMessage("Material is required"),
 
   body("gender")
     .optional()
@@ -329,3 +323,45 @@ export const editVendorOrderValidation = [
     .isString()
     .withMessage("Status must be a string."),
 ]
+
+
+export const validateVendor = [
+
+  body('storeName')
+    .trim()
+    .notEmpty().withMessage('Store name is required')
+    .isLength({ min: 3 }).withMessage('Store name must be at least 3 characters'),
+
+  body('storeLogo')
+    .notEmpty().withMessage('Store logo is required')
+    .isURL().withMessage('Store logo must be a valid URL'),
+
+  body('bio')
+    .optional()
+    .isLength({ max: 300 }).withMessage('Bio cannot exceed 300 characters'),
+
+  body('contactNumber')
+    .notEmpty().withMessage('Contact number is required')
+    .isMobilePhone().withMessage('Invalid contact number'),
+
+  body('email')
+    .notEmpty().withMessage('Email is required')
+    .isEmail().withMessage('Invalid email format')
+    .toLowerCase(),
+    
+
+  body('address')
+    .notEmpty().withMessage('Address is required'),
+
+  body('state')
+    .notEmpty().withMessage('State is required'),
+
+  body('campus')
+    .notEmpty().withMessage('Campus is required'),
+
+  body('kycDocs')
+    .optional()
+    .isArray().withMessage('KYC docs must be an array')
+    .custom((arr) => arr.every(item => /^https?:\/\/.+/.test(item)))
+    .withMessage('KYC docs must contain valid URLs'),
+];

@@ -10,14 +10,12 @@ const FilterSidebar = () => {
     gender:"",
     color:"",
     size:[],
-    material:[],
-    brand:[],
     minPrice:0,
     maxPrice:100
   })
 
   const [priceRange, setPriceRange] = useState([0, 100])
-  const categories = ["Top Wear", "Bottom Wear"]
+  const categories = ["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions","Others"]
   const colors = [
     "Red",
     "Blue",
@@ -33,25 +31,7 @@ const FilterSidebar = () => {
 
   const sizes =["XS", "S", "M", "L", "XL", "XXL"];
   
-  const materials = [
-    "Cotton",
-    "Wool",
-    "Denim",
-    "Polyester",
-    "Silk",
-    "Linen",
-    "Viscose",
-    "Fleece"
-  ]
 
-  const brands = [
-    "Urban Threads",
-    "Modern Fit",
-    "Street Style",
-    "Beach Breach",
-    "Fashionista",
-    "ChicStyle"
-  ]
 
   const genders = ["Men", "Women"]
 
@@ -63,8 +43,6 @@ const FilterSidebar = () => {
           gender: params.gender || "",
           color: params.color ||  "",
           size: params.size ? params.size.split(",") : [],
-          material: params.material ? params.material.split(",") : [],
-          brand: params.brand ? params.brand.split(",") : [],
           minPrice: params.minPrice || 0,
           maxPrice: params.maxPrice || 100
       })
@@ -193,33 +171,7 @@ const updateURLParams = (filters) => {
             ))  }
         </div>  
 
-
-         {/* material filter */}
-        <div className="mb-6" >
-          <label className="block mb-2 font-medium text-gray-600 " > Material </label>
-          
-           { materials.map((material)=>(
-              <div key={material} className="flex items-center mb-1 "  >
-                <input value={material} checked={filters.material.includes(material)} onChange={handleFilterChange} type="checkbox" name="material" className="text-blue-500 cursor-pointer mr-2 w-4 h-4 border-gray-300 focus:ring-blue-400 " />
-                <span className="text-gray-700"> { material } </span>
-              </div>  
-            ))  }
-        </div>
-
-                 {/* brand filter */}
-        <div className="mb-6" >
-          <label className="block mb-2 font-medium text-gray-600 " > Brand </label>
-          
-           { brands.map((brand)=>(
-              <div key={brand} className="flex items-center mb-1 "  >
-                <input value={brand} checked={filters.brand.includes(brand)} onChange={handleFilterChange}  type="checkbox" name="brand" className="text-blue-500 cursor-pointer mr-2 w-4 h-4 border-gray-300 focus:ring-blue-400 " />
-                <span className="text-gray-700"> { brand } </span>
-              </div>  
-            ))  }
-        </div>
-
-
-                 {/* price range filter */}
+          {/* price range filter */}
         <div className="mb-16" >
           <label className="block mb-2 font-medium text-gray-600 " > Price Range Filter </label>
                 <input value={priceRange[1]} checked={filters.priceRange === priceRange} onChange={handleFilterChange}  type="range" name="priceRange" min={0} max={100}  className="cursor-pointer  w-full  h-2 bg-gray-300  " />

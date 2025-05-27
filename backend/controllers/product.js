@@ -1,109 +1,124 @@
 import express from "express"
 import Product from "../models/product.model.js"
+import Vendor from "../models/vendors.model.js"
+
 import { validationResult, matchedData } from "express-validator"
 
 
-export const createProduct = async(req, res, next)=>{
+export const createProduct = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      statusCode: 400,
+      success: false,
+      message: errors.array()[0].msg,
+    });
+  }
 
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        // If there are validation errors, return the first error message
-        return res.status(400).json({
-            statusCode: 400,
-            success: false,        
-            message: errors.array()[0].msg 
-        }); 
-    }        
-
-    try {
-
-        if(!req.user){
-            return res.status(403).json({
-                success: false,
-                message: "Unauthorized user.",
-            });
-        }
-        
-        const {
-            name,
-            description, 
-            price, 
-            discountPrice, 
-            countInStock,   
-            category,
-            brand,
-            sizes,
-            colors,
-            collections,
-            material,
-            gender,
-            images,
-            isFeatured,
-            isPublished,
-            tags,
-            dimensions,
-            weight,
-            sku
-            
-        }
-         = matchedData(req)
-
-        if(req.user.role !== "admin"   && req.user.role !== "vendor" ){
-            return res.status(403).json({
-                success: false,
-                message: "You are not authorized to create a product.",
-            });
-        }
-
-         const product = new Product({
-            name,
-            description, 
-            price, 
-            discountPrice, 
-            countInStock,   
-            category,
-            brand,
-            sizes,
-            colors,
-            collections,
-            material,
-            gender,
-            images,
-            isFeatured,
-            isPublished,
-            tags,
-            dimensions,
-            weight,
-            sku,
-            user: req.user._id
-
-         })
-
-        const createdProduct = await product.save()
-
-        return res.status(201).json({
-            success: true,
-            createdProduct,
-            message: "Product created successfully",
-        }); 
-
-    } catch (error) {
-        console.log(error)
-            if (error.code === 11000) {
-            return res.status(400).json({ 
-                success: false,  
-                message: "SKU must be unique" 
-            });
-            }
-
-        return res.status(500).json({
-            success: false,  
-            message: "Internal Server Error",
-        });     
+  try {
+    if (!req.user) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized user.",
+      });
     }
 
-} 
+    if (req.user.role !== "admin" && req.user.role !== "vendor") {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to create a product.",
+      });
+    }
+
+    const {
+      name,
+      description,
+      price,
+      discountPrice,
+      countInStock,
+      category,
+      sizes,
+      colors,
+      gender,
+      images,
+      isFeatured,
+      isPublished,
+      tags,
+      dimensions,
+      weight,
+      sku,
+    } = matchedData(req);
+
+    let vendorInfo = {
+      vendorStoreName: "Admin",
+      vendorStoreLogo: "",
+      vendorStoreEmail: "pauladesina117@gmail.com",
+      vendorContactNumber: "+2348054696701",
+    };
+
+    if (req.user.role === "vendor") {
+      const vendor = await Vendor.findOne({ user: req.user._id }).populate(
+        "user",
+        "name"
+      );
+      if (!vendor) {
+        return res.status(400).json({
+          success: false,
+          message: "Vendor profile not found.",
+        });
+      }
+      vendorInfo = {
+        vendorStoreName: vendor.storeName,
+        vendorStoreLogo: vendor.storeLogo,
+        vendorStoreEmail: vendor.email,
+        vendorContactNumber: vendor.contactNumber,
+      };
+    }
+
+    const product = new Product({
+      name,
+      description,
+      price,
+      discountPrice,
+      countInStock,
+      category,
+      sizes,
+      colors,
+      gender,
+      images,
+      isFeatured,
+      isPublished,
+      tags,
+      dimensions,
+      weight,
+      sku,
+      user: req.user._id,
+      ...vendorInfo, 
+    });
+
+    const createdProduct = await product.save();
+
+    return res.status(201).json({
+      success: true,
+      createdProduct,
+      message: "Product created successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "SKU must be unique",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
 
 
 export const editProduct = async(req, res, next)=>{
@@ -136,11 +151,8 @@ export const editProduct = async(req, res, next)=>{
             discountPrice, 
             countInStock,   
             category,
-            brand,
             sizes,
             colors,
-            collections,
-            material,
             gender,
             images,
             isFeatured,
@@ -186,11 +198,8 @@ export const editProduct = async(req, res, next)=>{
                 discountPrice,
                 countInStock,
                 category,
-                brand,
                 sizes,
                 colors,
-                collections,
-                material,
                 gender,
                 images,
                 isFeatured,
@@ -295,11 +304,12 @@ export const getProducts = async(req, res, next)=>{
             sortBy,
             search,
             category,
-            material,
-            brand,
-            limit
 
         } =req.query
+
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
     
     
     try {
@@ -314,12 +324,6 @@ export const getProducts = async(req, res, next)=>{
             query.category = category
         }   
 
-        if(material){
-            query.material = { $in: material.split(",") }
-        }
-        if(brand){
-            query.brand = { $in: brand.split(",") }
-        }
 
         if(size){
             query.sizes = { $in: size.split(",") }
@@ -343,7 +347,9 @@ export const getProducts = async(req, res, next)=>{
         if(search){
             query.$or = [
                 {name : {$regex: search, $options: "i"  }},
-                {description : {$regex: search, $options: "i"  }}
+                {description : {$regex: search, $options: "i"  }},
+                {category : {$regex: search, $options: "i"  }},
+
  
             ]
         }
@@ -364,11 +370,12 @@ export const getProducts = async(req, res, next)=>{
             }
         }
 
-        const products = await Product.find(query).sort(sort).limit(Number(limit) ||10 )
+        const products = await Product.find(query).sort(sort).skip(skip).limit(limit);
 
         if(products.length === 0){
-            return res.status(400).json({
-            success: false,  
+            return res.status(200).json({
+            success: true,  
+            products: [],
             message: "No products available",
         }); 
         }

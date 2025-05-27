@@ -1,27 +1,68 @@
 import { Link } from "react-router-dom";
+import SkeletonLoading from "./SkeletonLoading";
 
-const ProductGrid = ({ products }) => {
+const ProductGrid = ({ products, isLoading }) => {
+  const skeletonArray = Array.from({ length: 10 });
+
   return (
-    <>
-      <div className="grid grid-cols-1   gap-x-[25px] pt-12 gap-y-[25px] sm:grid-cols-2 lg:grid-cols-4  ">
-        {products?.map((product) => (
-          <div key={product._id} className="bg-white  block  ">
-            <Link
-              to={`/product/${product._id}`}
-              key={product?._id}
-              className="   "
-            >
-              <div className="w-full  mb-4 ">
-                <img className="object-cover mb-2 rounded-md flex-shrink-0 h-110 " src={product?.image} alt={product?.name} />
-                <div className="text-sm  " > {product.name} </div>
-                <div className="text-sm text-gray-500 tracking-tighter font-medium  " > ${product.price} </div>
+    <div className="grid grid-cols-1 gap-6 pt-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {isLoading
+        ? skeletonArray.map((_, i) => <SkeletonLoading key={i} />)
+        : products?.map((product) => {
+            const mainImage = product.images?.[0]?.url;
+            const altText = product.images?.[0]?.altText || product.name;
 
+            return (
+              <div
+                key={product._id}
+                className="group relative bg-white border border-gray-400 rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
+              >
+                <Link to={`/product/${product._id}`} className="block">
+                  <div className="relative w-full aspect-[4/5] overflow-hidden">
+                    <img
+                      src={mainImage}
+                      alt={altText}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
+
+                  <div className="p-4">
+                    <h3 className="text-base font-semibold text-gray-800 truncate">
+                      {product.name}
+                    </h3>
+
+                    <div className="flex items-center gap-2 mt-2">
+                      {product.discountPrice && product.discountPrice > 0 ? (
+                        <>
+                          <span className="text-sm font-bold text-red-500">
+                            ${product.discountPrice.toFixed(2)}
+                          </span>
+                          <span className="text-sm line-through text-gray-400">
+                            ${product.price.toFixed(2)}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-sm font-bold text-gray-800">
+                          ${product.price.toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                      <div className="mt-3 flex items-center gap-2">
+                        <img
+                          src={product.vendorStoreLogo}
+                          alt={product.vendorStoreName}
+                          className="h-6 w-6 rounded-full flex-shrink-0 object-cover"
+                        />
+                        <span className="text-sm text-gray-500 truncate ">
+                          {product.vendorStoreName}
+                        </span>
+                      </div>
+                  </div>
+                </Link>
               </div>
-            </Link>
-          </div>
-        ))}
-      </div>
-    </>
+            );
+          })}
+    </div>
   );
 };
 

@@ -20,7 +20,7 @@ const MyOrdersPage = () => {
     return res.json();
   };
 
-  const { data } = useQuery({
+  const { data, isLoading} = useQuery({
     queryKey: ["orders"],
     queryFn: fetchOrders,
   });
@@ -49,6 +49,9 @@ const MyOrdersPage = () => {
       <div className="mx-auto pt-[90px] px-[12px] pb-10 w-full " >
         <h1 className="text-xl md:text-2xl font-bold my-6" > My Orders </h1>
 
+        {
+          
+        }
         { orders?.length > 0 ? (
             <div className={` shadow-md   overflow-x-auto  relative rounded-sm lg:rounded-md `} >
             <table className="w-full text-left min-w-[900px] lg:min-w-full  text-gray-500 " >
@@ -106,10 +109,14 @@ const MyOrdersPage = () => {
         
 
           ):(
-
-            <div className=" text-gray-500 text-xl px-4 text-center" >
-            You have no orders yet!
+            isLoading ? (
+            <div className=" text-gray-500 text-xl px-4 text-center" > Loading your orders... </div>
+          ):(
+          <div className=" text-gray-500 text-xl px-4 text-center" >
+            You have no orders yet !
           </div>
+          )
+            
           )
 
         }

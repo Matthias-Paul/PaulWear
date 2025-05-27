@@ -30,11 +30,10 @@ const productSchema = new mongoose.Schema({
     },
     category: {
         type:String,
+        enum: ["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions","Others"],
         required: true
     },
-    brand: {
-        type:String
-    },
+    
     sizes: {
         type:[String],
         required: true
@@ -42,19 +41,27 @@ const productSchema = new mongoose.Schema({
     colors: {
         type:[String],
         required: true
-    },
-    collections: {
-        type:String,
-        required: true
-    },    
-    material: {
-        type:String,
-        required: true
-    },  
-    gender: {  
+    },      
+    gender: {     
         type: String,
         enum:["Men", "Women", "Unisex"]
     },
+    vendorStoreName: {     
+        type: String,
+        required:true
+    },
+    vendorStoreLogo: {     
+        type: String,
+    },
+    vendorStoreEmail: {     
+        type: String,
+        required:true
+    },
+    vendorContactNumber: {     
+        type: String,
+        required:true
+    },
+
     images: [{
         url: {
             type: String,
