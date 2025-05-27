@@ -9,6 +9,7 @@ import { useSearchParams } from "react-router-dom";
 
 const CollectionPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const productContainerRef = useRef(null);
   const sidebarRef = useRef(null);
   const toggleButtonRef = useRef(null);
   const [searchParams] = useSearchParams();
@@ -33,7 +34,6 @@ const CollectionPage = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Fetching function with pagination
   const fetchProducts = async ({ pageParam = 1 }) => {
     const res = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/api/product?${searchParams.toString()}&page=${pageParam}&limit=10`,
@@ -63,11 +63,14 @@ const CollectionPage = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
-        hasNextPage &&
-        !isFetchingNextPage
-      ) {
+      const container = productContainerRef.current;
+      if (!container) return;
+
+      const { bottom } = container.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // If the container's bottom is within 100px of the viewport's bottom
+      if (bottom <= windowHeight + 100 && hasNextPage && !isFetchingNextPage) {
         fetchNextPage();
       }
     };
@@ -75,6 +78,7 @@ const CollectionPage = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
 
   // Flatten paginated data into a single array
   const products = data?.pages.flatMap((page) => page.products) || [];
@@ -101,7 +105,7 @@ const CollectionPage = () => {
           <FilterSidebar />
         </div>
 
-        <div className="flex-grow lg:pl-50 w-full lg:w-2/3">
+        <div ref={productContainerRef} className="flex-grow lg:pl-50 w-full lg:w-2/3">
           <h1 className="text-lg xl:text-2xl text-center my-3 uppercase">
             All Products
           </h1>

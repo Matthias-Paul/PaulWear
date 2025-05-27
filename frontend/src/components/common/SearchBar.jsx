@@ -1,14 +1,22 @@
 import {useEffect, useRef, useState } from "react"
 import { HiMagnifyingGlass, HiMiniXMark } from "react-icons/hi2"
+import { useNavigate, useSearchParams } from "react-router-dom";
+
+
 const SearchBar = () => {
     const editRef = useRef(false)
     const [searchTerm, setSearchTerm] = useState("")
     const [isOpen, setIsOpen] = useState(false)
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     const handleSearchToggle = ()=>{
         setIsOpen(true)
     }
-
+    useEffect(() => {
+        const currentSearch = searchParams.get("search") || "";
+        setSearchTerm(currentSearch);
+      }, [searchParams]);
     
   const handleClickOutside = (event) => {
     if (editRef.current && !editRef.current.contains(event.target)) {
@@ -29,12 +37,20 @@ const SearchBar = () => {
     };
   }, [isOpen]);
 
-    const handleSearch = (e)=>{
-        e.preventDefault()
-        console.log("Search term:", searchTerm)
-        setSearchTerm("")
+    const handleSearch = (e) => {
+    e.preventDefault();
+
+    const params = new URLSearchParams(searchParams);
+    if (searchTerm.trim()) {
+      params.set("search", searchTerm.trim());
+    } else {
+      params.delete("search");
     }
 
+    navigate({ search: params.toString() });
+
+    // setIsOpen(false);
+  };
   return (
     <>
       <div className=" flex  items-center ">

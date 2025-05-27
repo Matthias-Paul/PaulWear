@@ -106,7 +106,7 @@ export const createProduct = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     if (error.code === 11000) {
-      return res.status(400).json({
+      return res.status(400).json({    
         success: false,
         message: "SKU must be unique",
       });

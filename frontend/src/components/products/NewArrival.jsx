@@ -3,6 +3,8 @@ import {FiChevronLeft, FiChevronRight} from "react-icons/fi"
 import { Link } from "react-router-dom"
 import { useRef, useState, useEffect } from "react"
 import { useQuery } from "@tanstack/react-query";
+import SkeletonLoading from "./SkeletonLoading";
+import useResponsiveSkeletonCount from './useResponsiveSkeletonCount';
 
 const NewArrival = () => {
         const scrollRef = useRef(null)
@@ -12,6 +14,9 @@ const NewArrival = () => {
         const [canScrollRight, setCanScrollRight] = useState(false)
         const [canScrollLeft, setCanScrollLeft] = useState(false)
         const [newArrivals, setNewArrivals] = useState(null)
+
+         const skeletonCount = useResponsiveSkeletonCount();
+         const skeletonArray = Array.from({ length: skeletonCount });
 
         
         const fetchNewArrivals = async () => {
@@ -113,11 +118,6 @@ const NewArrival = () => {
   
             {/* Scrollable content */}
 
-            {
-                isLoading && (
-                    <div className=" text-gray-500 text-xl px-4 text-center" > Loading latest products... </div>
-                )
-            }
             <div ref={scrollRef}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -126,7 +126,7 @@ const NewArrival = () => {
 
             className={`container w-full mt-23  mb-10 overflow-x-scroll flex gap-x-5  mx-auto ${isDragging ? "cursor-dragging":  "cursor-default" }   `} >
                 {
-                    newArrivals?.map((product)=>(
+                    isLoading? skeletonArray.map((_, i) => <SkeletonLoading key={i} />):newArrivals?.map((product)=>(
                         <div className="flex  w-full min-w-[100%] sm:min-w-[50%] lg:min-w-[33%]  relative   " key={product?._id} >
                                 <img draggable={false} className="w-full rounded-md h-[500px]  flex-shrink-0 object-cover   " alt={product?.name} src={product?.images[0].url} />
                                 <div className="rounded-b-lg absolute font-medium text-start p-2 bg-opacity-50 text-white backdrop-blur-md bottom-0 right-0 left-0 ">

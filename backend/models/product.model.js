@@ -56,7 +56,7 @@ const productSchema = new mongoose.Schema({
     vendorStoreEmail: {     
         type: String,
         required:true
-    },
+    },   
     vendorContactNumber: {     
         type: String,
         required:true
