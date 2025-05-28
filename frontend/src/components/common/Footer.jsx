@@ -18,7 +18,6 @@ const Footer = () => {
               Be the first to hear about new products, exclusive events and
               online offer.{" "}
             </p>
-            <p className="text-gray-600 mb-6 text-sm "> Sign up and get 10% off your first order.</p>
             <form className="flex  ">
                <div className="relative">
               <input

@@ -5,7 +5,8 @@ import pic from "../../assets/pic.jpg"
 const FeaturedCollection = () => {
   return (
     <>
-      <div className="py-12 px-[12px] mt-14 gap-x-[35px] w-full max-w-[1400px] flex flex-col-reverse md:flex-row mx-auto bg-green-50 container rounded-md items-center  ">
+    <div className="px-[12px] pb-8 " >
+      <div className="py-12 px-[12px]  border border-gray-200  mt-14 gap-x-[35px] w-full max-w-[1400px]  flex flex-col-reverse md:flex-row mx-auto container rounded-md items-center  ">
         {/* left content */}
         <div className="md:w-1/2 text-center md:text-left  ">
           <h2 className="text-lg text-gray-700 my-2 font-semibold">
@@ -34,6 +35,8 @@ const FeaturedCollection = () => {
              
         </div>
       </div>
+
+    </div>  
     </>
   );
 };

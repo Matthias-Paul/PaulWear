@@ -71,7 +71,7 @@ export const validateProduct = [
     .notEmpty().withMessage("SKU is required"),
 
   body("category")
-    .isIn(["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions","Others"])
+    .isIn(["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions", "Health and Personal Care Products","Others"])
     .withMessage("Invalid  category")
     .notEmpty().withMessage("Category is required"),
 

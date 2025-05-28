@@ -32,7 +32,7 @@ const productSchema = new mongoose.Schema({
 
     category: {
         type:String,
-        enum: ["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions","Others"],
+        enum: ["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions", "Health and Personal Care Products","Others"],
         required: true
     },
     

@@ -159,7 +159,8 @@ const OrderDetailsPage = () => {
                          </td >
 
                         <td className="py-2 px-4 sm:py-4 sm:px-4" > 
-                            <button onClick={handleMarkAsRead} className="py-1 px-2 cursor-pointer text-white hover:bg-green-600 bg-green-500 rounded-md" > 
+                            <button onClick={handleMarkAsRead} 
+                            className={`py-1 px-2 ${markMutation.isPending  ? "cursor-not-allowed " : "cursor-pointer "}  text-white hover:bg-green-600 bg-green-500 rounded-md`} > 
                                {
                                 orderDetails.isReceived ? "Received": "Mark as received"
                                } 

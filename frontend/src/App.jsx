@@ -28,6 +28,7 @@ import VendorEditProductPage from "./components/vendor/VendorEditProductPage";
 import VendorOrderManagement from "./components/vendor/VendorOrderManagement";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import VendorApplicationForm from "./pages/VendorApplicationForm.jsx";
+import StorePage from "./pages/StorePage.jsx";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+            <Route path="stores" element={<StorePage />} />
             <Route path="collections/:collection" element={<CollectionPage />} />
             <Route path="product/:id" element={<ProductsDetails />} />
 

@@ -106,8 +106,8 @@ const updateURLParams = (filters) => {
 
   return (
     <>
-      <div className=" mt-3  " >
-        <h1 className="text-xl mb-3 font-medium text-gray-800  " > Filter</h1>
+      <div className=" pt-3" >
+        <h1 className="text-xl  mb-3 font-medium text-gray-800  " > Filter</h1>
         {/* category filter */}
         <div className="mb-6" >
           <label className="block mb-2 font-medium text-gray-600  " > Category </label>

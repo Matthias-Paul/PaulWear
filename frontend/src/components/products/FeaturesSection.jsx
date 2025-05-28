@@ -54,7 +54,7 @@ const buyer =[
   return (
     <>
       <div className=" max-w-6xl w-full mt-13 px-[12px] mx-auto ">
-            <h2 className="  text-2xl sm:text-3xl font-bold text-center mt-4 ">
+            <h2 className=" pt-6 text-2xl sm:text-3xl font-bold text-center mt-4 ">
               Why Choose Us
             </h2>
             <p className="text-gray-800  mt-3 text-3 sm:text-4 text-start  " >

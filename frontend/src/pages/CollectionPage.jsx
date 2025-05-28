@@ -85,7 +85,7 @@ const CollectionPage = () => {
 
   return (
     <>
-      <div className="container relative px-[12px] flex flex-col lg:flex-row pt-[90px] pb-[50px] max-w-[1400px] mx-auto">
+      <div className="container bg-gray-50 relative px-[12px] flex flex-col lg:flex-row pt-[90px] pb-[50px] max-w-[1400px] mx-auto">
         {/* mobile button */}
         <button
           ref={toggleButtonRef}
@@ -105,7 +105,7 @@ const CollectionPage = () => {
           <FilterSidebar />
         </div>
 
-        <div ref={productContainerRef} className="flex-grow lg:pl-50 w-full lg:w-2/3">
+        <div ref={productContainerRef} className="flex-grow  lg:pl-50 w-full lg:w-2/3">
           <h1 className="text-lg xl:text-2xl text-center my-3 uppercase">
             All Products
           </h1>

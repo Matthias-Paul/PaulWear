@@ -19,10 +19,10 @@ const Home = () => {
     <>
       <div className="  h-full   text-black  ">
         <Hero />
-        <div className="container pt-[30px] max-w-[1400px] mx-auto  ">
+        <div className="container  max-w-[1400px] mx-auto  ">
 
-          <div className="mx-auto max-w-[1400px] w-full container">
-            <h2 className="  text-2xl sm:text-3xl font-bold text-center my-4 ">
+          <div className="mx-auto bg-gray-50 pt-7  max-w-[1400px] w-full container">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center my-4 ">
               Shop By Category
             </h2>
             <h3 className="  text-lg sm:text-xl text-center my-2 " > Explore a wide range of categories  from fashion to food, beauty, and more. </h3>
@@ -33,9 +33,11 @@ const Home = () => {
             <BestProduct />
         
           </div>
+          <div className="  bg-gray-50" >
           <FeaturesSection/>
           
           <FeaturedCollection />
+          </div>
         </div>
       </div>
     </>
