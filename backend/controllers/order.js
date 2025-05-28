@@ -73,6 +73,69 @@ export const  getOrderDetails = async(req, res)=>{
     }
 }
 
+export const updateOrderIsReceived = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const { markAsReceived } = req.body;
+
+    if (markAsReceived !== true) {
+      return res.status(400).json({
+        success: false,
+        message: "markAsReceived field is required and must be true.",
+      });
+    }
+
+    if (!userId) {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized access!",
+      });
+    }
+
+    const orderDetails = await Order.findById(id).populate("user", "name email");
+
+    if (!orderDetails) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found!",
+      });
+    }
+
+    if (orderDetails.user._id.toString() !== userId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to edit this order!",
+      });
+    }
+
+    if (orderDetails.isReceived === true) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already marked this order as received.",
+      });
+    }
+
+    orderDetails.isReceived = true;
+    orderDetails.receivedAt = new Date();
+
+    await orderDetails.save(); 
+
+    return res.status(200).json({
+      success: true,
+      message: "Order marked as received successfully.",
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+
 
 export const getVendorOrders = async (req, res) => {
   try {

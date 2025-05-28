@@ -7,7 +7,7 @@ import {  useNavigate } from "react-router-dom"
 
 const VendorApplicationForm = () => {
       const navigate = useNavigate();
-
+    const [ isUploading, setIsUploading] = useState(null)
     const [formData, setFormData] = useState({
         storeName:"",
         bio:"",
@@ -35,6 +35,7 @@ const VendorApplicationForm = () => {
             const formData = new FormData();
             formData.append("image", file);
 
+            setIsUploading(fieldName)
             try {
                 const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/upload`, {
                 method: "POST",
@@ -54,6 +55,7 @@ const VendorApplicationForm = () => {
                 ...prevData,
                 [fieldName]: data.imageUrl,
                 }));
+                setIsUploading(false)
             } catch (error) {
                 console.error("Image upload error:", error.message);
                 toast.error(error.message)
@@ -83,8 +85,8 @@ const VendorApplicationForm = () => {
     },
      onSuccess: (data) => {
         toast.success(data.message, {
-        autoClose: 4000,
-        });      
+            duration: 8000,
+        }); 
         console.log("details:", data.vendor);
       setFormData({
         storeName:"",
@@ -166,7 +168,8 @@ const VendorApplicationForm = () => {
             <div className="mb-6  " >
                 <label  className=" block font-semibold " >Store Logo/Bannar  </label>
                 <input required type="file" accept="image/>*"   onChange={(e) => handleImageUpload(e, "storeLogo")} className=" cursor-pointer mt-2 bg-gray p-1  "    />
-                <div className="flex gap-4 mt-4   ">  
+                <div className="flex gap-4 mt-4   "> 
+                    {isUploading ==="storeLogo" && (<div className="ml-3 text-sm text-gray-500" >  Uploading...  </div> )}  
                    {
                     formData.storeLogo && (
                          <img src={formData.storeLogo} alt="store logo" className="w-20 h-20 rounded-sm shadow-md object-cover flex-shrink-0 " />
@@ -178,7 +181,8 @@ const VendorApplicationForm = () => {
             <div className="mb-6  " >
                 <label  className=" block font-semibold " >Business Certificate (optional)  </label>
                 <input type="file" accept="image/>*"   onChange={(e) => handleImageUpload(e, "businessCertificate")} className=" cursor-pointer mt-2 bg-gray p-1  "    />
-                <div className="flex gap-4 mt-4   ">  
+                <div className="flex gap-4 mt-4   "> 
+                    {isUploading ==="businessCertificate" && (<div className="ml-3 text-sm text-gray-500" >  Uploading...  </div> )} 
                    {
                     formData.businessCertificate && (
                          <img src={formData.businessCertificate} alt="business certificate" className="w-20 h-20 rounded-sm shadow-md object-cover flex-shrink-0 " />

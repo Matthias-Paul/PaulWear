@@ -131,7 +131,7 @@ const NewArrival = () => {
                                 <img draggable={false} className="w-full rounded-md h-[500px]  flex-shrink-0 object-cover   " alt={product?.name} src={product?.images[0].url} />
                                 <div className="rounded-b-lg absolute font-medium text-start p-2 bg-opacity-50 text-white backdrop-blur-md bottom-0 right-0 left-0 ">
                                     <Link to={`/product/${product?._id}`}>
-                                    <h1 className=" text-lg "> {product?.name} </h1>
+                                    <h1 className=" text-lg truncate "> {product?.name} </h1>
                                     <div className="" >${product?.price} </div>
                                      <div className="mt-3 flex items-center gap-2">
                                         <img

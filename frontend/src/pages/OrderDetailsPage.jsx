@@ -2,10 +2,14 @@ import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from "react"
 import pic from "../assets/pic.jpg"
 import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+
 
 const OrderDetailsPage = () => {
     const { id } = useParams()
     const [orderDetails, setOrderDetails] = useState(null)
+    const queryClient = useQueryClient();
 
   
   const fetchOrderDetails = async () => {
@@ -30,6 +34,45 @@ const OrderDetailsPage = () => {
       console.log("orderDetails:", data.orderDetails);
     }
   }, [data]);
+
+
+
+  const markMutation = useMutation({
+    mutationFn: async ()=>{
+  
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/buyer/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ markAsReceived: true }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to mark as");
+      }
+
+      const data = await res.json();
+        
+      return data;
+    },
+     onSuccess: (data) => {
+      toast.success(data.message);
+      queryClient.invalidateQueries(["orderDetails", id]);
+
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+
+  })
+
+  const handleMarkAsRead = async()=>{
+ 
+    markMutation.mutate();
+
+
+  }
 
   return (
     <>
@@ -89,6 +132,8 @@ const OrderDetailsPage = () => {
                   <th className="py-2 px-4 sm:py-3 " > Unit Price </th>
                   <th className="py-2 px-4 sm:py-3 " > Quantity </th>
                   <th className="py-2 px-4 sm:py-3 " > Total </th>
+                  <th className="py-2 px-4 sm:py-3 " > Action </th>
+
 
                 </tr>
   
@@ -112,6 +157,14 @@ const OrderDetailsPage = () => {
                         <td className="py-2 px-4 sm:py-4 sm:px-4" > 
                             ${item?.price * item?.quantity}                      
                          </td >
+
+                        <td className="py-2 px-4 sm:py-4 sm:px-4" > 
+                            <button onClick={handleMarkAsRead} className="py-1 px-2 cursor-pointer text-white hover:bg-green-600 bg-green-500 rounded-md" > 
+                               {
+                                orderDetails.isReceived ? "Received": "Mark as received"
+                               } 
+                               </button>
+                           </td >
 
                         </tr>
   
