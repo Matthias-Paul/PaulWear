@@ -18,8 +18,8 @@ const TopBar = () => {
             <RiTwitterXLine className="h-4 w-4  " />
           </Link>
         </div>
-        <div className=" mx-auto text-xs sm:text-sm">
-          We ship worldwide - Fast and reliable shipping!
+        <div className=" mx-auto text-xs text-center sm:text-sm">
+          Safe shopping, fast delivery, secure payments!
         </div>
         <div className=" hidden sm:flex text-center hover:text-gray-300 text-sm">
           <Link to="tel:+2348054696701">+2348054696701</Link>

@@ -6,9 +6,12 @@ import SortOptions from "../components/products/SortOptions";
 import ProductGrid from "../components/products/ProductGrid";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
+import toast from "react-hot-toast";
+
 
 const CollectionPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [result, setResult] = useState(false);
   const productContainerRef = useRef(null);
   const sidebarRef = useRef(null);
   const toggleButtonRef = useRef(null);
@@ -60,6 +63,9 @@ const CollectionPage = () => {
       return pages.length + 1;
     },
   });
+ 
+ 
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -116,6 +122,9 @@ const CollectionPage = () => {
 
             
           {/* product grid */}
+           {!isLoading && data && data.pages[0].products.length === 0 && (
+          <p className="text-center text-gray-600 mt-9 text-md sm:text-lg">No products found for your search.</p>
+           )}
           <ProductGrid products={products} isLoading={isLoading || isFetchingNextPage} />
 
         

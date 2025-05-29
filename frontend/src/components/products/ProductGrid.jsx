@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import SkeletonLoading from "./SkeletonLoading";
 
 const ProductGrid = ({ products, isLoading }) => {
-  const skeletonArray = Array.from({ length: 10 });
+  const skeletonArray = Array.from({ length: 8 });
 
   return (
     <div className="grid grid-cols-1 gap-6 pt-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -35,15 +35,15 @@ const ProductGrid = ({ products, isLoading }) => {
                       {product.discountPrice && product.discountPrice > 0 ? (
                         <>
                           <span className="text-sm font-bold text-red-500">
-                            ${product.discountPrice.toFixed(2)}
+                            ₦{product.discountPrice.toFixed(2)}
                           </span>
                           <span className="text-sm line-through text-gray-400">
-                            ${product.price.toFixed(2)}
+                            ₦{product.price.toFixed(2)}
                           </span>
                         </>
                       ) : (
                         <span className="text-sm font-bold text-gray-800">
-                          ${product.price.toFixed(2)}
+                          ₦{product.price.toFixed(2)}
                         </span>
                       )}
                     </div>

@@ -14,10 +14,14 @@ export const getOrders = async( req, res)=>{
                 success: false,
                 message: "Unauthorized access",
             });
-        }     
+        }  
+        
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
 
-        const orders = await Order.find({user: req.user._id}).sort({ createdAt: -1})
-
+        const orders = await Order.find({user: req.user._id}).sort({ createdAt: -1}).skip(skip).limit(limit)
+        
         if (!orders || orders.length === 0) {
             return res.status(404).json({
                 success: false,
@@ -25,9 +29,14 @@ export const getOrders = async( req, res)=>{
             });
         }
 
+        const totalOrders = await Order.countDocuments({ user: req.user._id });
+        console.log(totalOrders)
+        const hasNextPage = page * limit < totalOrders
+
         return res.status(200).json({
             success: true,
-            orders
+            orders,
+            hasNextPage
         });
 
 
@@ -146,7 +155,11 @@ export const getVendorOrders = async (req, res) => {
       });
     }
 
-    const vendorOrders = await Order.find({ vendor: req.user._id }).populate("user", "name email")
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+    const vendorOrders = await Order.find({ vendor: req.user._id }).populate("user", "name email").sort({ createdAt: -1}).skip(skip).limit(limit)
 
     if (vendorOrders.length === 0) {
       return res.status(404).json({
@@ -155,9 +168,14 @@ export const getVendorOrders = async (req, res) => {
       });
     }
 
+    const totalOrders = await Order.countDocuments({ vendor: req.user._id });
+        console.log(totalOrders)
+        const hasNextPage = page * limit < totalOrders
+
     return res.status(200).json({
       success: true,
       orders: vendorOrders,
+      hasNextPage
     });
 
   } catch (error) {
@@ -181,7 +199,12 @@ export const getAllOrders = async( req, res)=>{
             });
         }     
 
-        const orders = await Order.find().populate("user", "name email").sort({ createdAt: -1})
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+
+        const orders = await Order.find().populate("user", "name email").sort({ createdAt: -1}).skip(skip).limit(limit)
 
         if (!orders || orders.length === 0) {
             return res.status(200).json({
@@ -190,9 +213,14 @@ export const getAllOrders = async( req, res)=>{
             });
         }
 
+         const totalOrders = await Order.countDocuments();
+        console.log(totalOrders)
+        const hasNextPage = page * limit < totalOrders
+
         return res.status(200).json({
             success: true,
-            orders
+            orders,
+            hasNextPage
         });
 
 

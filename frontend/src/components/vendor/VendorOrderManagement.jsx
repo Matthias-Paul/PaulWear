@@ -74,7 +74,7 @@ const VendorOrderManagement = () => {
                          </td >
 
                          <td className="py-3 px-4 sm:py-4 sm:px-4" > 
-                            ${order?.totalPrice}                      
+                            ₦{order?.totalPrice.toFixed(2)}                      
                          </td >
                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
                         <select name="role" value={order.status} onChange={(e) => handleStatusChange(order._id, e.target.value) } className=" focus:ring-blue-500 focus:border-blue-500   w-full block cursor-pointer bg-gray-50 text-sm p-2 rounded border border-gray-400 mt-1 " >

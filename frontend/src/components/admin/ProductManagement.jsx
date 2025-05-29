@@ -71,7 +71,7 @@ const ProductManagement = () => {
                             {product?.name}
                          </td >
                          <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
-                            ${product?.price}
+                            ₦{product?.price.toFixed(2)}
                          </td >
 
                          <td className="py-3 px-4 sm:py-4 sm:px-4" > 

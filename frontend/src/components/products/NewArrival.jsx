@@ -118,7 +118,7 @@ const NewArrival = () => {
   
             {/* Scrollable content */}
 
-            <div ref={scrollRef}
+       <div ref={scrollRef}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUpOrLeave}
@@ -132,7 +132,7 @@ const NewArrival = () => {
                                 <div className="rounded-b-lg absolute font-medium text-start p-2 bg-opacity-50 text-white backdrop-blur-md bottom-0 right-0 left-0 ">
                                     <Link to={`/product/${product?._id}`}>
                                     <h1 className=" text-lg truncate "> {product?.name} </h1>
-                                    <div className="" >${product?.price} </div>
+                                    <div className="" >₦{product?.price.toFixed(2)} </div>
                                      <div className="mt-3 flex items-center gap-2">
                                         <img
                                         src={product?.vendorStoreLogo}

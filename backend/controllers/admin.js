@@ -8,6 +8,10 @@ import Vendor from "../models/vendors.model.js";
 export const getUsers = async(req, res)=>{
 
     try {
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
         if (!req.user || req.user.role !== "admin") {
             return res.status(403).json({
                 success: false,
@@ -17,11 +21,17 @@ export const getUsers = async(req, res)=>{
 
        const allUsers = await User.find({
          _id: { $ne: req.user._id }
-       }).select("-password -__v"); 
+       }).select("-password -__v").sort({ createdAt: -1}).skip(skip).limit(limit);; 
+
+       const totalUsers = await User.countDocuments({ _id: { $ne: req.user._id }});
+        console.log(totalUsers)
+        const hasNextPage = page * limit < totalUsers
+
 
         return res.status(200).json({
             success: true,
-            allUsers
+            allUsers,
+            hasNextPage
         });
         
 
@@ -315,3 +325,44 @@ export const validateVendor = async (req, res) => {
     });
   }
 };
+
+
+export const  getAllStore =async(req, res)=>{
+
+  try {
+
+       const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+    if (!req.user || req.user.role !== "admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized access.",
+      });
+    }
+
+    const stores = await Vendor.find({}).populate("user", "name email").sort({ createdAt: -1}).skip(skip).limit(limit);;
+
+    if (!stores || stores.length === 0) {
+      return res.status(200).json({
+        success: false,
+        stores: [],
+        message: "No store found!",
+      });
+    }
+
+        const totalStore = await Vendor.countDocuments({});
+        console.log(totalStore)
+        const hasNextPage = page * limit < totalStore
+
+    return res.status(200).json({
+      success: true,
+      stores,
+      hasNextPage
+    });
+
+  } catch (error) {
+    
+  }
+}

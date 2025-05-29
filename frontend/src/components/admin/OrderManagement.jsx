@@ -72,7 +72,7 @@ const OrderManagement = () => {
                          </td >
 
                          <td className="py-3 px-4 sm:py-4 sm:px-4" > 
-                            ${order?.totalPrice}                      
+                            ₦{order?.totalPrice.toFixed(2)}                      
                          </td >
                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
                           {order?.status}                   

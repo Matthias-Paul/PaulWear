@@ -145,7 +145,7 @@ const cart = {
                                           </div> 
 
                                         </div>    
-                                     <p className="text-xl" >  ${product?.price?.toLocaleString()} </p>   
+                                     <p className="text-xl" >  ₦{product?.price?.toLocaleString()} </p>   
 
                                      </div>   
                                 ))
