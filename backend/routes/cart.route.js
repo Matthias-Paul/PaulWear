@@ -10,7 +10,7 @@ router.put("/cart",  validateEditCartItem, editCart)
 router.get("/cart", getUserCart)
 router.post("/cart/merge", verifyUser, mergeUserCart) // merge guest cart and when he/she login cart 
 router.delete("/cart/:productId", validateDeleteCartItem, deleteCart)
-
+         
    
 export default router
 

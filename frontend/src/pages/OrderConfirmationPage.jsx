@@ -97,7 +97,6 @@ const OrderConfirmationPage = () => {
                         <div className="  ">
                             <h4 className="text-mlgd font-bold mb-2 " >  Delivery </h4>
                             <p className=" text-gray-600 " > {checkout.shippingAddress.address} </p>
-                            <p className=" text-gray-600 " > {checkout.shippingAddress.city}, {" "} { checkout.shippingAddress.country} </p>
 
                         </div>
 

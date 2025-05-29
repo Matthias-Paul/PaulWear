@@ -86,23 +86,6 @@ const cart = {
                        <input type="text" required className="w-full p-2 rounded p-2 border border-gray-400" value={shippingAddress.address} onChange={(e) => setShippingAddress({...shippingAddress, address: e.target.value})}  />                                                                                                                                                                        
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4 mb-4 mt-4  " >
-                        <div className="  " >
-                       <label className="text-gray-700 block "> City </label> 
-                       <input type="text" required className="w-full p-2 rounded p-2 border border-gray-400" value={shippingAddress.city} onChange={(e) => setShippingAddress({...shippingAddress, city: e.target.value})}  />                                                                                                                                                                        
-                        </div>
-
-                          <div className="  " >
-                       <label className="text-gray-700 block "> Postal Code </label> 
-                       <input type="text" required className="w-full p-2 rounded p-2 border border-gray-400" value={shippingAddress.postalCode} onChange={(e) => setShippingAddress({...shippingAddress, postalCode: e.target.value})}  />                                                                                                                                                                        
-                        </div>
-
-                        </div>     
-
-                        <div className=" mt-4 " >
-                       <label className="text-gray-700 block "> Country </label> 
-                       <input type="text" required className="w-full p-2 rounded p-2 border  border-gray-400" value={shippingAddress.country} onChange={(e) => setShippingAddress({...shippingAddress, country: e.target.value})}  />                                                                                                                                                                        
-                        </div>
                         <div className="mt-4  " >
                        <label className="text-gray-700 block "> Phone</label> 
                        <input type="tel" required className="w-full p-2 rounded p-2 border border-gray-400" value={shippingAddress.phone} onChange={(e) => setShippingAddress({...shippingAddress, phone: e.target.value})}  />                                                                                                                                                                        
@@ -145,7 +128,7 @@ const cart = {
                                           </div> 
 
                                         </div>    
-                                     <p className="text-xl" >  ₦{product?.price?.toLocaleString()} </p>   
+                                     <p className="text-xl" >  ₦{product?.price?.toFixed(2)} </p>   
 
                                      </div>   
                                 ))
@@ -154,17 +137,17 @@ const cart = {
 
                <div className=" text-lg mb-4 flex justify-between items-center" >
                             <p> SubTotal </p>
-                            <p className="text-xl" >  ${cart?.totalPrice?.toLocaleString()} </p>   
+                            <p className="text-xl" >  ₦{cart?.totalPrice?.toFixed(2)} </p>   
 
                </div> 
                  <div className=" text-lg mb-4 flex justify-between items-center" >
-                            <p> Shipping </p>
+                            <p> Delivery </p>
                             <p className="text-xl" > Free </p>   
 
                </div> 
                 <div className=" text-lg mb-4 flex justify-between items-center pb-4 border-t border-gray-700 " >
                             <p> Total </p>
-                            <p className="text-xl" >  ${cart?.totalPrice?.toLocaleString()} </p>   
+                            <p className="text-xl" >  ₦{cart?.totalPrice?.toFixed(2)} </p>   
 
                </div> 
             </div>    

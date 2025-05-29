@@ -21,7 +21,7 @@ const StoreGrid = ({ stores, isLoading }) => {
                 />
               </div>
 
-              <h3 className="text-lg font-semibold text-gray-900 text-center">
+              <h3 className="text-lg font-semibold truncate text-gray-900 text-center">
                 {store.storeName}
               </h3>
 

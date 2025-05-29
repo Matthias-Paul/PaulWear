@@ -271,17 +271,17 @@ export const validateCheckout = [
     .notEmpty()
     .withMessage("Shipping address is required"),
 
-  body("shippingAddress.postalCode")
-    .notEmpty()
-    .withMessage("Postal code is required"),
+  // body("shippingAddress.postalCode")
+  //   .notEmpty()
+  //   .withMessage("Postal code is required"),
 
-  body("shippingAddress.city")
-    .notEmpty()
-    .withMessage("City is required"),
+  // body("shippingAddress.city")
+  //   .notEmpty()
+  //   .withMessage("City is required"),
 
-  body("shippingAddress.country")
-    .notEmpty()
-    .withMessage("Country is required"),
+  // body("shippingAddress.country")
+  //   .notEmpty()
+  //   .withMessage("Country is required"),
 
   body("paymentMethod")
     .notEmpty()

@@ -95,7 +95,7 @@ const MyOrdersPage = () => {
                     </td>
                     <td className="py-2 px-4 sm:py-4 sm:px-4">
                       {order?.shippingAddress
-                        ? `${order?.shippingAddress?.city}, ${order?.shippingAddress?.country}`
+                        ? `${order?.shippingAddress?.address}`
                         : "N/A"}
                     </td>
                     <td className="py-2 px-4 sm:py-4 sm:px-4">

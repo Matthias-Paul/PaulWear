@@ -66,7 +66,6 @@ const OrderDetailsPage = () => {
     },
 
   })
-
   const handleMarkAsRead = async()=>{
  
     markMutation.mutate();
@@ -114,7 +113,7 @@ const OrderDetailsPage = () => {
                                                     Shipping Info
                                             </h3>
                                             <p> Shipping Method: { orderDetails.shippingMethod} </p>
-                                            <p> { ` ${orderDetails.shippingAddress.city}, ${orderDetails.shippingAddress.country} ` } </p>
+                                            <p> { ` ${orderDetails?.shippingAddress?.address} ` } </p>
 
                                          </div>  
 

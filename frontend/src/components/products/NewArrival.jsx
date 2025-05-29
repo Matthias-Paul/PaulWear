@@ -139,7 +139,7 @@ const NewArrival = () => {
                                         alt={product?.vendorStoreName}
                                         className="h-6 w-6 rounded-full flex-shrink-0 object-cover"
                                         />
-                                        <span className="text-md text-white  truncate ">
+                                        <span className="text-md text-white truncate ">
                                         {product?.vendorStoreName}
                                         </span>
                                     </div>
