@@ -371,15 +371,15 @@ export const getProducts = async(req, res, next)=>{
         }
 
         const products = await Product.find(query).sort(sort).skip(skip).limit(limit);
-
+       
         if(products.length === 0){
             return res.status(200).json({
-            success: true,  
+            success: true,               
             products: [],
             message: "No products available",
-        }); 
+        });  
         }
-
+   
 
         return res.status(200).json({
             success: true,

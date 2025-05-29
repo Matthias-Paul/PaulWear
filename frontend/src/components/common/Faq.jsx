@@ -4,7 +4,7 @@ import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 const faqs = [
   {
     question: "How do I create an account?",
-    answer: "Simply click on the 'Sign Up' button at the top of the page and follow the instructions. Once registered, you'll be able to browse stores, make purchases, and track your orders."
+    answer: "Simply navigate to the Register Page by clicking on the profile icon and follow the instructions. Once registered, you'll be able to browse stores, make purchases, and track your orders."
   },
   {
     question: "How do I pay for products?",
@@ -43,7 +43,7 @@ const Faq = () => {
 
   return (
      <div className="max-w-4xl mx-auto  pt-3 pb-20">
-      <h2 className=" text-xl sm:text-3xl font-bold text-center mb-6">Frequently Asked Questions</h2>
+      <h2 className=" text-xl sm:text-3xl font-bold text-center mb-6 sm:mb-10">Frequently Asked Questions</h2>
 
       <div className="space-y-4">
         {faqs.map((faq, index) => {

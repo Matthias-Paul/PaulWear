@@ -67,25 +67,7 @@ const CollectionPage = () => {
  
 
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const container = productContainerRef.current;
-      if (!container) return;
-
-      const { bottom } = container.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      // If the container's bottom is within 100px of the viewport's bottom
-      if (bottom <= windowHeight + 100 && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-
+ 
   // Flatten paginated data into a single array
   const products = data?.pages.flatMap((page) => page.products) || [];
 
@@ -125,8 +107,18 @@ const CollectionPage = () => {
            {!isLoading && data && data.pages[0].products.length === 0 && (
           <p className="text-center text-gray-600 mt-9 text-md sm:text-lg">No products found for your search.</p>
            )}
-          <ProductGrid products={products} isLoading={isLoading || isFetchingNextPage} />
-
+          <ProductGrid products={products} isLoading={isLoading} />
+           {hasNextPage && (
+            <div className="flex justify-center items-center">
+              <button
+                className="rounded py-1 px-4 bg-green-600 hover:bg-green-500 my-10 text-white cursor-pointer"
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
+              >
+                {isFetchingNextPage ? "Loading more..." : "Load more"}
+              </button>
+            </div>
+          )}
         
         </div>
       </div>

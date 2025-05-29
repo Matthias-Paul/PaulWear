@@ -14,7 +14,7 @@ const StorePage = () => {
   const [searchParams] = useSearchParams();
      
   const fetchStore = async ({ pageParam = 1 }) => {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor-store?${searchParams.toString()}&page=${pageParam}&limit=1`, {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor-store?${searchParams.toString()}&page=${pageParam}&limit=8`, {
       method: "GET",
       credentials: "include",
     });
@@ -56,7 +56,7 @@ const StorePage = () => {
                 )}
                                 
             <StoreGrid stores={stores}  isLoading={isLoading} />
-              {hasNextPage && (
+        {hasNextPage && (
             <div className="flex justify-center items-center">
               <button
                 className="rounded py-1 px-4 bg-green-600 hover:bg-green-500 my-4 text-white cursor-pointer"

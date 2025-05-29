@@ -82,7 +82,7 @@ const MyOrdersPage = () => {
                     <td className="px-4 sm:px-4">
                       <img
                         src={order?.orderItems[0]?.image}
-                        className="w-12 h-12 rounded-lg sm:rounded-md object-cover flex-shrink-0"
+                        className="w-12 h-12 rounded-lg my-2 sm:rounded-md object-cover flex-shrink-0"
                         alt={order?.orderItems[0]?.name}
                       />
                     </td>
