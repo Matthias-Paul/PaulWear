@@ -46,6 +46,8 @@ const VendorApplicationForm = () => {
                 if (!res.ok) {
                 const errorData = await res.json();
                 throw new Error(errorData.message || "Image upload failed");
+                  setIsUploading(null)
+
                 }
 
                 const data = await res.json();
@@ -59,6 +61,8 @@ const VendorApplicationForm = () => {
             } catch (error) {
                 console.error("Image upload error:", error.message);
                 toast.error(error.message)
+                  setIsUploading(null)
+
             }
             };
 

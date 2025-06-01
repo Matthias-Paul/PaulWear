@@ -14,7 +14,7 @@ const StorePage = () => {
   const [searchParams] = useSearchParams();
      
   const fetchStore = async ({ pageParam = 1 }) => {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor-store?${searchParams.toString()}&page=${pageParam}&limit=8`, {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor-store?${searchParams.toString()}&page=${pageParam}&limit=12`, {
       method: "GET",
       credentials: "include",
     });

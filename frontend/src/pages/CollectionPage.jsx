@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 
 const CollectionPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [result, setResult] = useState(false);
   const productContainerRef = useRef(null);
   const sidebarRef = useRef(null);
   const toggleButtonRef = useRef(null);
@@ -39,7 +38,7 @@ const CollectionPage = () => {
 
   const fetchProducts = async ({ pageParam = 1 }) => {
     const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/product?${searchParams.toString()}&page=${pageParam}&limit=10`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/product?${searchParams.toString()}&page=${pageParam}&limit=12`,
       {
         method: "GET",
         credentials: "include",

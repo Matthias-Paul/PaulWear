@@ -51,14 +51,14 @@ export const createProduct = async (req, res, next) => {
 
     let vendorInfo = {
       vendorStoreName: "Admin",
-      vendorStoreLogo: "",
+      vendorStoreLogo: "https://res.cloudinary.com/drkxtuaeg/image/upload/v1748783911/gwkhzbo0megprhf62s6p.jpg",
       vendorStoreEmail: "pauladesina117@gmail.com",
       vendorContactNumber: "+2348054696701",
     };
-
+    
     if (req.user.role === "vendor") {
       const vendor = await Vendor.findOne({ user: req.user._id }).populate(
-        "user",
+        "user", 
         "name"
       );
       if (!vendor) {
@@ -73,7 +73,9 @@ export const createProduct = async (req, res, next) => {
         vendorStoreEmail: vendor.email,
         vendorContactNumber: vendor.contactNumber,
       };
-    }
+    }   
+    // const totalProducts = await Product.countDocuments({user: req.user._id});
+    // const vendorStore = await Vendor.find({user: req.user._id})
 
     const product = new Product({
       name,
@@ -97,6 +99,7 @@ export const createProduct = async (req, res, next) => {
     });
 
     const createdProduct = await product.save();
+
 
     return res.status(201).json({
       success: true,
@@ -540,9 +543,52 @@ export const getVendorProducts = async (req, res) => {
         success: false,
         message: "Unauthorized access",
       });
-    }
+    }     
 
-    const vendorProducts = await Product.find({ user: req.user._id }).sort({ createdAt: -1});
+    let filter = { user: req.user._id  };
+
+
+        if(category){
+            filter.category = category
+        }   
+
+
+        if(size){
+            filter.sizes = { $in: size.split(",") }
+        }
+
+        if(color){
+            filter.colors = { $in: [color] }
+        }
+
+         if(gender){
+            filter.gender = gender
+        }
+
+        if(minPrice || maxPrice){
+            filter.price = {}
+            if(minPrice) filter.price.$gte = Number(minPrice)
+            if(maxPrice) filter.price.$lte = Number(maxPrice)
+
+        }
+
+        if(search){
+            filter.$or = [
+                {name : {$regex: search, $options: "i"  }},
+                {description : {$regex: search, $options: "i"  }},
+                {category : {$regex: search, $options: "i"  }},
+
+ 
+            ]
+        }   
+
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+
+
+    const vendorProducts = await Product.find(filter).sort({ createdAt: -1}).skip(skip).limit(limit)
 
     if (!vendorProducts || vendorProducts.length === 0) {
       return res.status(404).json({
@@ -551,9 +597,101 @@ export const getVendorProducts = async (req, res) => {
       });
     }
 
+        const totalProducts = await Product.countDocuments(filter);
+        console.log(totalProducts)
+        const hasNextPage = page * limit < totalProducts
+
     return res.status(200).json({
       success: true,
       vendorProducts,
+      hasNextPage     
+    });
+
+  } catch (error) {
+    console.log(error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const getProductsPerVendor = async (req, res) => {
+  try {
+   
+    const {id} =req.params
+          
+     const {
+            size,
+            color,
+            gender,
+            minPrice,
+            maxPrice,
+            search,
+            category,
+
+        } =req.query
+
+    let filter = { user: id };
+       
+        if(category && category.toLocaleLowerCase() !== "all" ){
+            filter.category = category
+        }     
+
+
+        if(size){
+            filter.sizes = { $in: size.split(",") }
+        }
+
+        if(color){
+            filter.colors = { $in: [color] }
+        }
+
+         if(gender){
+            filter.gender = gender
+        }
+
+        if(minPrice || maxPrice){
+            filter.price = {}
+            if(minPrice) filter.price.$gte = Number(minPrice)
+            if(maxPrice) filter.price.$lte = Number(maxPrice)
+
+        }     
+     
+        if(search){
+            filter.$or = [
+                {name : {$regex: search, $options: "i"  }},
+                {description : {$regex: search, $options: "i"  }},
+
+ 
+            ]
+        }   
+
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        
+        
+
+    const vendorProducts = await Product.find(filter).sort({ createdAt: -1}).skip(skip).limit(limit)
+           
+    if (!vendorProducts || vendorProducts.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "You have no products",
+      });
+    }
+
+        const totalProducts = await Product.countDocuments(filter);
+        console.log(totalProducts)
+        const hasNextPage = page * limit < totalProducts
+            
+    return res.status(200).json({
+      success: true,
+      vendorProducts,
+      totalProducts,
+      hasNextPage     
     });
 
   } catch (error) {

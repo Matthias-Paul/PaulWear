@@ -120,7 +120,7 @@ export const getStore = async (req, res) => {
       });
     }
 
-    const totalStore = await Vendor.countDocuments(filter);
+        const totalStore = await Vendor.countDocuments(filter);
         console.log(totalStore)
         const hasNextPage = page * limit < totalStore
 

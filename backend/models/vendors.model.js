@@ -55,7 +55,7 @@ const vendorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
+             
   totalProducts: {
     type: Number,
     default: 0,

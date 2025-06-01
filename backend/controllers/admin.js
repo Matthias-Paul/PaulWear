@@ -229,6 +229,7 @@ export const validateVendor = async (req, res) => {
 
     if (status === "approved") {
       vendor.status = "approved";
+      vendor.isVerified = true;
       await vendor.save();
 
        const user = await User.findById(vendor.user);
