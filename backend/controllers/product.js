@@ -74,8 +74,7 @@ export const createProduct = async (req, res, next) => {
         vendorContactNumber: vendor.contactNumber,
       };
     }   
-    // const totalProducts = await Product.countDocuments({user: req.user._id});
-    // const vendorStore = await Vendor.find({user: req.user._id})
+    
 
     const product = new Product({
       name,
@@ -677,11 +676,12 @@ export const getProductsPerVendor = async (req, res) => {
     const vendorProducts = await Product.find(filter).sort({ createdAt: -1}).skip(skip).limit(limit)
            
     if (!vendorProducts || vendorProducts.length === 0) {
-      return res.status(404).json({
-        success: false,
+      return res.status(200).json({
+        success: true,
+        vendorProducts:[],
         message: "You have no products",
       });
-    }
+    } 
 
         const totalProducts = await Product.countDocuments(filter);
         console.log(totalProducts)
@@ -690,7 +690,6 @@ export const getProductsPerVendor = async (req, res) => {
     return res.status(200).json({
       success: true,
       vendorProducts,
-      totalProducts,
       hasNextPage     
     });
 
@@ -703,3 +702,22 @@ export const getProductsPerVendor = async (req, res) => {
     });
   }
 };
+
+
+export const countProducts = async(req, res)=>{
+
+    try {
+        
+         const { vendorId } = req.params;
+        const count = await Product.countDocuments({ user: vendorId });
+        return res.status(200).json({
+            success: true,
+            totalProducts: count               
+        });
+    } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+    }
+}

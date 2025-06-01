@@ -23,12 +23,13 @@ export const getOrders = async( req, res)=>{
         const orders = await Order.find({user: req.user._id}).sort({ createdAt: -1}).skip(skip).limit(limit)
         
         if (!orders || orders.length === 0) {
-            return res.status(404).json({
-                success: false,
+            return res.status(200).json({
+                success: true,
+                orders:[],    
                 message: "You have no order!"
-            });
-        }
-
+            });   
+        }              
+      
         const totalOrders = await Order.countDocuments({ user: req.user._id });
         console.log(totalOrders)
         const hasNextPage = page * limit < totalOrders
@@ -162,8 +163,9 @@ export const getVendorOrders = async (req, res) => {
     const vendorOrders = await Order.find({ vendor: req.user._id }).populate("user", "name email").sort({ createdAt: -1}).skip(skip).limit(limit)
 
     if (vendorOrders.length === 0) {
-      return res.status(404).json({
-        success: false,
+      return res.status(200).json({
+        success: true,
+        orders:[],
         message: "No orders found for your products",
       });
     }

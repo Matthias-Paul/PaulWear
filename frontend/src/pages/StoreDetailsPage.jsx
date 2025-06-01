@@ -9,10 +9,12 @@ import AboutVendor from "../components/vendor/AboutVendor";
 
 const StoreDetailsPage = () => {
   const [storeDetails, setStoreDetails] = useState(null);
+  const [productCount, setProductCount] = useState([]);
+
   const { id } = useParams(); // store id from URL
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const productContainerRef = useRef(null);
+  const productContainerRef = useRef(null)
   const sidebarRef = useRef(null);
   const toggleButtonRef = useRef(null);
   const [searchParams] = useSearchParams();
@@ -62,9 +64,33 @@ const StoreDetailsPage = () => {
     }
   }, [detailsData]);
 
+
+  const fetchProductsCount = async () => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/${storeDetails.user}/count`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch product  count");
+    }
+    return res.json();
+  };
+
+  const { data: productVendorCount } = useQuery({
+    queryKey: ["productCount"],
+    queryFn: fetchProductsCount,
+  });
+
+  useEffect(() => {
+    if (productVendorCount && productVendorCount.totalProducts) {
+      setProductCount(productVendorCount);
+      console.log("Products Count:", productVendorCount);
+    }
+  }, [productVendorCount]);
+
   const fetchVendorProducts = async ({ pageParam = 1 }) => {
     const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/product/vendor-products/${storeDetails.user}?${searchParams.toString()}&page=${pageParam}&limit=12`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/product/vendor-products/${storeDetails.user}?${searchParams.toString()}&page=${pageParam}&limit=8`,
       {
         method: "GET",
         credentials: "include",
@@ -86,6 +112,7 @@ const StoreDetailsPage = () => {
     getNextPageParam: (lastPage, pages) => {
       return lastPage.hasNextPage ? pages.length + 1 : undefined;
     },
+    enabled: !!storeDetails?.user, 
   });
 
   // Flatten paginated product data
@@ -120,7 +147,7 @@ const StoreDetailsPage = () => {
           <>
             <div className="relative">
               <img
-                className="rounded-md sm:rounded-xl w-full max-w-[1400px] max-h-[370px] min-h-[220px] object-cover"
+                className="rounded-md sm:rounded-xl w-full max-w-[1400px] max-h-[250px] sm:max-h-[370px] min-h-[220px] object-cover"
                 src={storeDetails.storeLogo}
                 alt={storeDetails.storeName}
               />
@@ -129,7 +156,7 @@ const StoreDetailsPage = () => {
                 <h1 className="text-2xl max-w-[800px] md:text-4xl leading-[35px] sm:leading-[60px] tracking-tighter uppercase">
                   {storeDetails.storeName}
                 </h1>
-                <p className="text-sm sm:text-xl max-w-[900px]">{storeDetails.bio}</p>
+                <p className="text-sm sm:text-xl max-w-[900px]">{storeDetails.bio}  </p>
                 {storeDetails.contactNumber && (
                   <button className="cursor-pointer rounded-md bg-white shadow-md text-gray-900 md:text-[24px] py-[5px] md:py-[8px] md:rounded-lg mt-4 px-[12px] md:px-[20px]">
                     <a href={`tel:${storeDetails.contactNumber}`}>Contact Vendor</a>
@@ -137,10 +164,18 @@ const StoreDetailsPage = () => {
                 )}
               </div>
             </div>
-            <h2 className="text-lg xl:text-2xl font-bold text-center mt-10 text-center uppercase">Shop Our Collection</h2>
-            <p  className="text-center text-gray-600 mt-2  text-md sm:text-lg" >Discover the latest products from {storeDetails.storeName}. Fast delivery, secure payments, and great deals.</p>
-  
-            <ProductGrid products={products} isLoading={isProductLoading} />
+            {
+                products.length < 1?(
+                    <div className="text-lg xl:text-xl my-10 font-semibold text-center text-center " > This vendor has no products yet! </div>
+                ):(
+                <div>
+                         <h2 className="text-lg xl:text-2xl font-bold text-center mt-10 text-center uppercase">Shop Our Collection</h2>
+                         <p  className="text-center sm:px-[20px] text-gray-600 mt-2  text-md sm:text-lg" >Discover the latest products from {storeDetails.storeName}. Fast delivery, secure payments, and great deals.</p>
+           
+                    <ProductGrid products={products} isLoading={isProductLoading} />
+                 </div>
+                )
+            }
 
 
             {hasNextPage && (
@@ -154,10 +189,10 @@ const StoreDetailsPage = () => {
                 </button>
               </div>
             )}
-             <h2 className="text-lg xl:text-2xl font-bold text-center mt-5 text-center uppercase">About the storee</h2>
+             <h2 className="text-lg xl:text-2xl font-bold text-center mt-5 text-center uppercase">About this store</h2>
             <p  className="text-center text-gray-600 mt-2  text-md sm:text-lg" >Your trusted source for affordable and quality products—meet the seller..</p>
   
-            < AboutVendor storeDetails={storeDetails} />
+            < AboutVendor productVendorCount={productVendorCount} storeDetails={storeDetails} />
           </>
         ) : (
           <p className="text-center my-4">No store details available.</p>

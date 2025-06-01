@@ -56,6 +56,7 @@ export const becomeVendor = async (req, res) => {
         message: "Store name is already in use. Please choose a different name.",
       });
     }
+
     const newVendor = new Vendor({
       user: userId,
       storeName,
@@ -73,6 +74,7 @@ export const becomeVendor = async (req, res) => {
 
     await newVendor.save();
 
+    
     return res.status(201).json({
       success: true,
       message: "Your vendor application has been submitted for review. We will notify you by email once approved.",
