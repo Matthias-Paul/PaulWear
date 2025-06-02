@@ -27,7 +27,7 @@ export const getOrders = async( req, res)=>{
                 success: true,
                 orders:[],    
                 message: "You have no order!"
-            });   
+            });
         }              
       
         const totalOrders = await Order.countDocuments({ user: req.user._id });

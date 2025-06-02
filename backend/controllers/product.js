@@ -721,3 +721,14 @@ export const countProducts = async(req, res)=>{
     });
     }
 }
+
+
+export const categoryProducts =async(req, res)=>{
+
+
+    try {
+        
+    } catch (error) {
+        
+    }
+}

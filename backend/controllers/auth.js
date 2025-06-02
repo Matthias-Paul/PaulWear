@@ -86,12 +86,13 @@ const errors = validationResult(req);
             // Send email
             await transporter.sendMail(mailOptions);
 
-        const token = await generateToken(user.id, user.role, res); 
+        const token = await generateToken(user._id, user.role, res); 
         console.log(token)
         
         res.status(201).json({
             success: true,            
             user:{
+                id:user._id,
                 name:user.name,
                 email:user.email,
                 role:user.role,     
@@ -146,12 +147,13 @@ export const loginUser = async(req, res, next)=>{
                 message: "Invalid Credentials.",
             });    
         }
-        const token = await generateToken(user.id, user.role, res); 
+        const token = await generateToken(user._id, user.role, res); 
         console.log(token)
   
         return res.status(200).json({
             success:true,  
             user:{
+                id:user._id,
                 name:user.name,
                 email:user.email,
                 role:user.role,  
@@ -180,12 +182,13 @@ export const googleAuth  =async(req, res, next)=>{
     try {    
     const user = await User.findOne({ googleUID });
     if(user){
-        const token = await generateToken(user.id, user.role, res); 
+        const token = await generateToken(user._id, user.role, res); 
         console.log(token)
 
         return res.status(200).json({
             success:true,  
             user:{
+                id:user._id,
                 name:user.name,
                 email:user.email,   
                 role:user.role,    
@@ -213,7 +216,7 @@ export const googleAuth  =async(req, res, next)=>{
       });   
             
       await newUser.save();
-       const token = await generateToken(newUser.id, newUser.role, res); 
+       const token = await generateToken(newUser._id, newUser.role, res); 
        console.log(token)
 
         const mailOptions = {
@@ -256,6 +259,7 @@ export const googleAuth  =async(req, res, next)=>{
         return res.status(201).json({
             success:true,  
             user:{
+                id:newUser._id,
                 name:newUser.name,
                 email:newUser.email,
                 role:newUser.role,  

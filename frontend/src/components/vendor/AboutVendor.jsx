@@ -13,7 +13,7 @@ function formatDateWithSuffix(dateString) {
   return (
     <>
        <div>
-            <div className="w-full mx-auto bg-white p-6 rounded-xl shadow-md mt-6">
+            <div className="w-full mx-auto bg-white p-3 sm:p-6 rounded-xl shadow-md mt-6">
             <div className="flex items-center space-x-4">
                 <img
                 src={storeDetails?.storeLogo}
