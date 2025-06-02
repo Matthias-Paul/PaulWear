@@ -15,10 +15,10 @@ router.get("/product/vendor", verifyUser, getVendorProducts)
 router.get("/product/vendor-products/:id",  getProductsPerVendor)
 router.get("/product/best-seller", bestSeller)
 router.get("/product/new-arrivals", newArrivals)
+router.post("/product/category", categoryProducts)
 router.get("/product/:id", getSingleProduct)
 router.get("/product/similar/:id", getSimilarProduct)   
 router.get("/product/:vendorId/count", countProducts)
-router.get("/product/category", categoryProducts)
 
       
 export default router

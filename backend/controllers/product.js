@@ -727,8 +727,69 @@ export const categoryProducts =async(req, res)=>{
 
 
     try {
+        const {
+            search,
+            sortBy,
+        } =req.query
+
+        const {  category } = req.body
+        let filter = { category: category };
+        let sort = {}     
+     
+        if(search){
+            filter.$or = [
+                {name : {$regex: search, $options: "i"  }},
+                {description : {$regex: search, $options: "i"  }},
+            ]
+        }   
+
+          if(sortBy){
+            switch (sortBy){
+                case "priceAsc":
+                    sort = {price: 1}
+                    break;   
+                case "priceDesc":
+                    sort = {price: -1}
+                    break;
+                case "popularity":
+                    sort = {rating: -1}
+                    break;
+                default:
+                    break;
+            }
+        }
+       
+
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        
+        
+
+    const categoryProducts = await Product.find(filter).sort({ createdAt: -1}).skip(skip).limit(limit)
+           
+    if (!categoryProducts || categoryProducts.length === 0) {
+      return res.status(200).json({
+        success: true,
+        categoryProducts:[],
+        message: " No products found",
+      });
+    } 
+
+        const totalProducts = await Product.countDocuments(filter);
+        console.log(totalProducts)
+        const hasNextPage = page * limit < totalProducts
+            
+        return res.status(200).json({
+            success: true,
+            categoryProducts,
+            hasNextPage     
+        });
         
     } catch (error) {
-        
+        return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
     }
 }

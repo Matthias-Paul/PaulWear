@@ -164,9 +164,7 @@ const StoreDetailsPage = () => {
                 )}
               </div>
             </div>
-             {!isProductLoading && vendorProductData && vendorProductData.pages[0]?.vendorProducts.length === 0 && productVendorCount?.totalProducts > 0 && (
-                    <p className="text-center text-gray-600 mt-9 text-md sm:text-lg">No products found for your search.</p>
-            )}
+             
             {
             !isProductLoading && vendorProductData && productVendorCount?.totalProducts === 0?(
                     <div className="text-lg xl:text-xl my-10 font-semibold text-center text-center " > This vendor has no products yet! </div>
@@ -174,7 +172,9 @@ const StoreDetailsPage = () => {
                 <div>
                          <h2 className="text-lg xl:text-2xl font-bold text-center mt-10 text-center uppercase">Shop Our Collection</h2>
                          <p  className="text-center sm:px-[20px] text-gray-600 mt-2  text-md sm:text-lg" >Discover the latest products from {storeDetails.storeName}. Fast delivery, secure payments, and great deals.</p>
-                   
+                   {!isProductLoading && vendorProductData && vendorProductData.pages[0]?.vendorProducts.length === 0 && productVendorCount?.totalProducts > 0 && (
+                    <p className="text-center text-gray-600 mt-9 text-md sm:text-lg">No products found for your search.</p>
+                  )}
                     <ProductGrid products={products} isLoading={isProductLoading} />
                  </div>
                 )
