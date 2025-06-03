@@ -730,9 +730,9 @@ export const categoryProducts =async(req, res)=>{
         const {
             search,
             sortBy,
+            category
         } =req.query
 
-        const {  category } = req.body
         let filter = { category: category };
         let sort = {}     
      
@@ -774,8 +774,8 @@ export const categoryProducts =async(req, res)=>{
         categoryProducts:[],
         message: " No products found",
       });
-    } 
-
+    }      
+        
         const totalProducts = await Product.countDocuments(filter);
         console.log(totalProducts)
         const hasNextPage = page * limit < totalProducts
@@ -792,4 +792,4 @@ export const categoryProducts =async(req, res)=>{
       message: "Internal Server Error",
     });
     }
-}
+}    

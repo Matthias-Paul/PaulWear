@@ -21,7 +21,7 @@ function formatDateWithSuffix(dateString) {
                 className=" w-12 sm:w-16 h-12 sm:h-16 flex-shrink-0 rounded-full object-cover"
                 />
                 <div>
-                <h2 className="text-2xl font-bold">{storeDetails?.storeName}</h2>
+                <h2 className=" text-xl sm:text-2xl font-bold">{storeDetails?.storeName}</h2>
                 <p className="text-sm text-gray-600">{storeDetails?.bio} </p>
                 <div className="flex items-center space-x-2 mt-1">
                     <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded">

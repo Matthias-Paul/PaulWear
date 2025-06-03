@@ -21,7 +21,7 @@ const CategoryGrid = () => {
       <div className="grid px-1 grid-cols-1 gap-x-[10px] pt-7 gap-y-[10px] sm:grid-cols-2 lg:grid-cols-4">
         {categories?.map((category) => (
           <div key={category?.name} className="p-2 block">
-            <Link to={`/category/${encodeURIComponent(category?.name)}`}>
+            <Link to={`/category?category=${encodeURIComponent(category?.name)}`}>
               <div className="w-full border-[0.3px] border-gray-400 rounded-md p-2 mb-4">
                 <img
                   className="object-cover mb-3 w-full flex-shrink-0 h-85 sm:h-70"

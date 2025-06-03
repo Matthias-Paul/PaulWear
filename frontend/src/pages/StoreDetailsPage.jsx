@@ -146,7 +146,7 @@ const StoreDetailsPage = () => {
         ) : storeDetails ? (
           <>
             <div className="relative">
-              <img
+              <img  
                 className="rounded-md sm:rounded-xl w-full max-w-[1400px] max-h-[250px] sm:max-h-[370px] min-h-[220px] object-cover"
                 src={storeDetails.storeLogo}
                 alt={storeDetails.storeName}

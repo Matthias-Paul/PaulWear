@@ -21,6 +21,9 @@ connectDatabase()
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+app.use(express.json());
+app.use(cookieParser());
+
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://stylenest-ax2d.onrender.com"],   
@@ -30,8 +33,7 @@ app.use(
 );
 
 
-app.use(express.json());
-app.use(cookieParser());
+
 
 const _dirname = path.resolve()
 
@@ -49,7 +51,7 @@ app.use("/api", checkoutRoute)
 app.use("/api", orderRoute)
 app.use("/api", uploadRoute)
 app.use("/api", subscribeRoute)
-app.use("/api", adminRoute)
+app.use("/api", adminRoute)  
 app.use("/api", vendorRoute)
 
 

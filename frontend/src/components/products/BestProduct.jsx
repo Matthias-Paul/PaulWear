@@ -1,4 +1,4 @@
-import pic from "../../assets/pic.jpg";
+
 import toast from "react-hot-toast";
 import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from "react";

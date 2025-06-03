@@ -32,6 +32,7 @@ const MyOrdersPage = () => {
     getNextPageParam: (lastPage, pages) => {
       return lastPage.hasNextPage ? pages.length + 1 : undefined;
     },
+    refetchOnMount: true,
   });
 
    
