@@ -2,7 +2,7 @@ import {  Link } from "react-router-dom"
 import { HiOutlineUser, HiOutlineShoppingBag, HiBars3BottomRight } from "react-icons/hi2"
 import SearchBar from "./SearchBar"
 import CartDrawer from "../layout/CartDrawer"
-import { useState } from "react"
+import {useEffect, useRef, useState } from "react"
 import { IoMdClose } from "react-icons/io" 
 import { useSelector } from "react-redux";
 
@@ -11,6 +11,7 @@ const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [navDrawerOpen, setNavDrawerOpen] = useState(false)
   const { loginUser, cartQuantity } = useSelector((state) => state.user);
+  const editRef = useRef(false)
 
 
     const toggleCartDrawer = () => {
@@ -24,6 +25,24 @@ const NavBar = () => {
       
     }
 
+const handleClickOutside = (event) => {
+    if (editRef.current && !editRef.current.contains(event.target)) {
+      setNavDrawerOpen(false);
+    }
+  };    
+
+  // Attach event listener for outside clicks
+  useEffect(() => {
+    if (navDrawerOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [navDrawerOpen]);
 
 
   return (
@@ -100,7 +119,7 @@ const NavBar = () => {
               </div>       
         </div>
       </nav>
-        <CartDrawer toggleCartDrawer={toggleCartDrawer} drawerOpen={drawerOpen} />
+        <CartDrawer setDrawerOpen={setDrawerOpen} toggleCartDrawer={toggleCartDrawer} drawerOpen={drawerOpen} />
 
       {/* Mobile navigation */}
       
@@ -108,7 +127,7 @@ const NavBar = () => {
           navDrawerOpen ? "translate-x-0" : "translate-x-full"
         } w-[300px] sm:w-[350px] xl:w-1/4 shadow-lg flex flex-col transform transition-transform duration-300  h-full bg-white `}
       >
-         <div className="flex justify-end ">
+         <div ref={editRef} className="flex justify-end ">
           <button onClick={toggleNavDrawer}>
             {" "}
             <IoMdClose className="w-6 cursor-pointer h-6 text-red-600 mt-3 mr-3  " />{" "}

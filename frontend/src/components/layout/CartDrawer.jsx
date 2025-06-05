@@ -1,9 +1,32 @@
 import { IoMdClose } from "react-icons/io" 
 import CartContents from "../cart/CartContents"
 import { useNavigate } from "react-router-dom"
+import {useEffect, useRef, useState } from "react"
 
-const CartDrawer = ({drawerOpen, toggleCartDrawer }) => {
+const CartDrawer = ({drawerOpen, setDrawerOpen, toggleCartDrawer }) => {
   const navigate = useNavigate()
+    const editRef = useRef(false)
+
+
+const handleClickOutside = (event) => {
+    if (editRef.current && !editRef.current.contains(event.target)) {
+      setDrawerOpen(false);
+    }
+  };    
+
+  // Attach event listener for outside clicks
+  useEffect(() => {
+    if (drawerOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [drawerOpen]);
+
 
   const handleCheckout= ()=>{
     
@@ -14,8 +37,9 @@ const CartDrawer = ({drawerOpen, toggleCartDrawer }) => {
 
   return (
     <>
-    <div className={`relative max-w-[1400px]   ${drawerOpen ? "h-screen": "" }  mx-auto`} > 
+    <div  className={`relative max-w-[1400px]    ${drawerOpen ? "h-screen": "" }  mx-auto`} > 
       <div
+      ref={editRef}
           className={`absolute right-0 bottom-0 h-full  w-[350px] sm:w-[400px] xl:w-[500px] shadow-lg flex flex-col h-full bg-white transition-all duration-300 ease-in-out
             ${drawerOpen ? "opacity-100 scale-100 bg-white pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}
           `}
