@@ -58,7 +58,7 @@ const CategoryPage = () => {
     <>
         <div className="max-w-[1400px] mb-[80px] px-[12px] " >          
             
-            <div className=" pt-[95px]  " >
+            <div className=" pt-[95px] sm:pt-[104px]  " >
             <SortOptions />
             </div>
 

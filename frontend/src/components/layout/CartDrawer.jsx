@@ -14,7 +14,7 @@ const CartDrawer = ({drawerOpen, toggleCartDrawer }) => {
 
   return (
     <>
-    <div className="relative max-w-[1400px] h-screen mx-auto" > 
+    <div className={`relative max-w-[1400px]   ${drawerOpen ? "h-screen": "" }  mx-auto`} > 
       <div
           className={`absolute right-0 bottom-0 h-full  w-[350px] sm:w-[400px] xl:w-[500px] shadow-lg flex flex-col h-full bg-white transition-all duration-300 ease-in-out
             ${drawerOpen ? "opacity-100 scale-100 bg-white pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}
