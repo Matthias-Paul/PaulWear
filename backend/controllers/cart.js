@@ -5,7 +5,7 @@ import Cart from "../models/cart.model.js"
 import { validationResult, matchedData } from "express-validator"
 
 const getCart =async(userId, guestId)=>{
-    if(userId){
+    if(userId){    
         return await Cart.findOne({ user: userId})
     }else if (guestId){
         return await Cart.findOne({ guestId })
@@ -48,7 +48,7 @@ export const addCart = async(req, res, next)=>{
                     (p) => p.productId.toString() === productId && p.size === size && p.color === color
                 );
                 console.log("productIndex", productIndex)
-
+      
                 if (productIndex > -1) {
                     cart.products[productIndex].quantity += quantity;
                 } else {              
@@ -56,7 +56,7 @@ export const addCart = async(req, res, next)=>{
                         productId,
                         name: product.name,
                         image: product.images?.[0]?.url ?? null,
-                        price: product.price,
+                        price: product.price * quantity,
                         size,
                         color,
                         quantity
@@ -65,10 +65,10 @@ export const addCart = async(req, res, next)=>{
 
                 cart.totalPrice = cart.products.reduce((acc, item) => acc + item.price * item.quantity, 0);
                 await cart.save();
-
+      
                 return res.status(200).json({
                     success: true,
-                    message: "Cart updated",
+                    message: "Product added ",
                     cart
                 });    
     
@@ -81,7 +81,7 @@ export const addCart = async(req, res, next)=>{
                             productId,
                             name: product.name,
                             image: product.images?.[0]?.url ?? null,
-                            price: product.price,
+                            price: product.price * quantity,
                             size,
                             color,
                             quantity
@@ -92,7 +92,7 @@ export const addCart = async(req, res, next)=>{
 
                 return res.status(201).json({
                     success: true,
-                    message: "Cart created",
+                    message: "Product added ",
                     cart: newCart
                 });
             }
@@ -228,14 +228,14 @@ export const deleteCart = async(req, res, next)=>{
         });
     }
 }
-
-
+      
+        
 
 export const getUserCart = async(req, res, next)=>{
 
+        
 
-
-    try {
+    try {      
 
         const { guestId, userId } = req.query
         console.log("guestId:", guestId, "UserId:", userId)
@@ -247,22 +247,22 @@ export const getUserCart = async(req, res, next)=>{
             });
         }       
         const cart = await getCart(userId, guestId )
-      
-        console.log(cart)
-        if(!cart){            
+        
+        console.log(cart) 
+        if(!cart){                 
             return res.status(404).json({
                 success: false,
                 message:"Cart not found"
-            })   
-         }     
-
+            })                  
+         }        
+     
         return res.status(200).json({
                 success: true,
-                cart       
-        })
+                cart                
+        })     
 
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message)   
         return res.status(500).json({
             success: false,  
             message: "Internal Server Error",

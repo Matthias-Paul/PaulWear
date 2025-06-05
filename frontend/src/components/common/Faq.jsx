@@ -4,7 +4,7 @@ import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 const faqs = [
   {
     question: "How do I create an account?",
-    answer: "Simply navigate to the Register Page by clicking on the profile icon and follow the instructions. Once registered, you'll be able to browse stores, make purchases, and track your orders."
+    answer: "Simply navigate to the Register Page by clicking on the sign up button on the nav bar and follow the instructions. Once registered, you'll be able to browse stores, make purchases, and track your orders."
   },
   {
     question: "How do I pay for products?",

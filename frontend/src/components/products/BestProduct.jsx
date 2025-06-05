@@ -3,7 +3,8 @@ import toast from "react-hot-toast";
 import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 
 
 
@@ -15,21 +16,16 @@ const BestProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
+  const { loginUser, guestId } = useSelector((state) => state.user);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleQuantityChange = (action) => {
     if (action === "minus" && quantity > 1) setQuantity((prev) => prev - 1);
     if (action === "plus") setQuantity((prev) => prev + 1);
   };
 
-  const handleAddToCart = () => {
-    if (!selectedColor || !selectedSize) {
-      toast.error("Please select a color and size before adding to cart!");
-    }
-
-    // navigate("/checkout");
-    // setIsButtonDisabled(true);
-  };
+ 
 
   const fetchBestSeller = async () => {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/best-seller`, {
@@ -54,7 +50,59 @@ const BestProduct = () => {
       console.log("bestProducts:", bestProductData.bestSeller);
     }
   }, [bestProductData]);
+    const addToCartMutation = useMutation({
+    mutationFn: async ()=>{
   
+     setIsButtonDisabled(true);
+      // Send user details to the backend
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/cart`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+            productId: selectedProduct._id,
+            userId: loginUser?.id,
+            guestId,
+            color:selectedColor,
+            size:selectedSize, 
+            quantity
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to add to cart");
+      }
+
+      const data = await res.json();
+        
+      return data;
+    },
+     onSuccess: (data) => {
+      toast.success(data.message);
+      setIsButtonDisabled(false);
+      console.log("Product:", data.product);
+      const key = loginUser?.id
+      ? ["cart", "user", loginUser.id]
+      : ["cart", "guest", guestId];
+
+    queryClient.invalidateQueries(key);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+
+  })
+
+
+
+  const handleAddToCart = () => {
+    if (!selectedColor || !selectedSize) {
+      toast.error("Please select a color and size before adding to cart!");
+    }
+    addToCartMutation.mutate();
+
+  };
  
     if (isLoading) {
     return (

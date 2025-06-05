@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [navDrawerOpen, setNavDrawerOpen] = useState(false)
-  const { loginUser } = useSelector((state) => state.user);
+  const { loginUser, cartQuantity } = useSelector((state) => state.user);
 
 
     const toggleCartDrawer = () => {
@@ -51,26 +51,43 @@ const NavBar = () => {
              <div className="flex items-center gap-x-3 sm:gap-x-5  " >
                    {
                     loginUser?.role ==="admin"? (
-                      <Link to="/admin" className=" bg-black text-sm  rounded px-2 cursor-pointer text-white " >
+                      <Link to="/admin" className=" bg-black text-sm py-1 rounded px-2 cursor-pointer text-white " >
                           Admin
                     </Link>
                     ): ""
                    }
-                    
-                    {
+                            {
                     loginUser?.role ==="vendor"? (
-                      <Link to="/vendor" className=" bg-black text-sm  rounded px-2 cursor-pointer text-white " >
+                      <Link to="/vendor" className=" bg-black text-sm py-1 rounded px-2 cursor-pointer text-white " >
                           Vendor
                       </Link>
                     ): ""
                    }
- 
-                    <Link to="/profile" className=" hover:text-black " >
+
+                     {
+                    loginUser? (
+                      <Link to="/profile" className=" hover:text-black " >
                             <HiOutlineUser className="w-5 h-5 text-gray-700 "  />
                     </Link>
+                    ):(
+                      <Link to="/register" className=" bg-black text-sm py-1 rounded px-2 cursor-pointer text-white " >
+                          Sign Up
+                      </Link>
+                    )
+                  }
+
+            
+                 
+                    
                     <button onClick={toggleCartDrawer}  className=" relative hover:text-black cursor-pointer ">
                         <HiOutlineShoppingBag className="w-5  h-5 text-gray-700 inline "  />
-                        <span className=" absolute text-[8px] bg-[#ea2e0e] font-[700] -right-1 text-white rounded-full px-1.5 py-0.5 " >  2   </span>
+                        
+                        {
+                          cartQuantity && (
+                            <span className=" absolute text-[8px] bg-[#ea2e0e] font-[700] -right-1 text-white rounded-full px-1.5 py-0.5 " >  {cartQuantity}   </span>
+
+                          )
+                        }
                     </button>
 
                     {/* Search component */}

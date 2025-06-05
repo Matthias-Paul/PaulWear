@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 
+
 const MyOrdersPage = () => {
   const navigate = useNavigate();
 
@@ -43,7 +44,7 @@ const MyOrdersPage = () => {
 
   const orders = data?.pages.flatMap((page) => page.orders) || [];
 
-  return (
+return (
     <div className="mx-auto pt-[90px] px-[12px] pb-10 w-full">
       <h1 className="text-xl md:text-2xl font-bold my-6">My Orders</h1>
 

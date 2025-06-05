@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   loginUser: null,
+  myCart: [],
+  cartQuantity: null,
   guestId: `guest_${Date.now()}`
 };
 
@@ -23,17 +25,28 @@ const userSlice = createSlice({
     },
     logOutSuccess: (state) => {
       state.loginUser = null;
-      state.guestId = `guest_${new Date().getTime()}`
-    }
+      state.guestId = `guest_${new Date().getTime()}`;
+      state.cartQuantity = null;   
+      state.myCart = [];   
+
+    },
+    setMyCart: (state, action) => {
+      state.myCart = action.payload;   
+    },
+    setCartQuantity: (state, action) => {         
+      state.cartQuantity = action.payload;      
+    },
   },
 });
-// destructuring declaration
+// destructuring declaration    
 export const {
   signInSuccess,
   deleteUserSuccess,
   updateUserSuccess,
   generateNewGuestId,   
   logOutSuccess,
+  setMyCart,
+  setCartQuantity,
   
 } = userSlice.actions;  
 

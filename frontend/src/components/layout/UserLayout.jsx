@@ -4,6 +4,7 @@ import Footer from "../common/Footer"
 const UserLayout = () => {
   return (
    <>
+   
      <Header  />
 
      <main>

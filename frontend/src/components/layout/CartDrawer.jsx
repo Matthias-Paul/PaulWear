@@ -14,29 +14,31 @@ const CartDrawer = ({drawerOpen, toggleCartDrawer }) => {
 
   return (
     <>
+    <div className="relative max-w-[1400px] h-screen mx-auto" > 
       <div
-        className={` fixed right-0  top-10 ${
-          drawerOpen ? "translate-x-0" : "translate-x-full"
-        } w-[300px] sm:w-[350px] xl:w-1/4 shadow-lg flex flex-col transform transition-transform duration-300  h-full bg-white `}
-      >
-        <div className="flex justify-end ">
-          <button onClick={toggleCartDrawer}>
-            {" "}
-            <IoMdClose className="w-6 cursor-pointer text-red-600 h-6 mt-3 mr-3  " />{" "}
-          </button>
-        </div>
-
-            <div className="flex-grow p-4 overflow-y-auto  " >
+          className={`absolute right-0 bottom-0 h-full  w-[350px] sm:w-[400px] xl:w-[500px] shadow-lg flex flex-col h-full bg-white transition-all duration-300 ease-in-out
+            ${drawerOpen ? "opacity-100 scale-100 bg-white pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}
+          `}
+        >
+        
+            <div className=" p-4  h-screen pb-20 bg-white overflow-y-auto  " >
+              <div className="flex justify-end ">
+              <button onClick={toggleCartDrawer}>
+                {" "}
+                <IoMdClose className="w-6 cursor-pointer text-red-600 h-6 mt-3 mr-3  " />{" "}
+              </button>
+            </div>
                 <h2 className="text-xl font-medium mb-4 " > Your Cart </h2>
                {/* cart contents */}
                < CartContents />
 
-                <div className="absolute   bottom-8 p-4 bg-white "> 
+                <div className=" px-4 xl:w-[460px] text-center mx-auto  bottom-8 py-7 bg-white "> 
                     <button onClick={handleCheckout} className="w-full transition hover:bg-gray-800 text-white py-2 bg-black cursor-pointer rounded-md font-semibold  "> Checkout </button>
                     <div className="text-sm tracking-tighter text-center mt-2 text-gray-500  " > Shipping, taxes, with discount codes calculated at checkout. </div>
                 </div>
              </div>   
                
+      </div>
       </div>
     </>
   );

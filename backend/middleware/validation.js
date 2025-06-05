@@ -77,7 +77,7 @@ export const validateProduct = [
 
   body("sizes")
     .isArray({ min: 1 }).withMessage("At least one size is required"),
-
+  
   body("colors")
     .isArray({ min: 1 }).withMessage("At least one color is required"),
 
