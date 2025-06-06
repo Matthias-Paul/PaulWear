@@ -3,16 +3,70 @@ import { FcGoogle } from "react-icons/fc";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
 import { app } from "../../../firebase";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
-import { signInSuccess } from "../../redux/slice/userSlice.js";
+import { useMutation, useQueryClient} from "@tanstack/react-query";
+import { signInSuccess, setMyCart, setCartQuantity, generateNewGuestId } from "../../redux/slice/userSlice.js";
 
 import toast from "react-hot-toast";
 
 const OAuth = () => {
-  const { loginUser } = useSelector((state) => state.user);
   const auth = getAuth(app);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loginUser, guestId } = useSelector((state) => state.user);
+  const queryClient = useQueryClient();
+
+
+    // Mutation to merge carts after login
+    const mergeCartMutation = useMutation({
+      mutationFn: async () => {
+        const res = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/cart/merge`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ guestId }),
+          }
+        );
+  
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || "Failed to merge cart");
+        }
+  
+        const data = await res.json();
+        return data.cart;
+      },
+      onSuccess: (mergedCart) => {
+        dispatch(setMyCart(mergedCart.products));
+        dispatch(setCartQuantity(mergedCart.products.reduce((acc, item) => acc + item.quantity, 0)));
+               
+        dispatch(generateNewGuestId());
+         const key = loginUser?.id
+          ? ["cart", "user", loginUser.id]
+          : ["cart", "guest", guestId];
+  
+          queryClient.invalidateQueries(key);
+      },
+      onError: (error) => {
+        toast.error("Cart merge failed: " + error.message);
+      },
+    });
+  
+    const handleMerge = async () => {
+            console.log("guestId:", guestId)
+            console.log("Hello world")
+            if (guestId) {
+              try {
+                await mergeCartMutation.mutateAsync();
+              } catch (error) {
+                console.log(error.message)
+              }
+            }
+          };
+
+
+
 
   const loginMutation = useMutation({
     mutationFn: async ()=>{
@@ -47,6 +101,8 @@ const OAuth = () => {
       toast.success("Log in successful! Redirecting to home page...");
       dispatch(signInSuccess(data.user))
       console.log("login user:", data.user);
+      handleMerge()
+
       setTimeout(() => navigate("/"), 1000);
     },
     onError: (error) => {

@@ -90,6 +90,7 @@ const BestProduct = () => {
     },
     onError: (error) => {
       toast.error(error.message);
+      setIsButtonDisabled(false);
     },
 
   })
@@ -97,9 +98,6 @@ const BestProduct = () => {
 
 
   const handleAddToCart = () => {
-    if (!selectedColor || !selectedSize) {
-      toast.error("Please select a color and size before adding to cart!");
-    }
     addToCartMutation.mutate();
 
   };

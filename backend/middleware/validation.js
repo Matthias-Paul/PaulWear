@@ -145,11 +145,11 @@ export const validateCartItem = [
     .isNumeric().withMessage("Price must be a number."),
 
   body("color")
-    .notEmpty().withMessage("Color is required.")
+    .notEmpty().withMessage("Please select a color before adding to cart.")
     .isString().withMessage("Color must be a string."),
 
   body("size")
-    .notEmpty().withMessage("Size is required.")
+    .notEmpty().withMessage("Please select a size before adding to cart.")
     .isString().withMessage("Size must be a string."),
    
   body("quantity")
@@ -299,7 +299,7 @@ export const validateCheckout = [
 
 
 export const validateSubscriber = [
-  body("email")
+  body("email")      
     .notEmpty()
     .withMessage("Email is required")
     .isEmail()

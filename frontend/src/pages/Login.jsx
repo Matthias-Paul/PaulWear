@@ -2,20 +2,71 @@ import pic from "../assets/pic.jpg";
 import OAuth from "../components/common/OAuth"
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"
-import { useMutation } from "@tanstack/react-query";
-import { signInSuccess } from "../redux/slice/userSlice.js";
+import { useMutation, useQueryClient} from "@tanstack/react-query";
+import { signInSuccess, setMyCart, setCartQuantity, generateNewGuestId } from "../redux/slice/userSlice.js";
+
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loginUser } = useSelector((state) => state.user);
+  const { loginUser, guestId } = useSelector((state) => state.user);
+  const queryClient = useQueryClient();
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  
+  // Mutation to merge carts after login
+  const mergeCartMutation = useMutation({
+    mutationFn: async () => {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/cart/merge`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ guestId }),
+        }
+      );
 
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to merge cart");
+      }
+
+      const data = await res.json();
+      return data.cart;
+    },
+    onSuccess: (mergedCart) => {
+      dispatch(setMyCart(mergedCart.products));
+      dispatch(setCartQuantity(mergedCart.products.reduce((acc, item) => acc + item.quantity, 0)));
+             
+      dispatch(generateNewGuestId());
+       const key = loginUser?.id
+        ? ["cart", "user", loginUser.id]
+        : ["cart", "guest", guestId];
+
+        queryClient.invalidateQueries(key);
+    },
+    onError: (error) => {
+      toast.error("Cart merge failed: " + error.message);
+    },
+  });
+
+  const handleMerge = async () => {
+          console.log("guestId:", guestId)
+          console.log("Hello world")
+          if (guestId) {
+            try {
+              await mergeCartMutation.mutateAsync();
+            } catch (error) {
+              console.log(error.message)
+            }
+          }
+        };
   const loginMutation = useMutation({
     mutationFn: async ()=>{
   
@@ -45,6 +96,7 @@ const Login = () => {
       console.log("login user:", data.user);
       setEmail("")
       setPassword("")
+       handleMerge()
       setTimeout(() => navigate("/"), 1000);
     },
     onError: (error) => {
@@ -53,9 +105,10 @@ const Login = () => {
 
   })
 
-
+  console.log("guestId:", guestId)
   const handleFormSubmit = (e)=>{
     e.preventDefault()
+
     loginMutation.mutate({ email, password });
     
   }

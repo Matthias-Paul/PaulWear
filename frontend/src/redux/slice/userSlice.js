@@ -13,17 +13,18 @@ const userSlice = createSlice({
   reducers: {
     signInSuccess: (state, action) => {
       state.loginUser = action.payload;
-    },  
+      state.guestId;
+    },        
     deleteUserSuccess: (state) => {
       state.loginUser = null;
-    },  
-    updateUserSuccess: (state, action) => {
+    },      
+    updateUserSuccess: (state, action) => {          
       state.loginUser = action.payload;
     },
     generateNewGuestId: (state) => {
       state.guestId = `guest_${new Date().getTime()}`;
     },
-    logOutSuccess: (state) => {
+    logOutSuccess: (state) => {  
       state.loginUser = null;
       state.guestId = `guest_${new Date().getTime()}`;
       state.cartQuantity = null;   

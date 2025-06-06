@@ -42,13 +42,13 @@ const registerMutation = useMutation({
       return data;
     },
      onSuccess: (data) => {
-      toast.success("Sign up successful! Redirecting to home page...");
+      toast.success("Sign up successful! Redirecting to log in page...");
       dispatch(signInSuccess(data.user))
       console.log("login user:", data.user);
       setName("")
       setEmail("")
       setPassword("")
-      setTimeout(() => navigate("/"), 1000);
+      setTimeout(() => navigate("/login"), 1000);
     },
     onError: (error) => {
       toast.error(error.message);

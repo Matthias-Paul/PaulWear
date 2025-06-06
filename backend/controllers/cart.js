@@ -209,11 +209,10 @@ export const deleteCart = async(req, res, next)=>{
 
         const productIndex = cart.products.findIndex(
             (p) => p.productId.toString() === productId && p.size === size && p.color === color
-        );
-
+        );   
+          
         if(productIndex > -1){
             cart.products.splice(productIndex, 1 )
-
             cart.totalPrice = cart.products.reduce((acc, item) => acc + Number(item.price), 0); 
             await cart.save()
 
@@ -221,8 +220,8 @@ export const deleteCart = async(req, res, next)=>{
                 success: true,
                 message:"Product removed from the cart"
             })
-
-        }else{
+                                   
+        }else{                             
             return res.status(404).json({
                 success: false,
                 message:"Product not found in the cart"
@@ -310,7 +309,7 @@ export const mergeUserCart = async (req, res) => {
         }
 
         let userCart = await Cart.findOne({ user: req.user._id });
-
+     
         if (!userCart) {
             // Re-assign the guest cart to the user, if user doesn't have a cart yet
             guestCart.user = req.user._id;
@@ -325,26 +324,29 @@ export const mergeUserCart = async (req, res) => {
         }
 
         // Merge logic
-        guestCart.products.forEach(guestItem => {
-            const existingIndex = userCart.products.findIndex(item =>
-                item.productId.toString() === guestItem.productId.toString() &&
-                item.size === guestItem.size &&
-                item.color === guestItem.color
-            );
+       for (const guestItem of guestCart.products) {
+        const existingIndex = userCart.products.findIndex(item =>
+            item.productId.toString() === guestItem.productId.toString() &&
+            item.size === guestItem.size &&
+            item.color === guestItem.color
+        );                    
 
-            if (existingIndex > -1) {
-                userCart.products[existingIndex].quantity += guestItem.quantity;
-            } else {
-                userCart.products.push(guestItem);
-            }
-        });
+    if (existingIndex > -1) {
+        const currentItem = userCart.products[existingIndex];
+        
+        const unitPrice = currentItem.price / currentItem.quantity;
 
+        currentItem.quantity += guestItem.quantity;
+
+        currentItem.price = unitPrice * currentItem.quantity;
+    } else {
+        userCart.products.push(guestItem);
+    }
+}
+
+    
         // Recalculate total price
-        userCart.totalPrice = userCart.products.reduce(
-            (acc, item) => acc + item.price * item.quantity,
-            0
-        );
-
+        userCart.totalPrice = userCart.products.reduce((acc, item) => acc + Number(item.price), 0); 
         await userCart.save();
 
         // Delete the guest cart

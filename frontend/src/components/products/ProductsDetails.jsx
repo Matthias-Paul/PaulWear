@@ -121,6 +121,7 @@ const ProductsDetails = () => {
     },
     onError: (error) => {
       toast.error(error.message);
+      setIsButtonDisabled(false);
     },
 
   })
@@ -128,9 +129,7 @@ const ProductsDetails = () => {
 
 
   const handleAddToCart = () => {
-    if (!selectedColor || !selectedSize) {
-      toast.error("Please select a color and size before adding to cart!");
-    }
+
     addToCartMutation.mutate();
 
   };
