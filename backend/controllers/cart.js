@@ -124,6 +124,14 @@ export const editCart = async(req, res, next)=>{
 
          const { productId, size, color, quantity, guestId, userId } = matchedData(req)     
 
+         const product = await Product.findById(productId);
+            if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found",
+            });
+            }
+
          let cart = await getCart(userId, guestId)
          if(!cart){
             return res.status(404).json({
@@ -139,11 +147,13 @@ export const editCart = async(req, res, next)=>{
         if(productIndex > -1){
             if(quantity > 0){
                 cart.products[productIndex].quantity = quantity;
+                cart.products[productIndex].price = Number(product.price) * cart.products[productIndex].quantity;
+
             }else{
                 cart.products.splice(productIndex, 1)
             }
 
-            cart.totalPrice = cart.products.reduce((acc, item) => acc + item.price * item.quantity, 0);
+            cart.totalPrice = cart.products.reduce((acc, item) => acc + Number(item.price), 0); 
             await cart.save()
 
             return res.status(200).json({
@@ -180,9 +190,10 @@ export const deleteCart = async(req, res, next)=>{
             message: errors.array()[0].msg 
         }); 
     }
-        
+               
+
     try {          
-   
+     
          const { productId, size, color, quantity, guestId, userId } = matchedData(req)     
 
          console.log("productId:", productId)
@@ -203,7 +214,7 @@ export const deleteCart = async(req, res, next)=>{
         if(productIndex > -1){
             cart.products.splice(productIndex, 1 )
 
-            cart.totalPrice = cart.products.reduce((acc, item) => acc + item.price * item.quantity, 0);
+            cart.totalPrice = cart.products.reduce((acc, item) => acc + Number(item.price), 0); 
             await cart.save()
 
             return res.status(200).json({
@@ -229,7 +240,7 @@ export const deleteCart = async(req, res, next)=>{
     }
 }
       
-        
+           
 
 export const getUserCart = async(req, res, next)=>{
 

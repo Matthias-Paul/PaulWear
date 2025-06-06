@@ -137,7 +137,7 @@ const ProductsDetails = () => {
 
   return (
     <>
-      <div className="mx-auto pt-[135px] px-[12px] max-w-[1400px]  bg-white ">
+      <div className="mx-auto pt-[100px] sm:pt-[110px] px-[12px] max-w-[1400px]  bg-white ">
         <div className="mx-auto max-w-6xl" >
 
           {
@@ -197,7 +197,7 @@ const ProductsDetails = () => {
           {/*  Right section */}
 
           <div className="md:w-1/2 md:ml-5 ">
-            <h2 className="  text-2xl sm:text-3xl font-semibold mt-2 md:mt-0   mb-2 ">
+            <h2 className="  text-2xl sm:text-3xl font-semibold mt-2 md:mt-[-5px]   mb-2 ">
               {" "}
               {selectedProduct?.name}{" "}
             </h2>
