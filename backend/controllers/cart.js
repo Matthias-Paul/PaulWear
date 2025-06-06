@@ -51,20 +51,20 @@ export const addCart = async(req, res, next)=>{
       
                 if (productIndex > -1) {
                     cart.products[productIndex].quantity += quantity;
-                } else {              
-                    cart.products.push({
-                        productId,
+                    cart.products[productIndex].price = Number(product.price) * cart.products[productIndex].quantity;
+                } else {                
+                    cart.products.push({        
+                        productId,    
                         name: product.name,
                         image: product.images?.[0]?.url ?? null,
-                        price: product.price * quantity,
-                        size,
-                        color,
+                        price: product.price * quantity,   
+                        size,    
+                        color,          
                         quantity
-                    });
-                }     
-
-                cart.totalPrice = cart.products.reduce((acc, item) => acc + item.price * item.quantity, 0);
-                await cart.save();
+                    });   
+                }          
+                cart.totalPrice = cart.products.reduce((acc, item) => acc + Number(item.price), 0); 
+                 await cart.save();
       
                 return res.status(200).json({
                     success: true,
@@ -82,7 +82,7 @@ export const addCart = async(req, res, next)=>{
                             name: product.name,
                             image: product.images?.[0]?.url ?? null,
                             price: product.price * quantity,
-                            size,
+                            size,   
                             color,
                             quantity
                         }

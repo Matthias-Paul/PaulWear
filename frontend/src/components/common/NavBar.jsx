@@ -127,13 +127,13 @@ const handleClickOutside = (event) => {
           navDrawerOpen ? "translate-x-0" : "translate-x-full"
         } w-[300px] sm:w-[350px] xl:w-1/4 shadow-lg flex flex-col transform transition-transform duration-300  h-full bg-white `}
       >
-         <div ref={editRef} className="flex justify-end ">
+         <div className="flex justify-end ">
           <button onClick={toggleNavDrawer}>
             {" "}
             <IoMdClose className="w-6 cursor-pointer h-6 text-red-600 mt-3 mr-3  " />{" "}
           </button>
         </div>
-          <div className="p-2 ">
+          <div ref={editRef} className="p-2 ">
             <nav>
               <h1  className="font-semibold mb-4 text-start text-xl " >Menu </h1>
               

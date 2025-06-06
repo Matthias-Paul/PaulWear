@@ -32,7 +32,12 @@ const userSlice = createSlice({
     },
     setMyCart: (state, action) => {
       state.myCart = action.payload;   
-    },
+    },    
+    clearMyCart: (state, action) => {
+      state.myCart = [];  
+      state.cartQuantity = null; 
+    },       
+
     setCartQuantity: (state, action) => {         
       state.cartQuantity = action.payload;      
     },
@@ -47,6 +52,7 @@ export const {
   logOutSuccess,
   setMyCart,
   setCartQuantity,
+  clearMyCart,
   
 } = userSlice.actions;  
 

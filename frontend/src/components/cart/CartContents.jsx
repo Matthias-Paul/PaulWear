@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { RiDeleteBin3Line } from "react-icons/ri";
 import { setMyCart, setCartQuantity } from "../../redux/slice/userSlice.js";
@@ -11,6 +11,7 @@ const CartContents = () => {
   const dispatch = useDispatch();
   const { myCart, loginUser, guestId } = useSelector((state) => state.user);
   const [quantity, setQuantity] = useState(1);
+  const queryClient = useQueryClient();
 
 
   const isLoggedIn = Boolean(loginUser?.id);
@@ -52,14 +53,67 @@ const handleQuantityChange = (action) => {
   
   };
 
+   const deleteMutation = useMutation({
+      mutationFn: async ({ product, userId, guestId }) => {
+          const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/cart/${product.productId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              productId: product.productId,
+              userId,
+              guestId,
+              color: product.color,
+              size: product.size,
+              quantity: product.quantity
+            }),
+          });
 
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || "Failed to remove product from the cart");
+          }
+
+          return res.json();
+        },
+
+     onSuccess: (data) => {
+      toast.success(data.message);
+      dispatch(setMyCart((prevCart) => ({
+        ...prevCart,
+        products: prevCart.products.filter(p => p.productId !== deletedProductId)
+      })));
+
+  dispatch(setCartQuantity((prev) => prev - 1));
+
+      const key = loginUser?.id
+      ? ["cart", "user", loginUser.id]
+      : ["cart", "guest", guestId];
+
+    queryClient.invalidateQueries(key);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+
+  })
+
+        const handleDeleteProduct = (product) => {
+          if (window.confirm("Are you sure you want to delete this product?")) {
+            deleteMutation.mutate({
+              product,
+              userId: loginUser?.id,
+              guestId,
+            });
+          }
+        };
 
   return (
     <>
       <div>
         { myCart?.products?.length >= 1 ? (
-          myCart?.products?.map((product, index)=>(
-            <div className=" flex overflow-y-auto items-start gap-x-3 justify-between py-4 border-b " key={index}>
+          myCart?.products?.map((product)=>(
+            <div className=" flex overflow-y-auto items-start gap-x-3 justify-between py-4 border-b " key={product?.productId}>
                 <div className=" flex items-start " >
                         <img className="w-20 h-24 object-cover flex-shrink-0 mr-4 rounded " src={product?.image} alt={product?.image} />
                         <div>
@@ -80,8 +134,8 @@ const handleQuantityChange = (action) => {
                 </div>
                <div> 
                 <div className=" text-end " >
-                <div> ₦{product?.price?.toLocaleString()} </div>
-                <button> <RiDeleteBin3Line className="h-6 cursor-pointer w-6 mt-[4px] text-red-600 " />  </button>
+                <div> ₦{Number(product?.price).toFixed(2)} </div>
+                <button onClick={()=> handleDeleteProduct(product) } > <RiDeleteBin3Line className="h-6 cursor-pointer w-6 mt-[4px] text-red-600 " />  </button>
                 </div>
               </div>
             </div>    
