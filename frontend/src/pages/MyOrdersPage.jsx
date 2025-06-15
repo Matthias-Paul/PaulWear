@@ -2,10 +2,14 @@ import pic from "../assets/pic.jpg";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { setMyOrders } from "../redux/slice/userSlice.js";
+import { useSelector, useDispatch } from "react-redux";
 
 
 const MyOrdersPage = () => {
   const navigate = useNavigate();
+  const { myOrders } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
   const fetchOrders = async ({ pageParam = 1 }) => {
     const res = await fetch(
@@ -44,15 +48,23 @@ const MyOrdersPage = () => {
 
   const orders = data?.pages.flatMap((page) => page.orders) || [];
 
+  useEffect(() => {
+    // Only dispatch if orders from the query !== Redux state
+    const areOrdersDifferent =
+      orders.length !== myOrders.length ||
+      orders.some((order, i) => order._id !== myOrders[i]?._id);
+  
+    if (orders.length > 0 && areOrdersDifferent) {
+      dispatch(setMyOrders(orders));
+    }
+  }, [orders, myOrders, dispatch]);
+  
+
 return (
   <div className="mx-auto pt-[90px] px-[12px] pb-10 w-full">
     <h1 className="text-xl md:text-2xl font-bold my-6">My Orders</h1>
 
-    {isLoading ? (
-      <div className="text-gray-500 text-xl px-4 text-center">
-        Loading your orders!
-      </div>
-    ) : orders?.length === 0 ? (
+    { myOrders?.length === 0 ? (
       <div className="text-gray-500 text-xl px-4 text-center">
         You have no orders yet!
       </div>
@@ -73,7 +85,7 @@ return (
               </tr>
             </thead>
             <tbody>
-              {orders?.map((order, index) => (
+              {myOrders?.map((order, index) => (
                 <tr
                   key={order?._id}
                   onClick={() => handleRowClick(order?._id)}

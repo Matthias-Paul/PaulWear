@@ -9,9 +9,7 @@ const generateToken = async (userId, role, res)=> {
     throw new Error("JWT_SECRET is not defined in the environment variables");
   }
 
-  const userToken = jwt.sign({ userId, role }, secret, {
-    expiresIn: "7d",
-  });
+  const userToken = jwt.sign({ userId, role }, secret);
 
   res.cookie("token", userToken, {
     httpOnly: true,

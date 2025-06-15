@@ -8,8 +8,9 @@ import toast from "react-hot-toast";
 
 
 
-const CartContents = () => {
+const CartContents = ({toggleCartDrawer}) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const { myCart, loginUser, guestId } = useSelector((state) => state.user);
   const [quantity, setQuantity] = useState(1);
   const queryClient = useQueryClient();
@@ -156,9 +157,18 @@ const CartContents = () => {
           };
 
 
+          const handleCheckout= ()=>{
+    
+
+            navigate("/checkout")
+            toggleCartDrawer()
+          }
+
   return (
     <>
       <div>
+
+        <div>
         { myCart?.products?.length >= 1 ? (
           myCart?.products?.map((product)=>(
             <div className=" flex overflow-y-auto items-start gap-x-3 justify-between py-4 border-b " key={product?.productId}>
@@ -186,14 +196,33 @@ const CartContents = () => {
                 <button onClick={()=> handleDeleteProduct(product) } > <RiDeleteBin3Line className="h-6 cursor-pointer w-6 mt-[4px] text-red-600 " />  </button>
                 </div>
               </div>
-            </div>    
+
+             
+
+
+            </div>
+
+                
           ))
+
+         
         ):(
               <div className="text-center font-medium text-[16px] pb-7  " > No products found in your cart, start shopping!  </div>
 
         )
           
         }
+        </div>  
+        {
+          myCart.products &&(
+          <div className=" px-4 xl:w-[460px] text-center mx-auto  bottom-8 py-7 bg-white "> 
+                    <button onClick={handleCheckout} className="w-full transition hover:bg-gray-800 text-white py-2 bg-black cursor-pointer rounded-md font-semibold  "> Checkout </button>
+                    <div className="text-sm tracking-tighter text-center mt-2 text-gray-500  " > Delivery, taxes, with discount codes calculated at checkout. </div>
+        </div>
+          )
+        }
+        
+
       </div>  
     </>
   );

@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   loginUser: null,
   myCart: [],
+  myOrders: [],
   cartQuantity: null,
   guestId: `guest_${Date.now()}`
 };
@@ -33,7 +34,10 @@ const userSlice = createSlice({
     },
     setMyCart: (state, action) => {
       state.myCart = action.payload;   
-    },    
+    }, 
+    setMyOrders: (state, action) => {
+      state.myOrders = action.payload;   
+    },   
     clearMyCart: (state, action) => {
       state.myCart = [];  
       state.cartQuantity = null; 
@@ -54,6 +58,7 @@ export const {
   setMyCart,
   setCartQuantity,
   clearMyCart,
+  setMyOrders,
   
 } = userSlice.actions;  
 

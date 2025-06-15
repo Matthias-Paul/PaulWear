@@ -35,9 +35,9 @@ const buyer =[
     subheading:"Whether it is fresh chinchin, a new pair of sneakers, or that perfect lip gloss, you all find it here, all from fellow students."
   },
   {
-    icon:HiShieldCheck,
-    heading:"Shop with Confidence",
-    subheading:"Our escrow system protects your money. Your payment is only released when your order arrives."
+    icon: HiShieldCheck,
+    heading: "Shop with Confidence",
+    subheading: "We simulate escrow by ensuring vendors only get paid when you confirm delivery, giving you peace of mind."
   },
   {
     icon:HiUsers,

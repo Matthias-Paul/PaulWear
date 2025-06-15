@@ -3,8 +3,7 @@ import OAuth from "../components/common/OAuth"
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"
 import { useMutation, useQueryClient} from "@tanstack/react-query";
-import { signInSuccess, setMyCart, setCartQuantity, generateNewGuestId } from "../redux/slice/userSlice.js";
-
+import { signInSuccess, setMyCart, setCartQuantity, generateNewGuestId }from "../redux/slice/userSlice.js"; 
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
@@ -52,7 +51,7 @@ const Login = () => {
         queryClient.invalidateQueries(key);
     },
     onError: (error) => {
-      toast.error("Cart merge failed: " + error.message);
+      console.log("Cart merge failed: " + error.message);
     },
   });
 

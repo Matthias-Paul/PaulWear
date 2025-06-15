@@ -28,19 +28,14 @@ const handleClickOutside = (event) => {
   }, [drawerOpen]);
 
 
-  const handleCheckout= ()=>{
-    
-
-    navigate("/checkout")
-    toggleCartDrawer()
-  }
+  
 
   return (
     <>
     <div  className={`relative max-w-[1400px]    ${drawerOpen ? "h-screen": "" }  mx-auto`} > 
       <div
       ref={editRef}
-          className={`absolute right-0 bottom-0 h-full  w-[350px] sm:w-[400px] xl:w-[500px] shadow-lg flex flex-col h-full bg-white transition-all duration-300 ease-in-out
+          className={`absolute right-0 bottom-0 h-full  w-full sm:w-[400px] xl:w-[500px] shadow-lg flex flex-col h-full bg-white transition-all duration-300 ease-in-out
             ${drawerOpen ? "opacity-100 scale-100 bg-white pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}
           `}
         >
@@ -54,12 +49,8 @@ const handleClickOutside = (event) => {
             </div>
                 <h2 className="text-xl font-medium mb-4 " > Your Cart </h2>
                {/* cart contents */}
-               < CartContents />
+               < CartContents toggleCartDrawer={toggleCartDrawer} />
 
-                <div className=" px-4 xl:w-[460px] text-center mx-auto  bottom-8 py-7 bg-white "> 
-                    <button onClick={handleCheckout} className="w-full transition hover:bg-gray-800 text-white py-2 bg-black cursor-pointer rounded-md font-semibold  "> Checkout </button>
-                    <div className="text-sm tracking-tighter text-center mt-2 text-gray-500  " > Shipping, taxes, with discount codes calculated at checkout. </div>
-                </div>
              </div>   
                
       </div>

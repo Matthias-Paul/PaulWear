@@ -4,31 +4,31 @@ import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 const faqs = [
   {
     question: "How do I create an account?",
-    answer: "Simply navigate to the Register Page by clicking on the sign up button on the nav bar and follow the instructions. Once registered, you'll be able to browse stores, make purchases, and track your orders."
+    answer: "Simply navigate to the Register Page by clicking on the Sign Up button in the navigation bar and follow the prompts. Once registered, you’ll be able to make purchases, and track your orders."
   },
   {
     question: "How do I pay for products?",
-    answer: "Payments are securely processed through our platform using Paystack. Your money is held in escrow until you confirm that you've received your order in good condition."
+    answer: "We securely process payments using Paystack. Once you place an order, the payment is processed, and the vendor is notified to prepare and deliver your item."
   },
   {
     question: "Is it safe to buy from vendors on this platform?",
-    answer: "Absolutely! We verify all vendors before they are approved to sell. Payments are also held in escrow until you confirm receipt of your order, ensuring a safe buying experience."
+    answer: "Yes, we screen vendors before they can start selling. While we don't use a full escrow system, we monitor transactions closely to help ensure a safe buying experience for our customers."
   },
   {
     question: "When will my order be delivered?",
-    answer: "Delivery times vary depending on the vendor and location. Once your order is confirmed, the vendor will process and deliver it. You can track your order under the 'Orders' section of your account."
+    answer: "Delivery times vary by vendor and location. After your order is confirmed, the vendor will process and ship it. You can track your order from your account under the 'Orders' section."
   },
   {
     question: "What happens if I don't receive my order?",
-    answer: "If you don't receive your order or it arrives damaged, please report the issue through your account. Our support team will step in to resolve the matter and ensure a fair outcome."
+    answer: "If your order hasn’t arrived or if there’s a problem, please report it from your account. We’ll work with the vendor to resolve the issue and ensure you get a fair outcome."
   },
   {
     question: "How do I contact a vendor?",
-    answer: "Visit the vendor's store page view their contact information on their store page."
+    answer: "You can view and contact vendors by visiting their store page. Their contact information or chat option will be available there."
   },
   {
-    question: "What is escrow and how does it protect me?",
-    answer: "Escrow ensures your money is safe. When you pay for an order, your payment is held securely and only released to the vendor when you confirm that you've received your order."
+    question: "What is escrow and how does this platform protect me?",
+    answer: "While we don’t use a traditional escrow system, we simulate a similar process by holding vendors accountable and providing support if issues arise. We encourage you to confirm your order delivery to help us maintain quality service."
   }
 ];
 

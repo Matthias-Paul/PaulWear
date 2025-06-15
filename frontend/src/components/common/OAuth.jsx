@@ -49,7 +49,7 @@ const OAuth = () => {
           queryClient.invalidateQueries(key);
       },
       onError: (error) => {
-        toast.error("Cart merge failed: " + error.message);
+        console.log("Cart merge failed: " + error.message);
       },
     });
   

@@ -37,12 +37,6 @@ export const verifyUser = async (req, res, next) => {
   } catch (error) {
     console.error("JWT Error:", error.message);
 
-    if (error.name === "TokenExpiredError") {
-      return res.status(401).json({
-        success: false,
-        message: "Token has expired. Please log in again.",
-      });
-    }
 
     if (error.name === "JsonWebTokenError") {
       return res.status(401).json({

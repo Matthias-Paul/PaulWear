@@ -219,15 +219,15 @@ export const deleteCart = async(req, res, next)=>{
             return res.status(200).json({
                 success: true,
                 message:"Product removed from the cart"
-            })
+            })    
                                    
         }else{                             
             return res.status(404).json({
                 success: false,
                 message:"Product not found in the cart"
             })
-        }
-
+        }    
+   
 
         
     } catch (error) {
