@@ -4,8 +4,8 @@ import { verifyUser } from "../middleware/verifyUser.js"
 import { editVendorOrderValidation } from "../middleware/validation.js"
 
 const router = express.Router()
-     
-router.get("/orders", verifyUser, getOrders)
+          
+router.get("/orders", verifyUser, getOrders)    
 router.get("/orders/admin",  verifyUser, getAllOrders)
 router.get("/orders/vendor",  verifyUser, getVendorOrders)
 router.put("/orders/vendor/:orderId",  verifyUser, editVendorOrderValidation, editVendorOrders)

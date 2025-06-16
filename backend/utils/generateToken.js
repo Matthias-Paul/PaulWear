@@ -14,9 +14,13 @@ const generateToken = async (userId, role, res)=> {
   res.cookie("token", userToken, {
     httpOnly: true,
     sameSite: "strict",
-  });
+    maxAge: 1000 * 60 * 60 * 24 * 365 * 100 // 100 years in milliseconds
 
-  return userToken;
+  });            
+
+
+
+  return userToken;   
 };
 
 export default generateToken;

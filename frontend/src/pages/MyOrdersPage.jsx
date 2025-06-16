@@ -19,9 +19,8 @@ const MyOrdersPage = () => {
         credentials: "include",
       }
     );
-    if (!res.ok) {
-      throw new Error("Failed to fetch orders");
-    }
+    if (!res.ok) throw new Error("Failed to fetch orders");
+
     return res.json();
   };
 
@@ -31,6 +30,7 @@ const MyOrdersPage = () => {
     hasNextPage,
     isFetchingNextPage,
     isLoading,
+    isError,
   } = useInfiniteQuery({
     queryKey: ["orders"],
     queryFn: fetchOrders,
@@ -48,23 +48,31 @@ const MyOrdersPage = () => {
 
   const orders = data?.pages.flatMap((page) => page.orders) || [];
 
-  useEffect(() => {
-    // Only dispatch if orders from the query !== Redux state
-    const areOrdersDifferent =
-      orders.length !== myOrders.length ||
-      orders.some((order, i) => order._id !== myOrders[i]?._id);
+  // useEffect(() => {
+  //   // Only dispatch if orders from the query !== Redux state
+  //   const areOrdersDifferent =
+  //     orders.length !== myOrders.length ||
+  //     orders.some((order, i) => order._id !== myOrders[i]?._id);
   
-    if (orders.length > 0 && areOrdersDifferent) {
-      dispatch(setMyOrders(orders));
-    }
-  }, [orders, myOrders, dispatch]);
+  //   if (orders.length > 0 && areOrdersDifferent) {
+  //     dispatch(setMyOrders(orders));
+  //   }
+  // }, [orders, myOrders, dispatch]);
+
+
+  if (isLoading) {
+    return <div className="mx-auto text-lg pt-[120px] md:pt-[90px] px-[12px] pb-10 w-full" >Loading your orders...</div>;
+  }
   
+  if (isError) {
+    return <div className="mx-auto text-lg pt-[120px] md:pt-[90px] px-[12px] pb-10 w-full">Failed to load orders: {error}</div>;
+  }
 
 return (
   <div className="mx-auto pt-[90px] px-[12px] pb-10 w-full">
     <h1 className="text-xl md:text-2xl font-bold my-6">My Orders</h1>
 
-    { myOrders?.length === 0 ? (
+    { orders?.length === 0 ? (
       <div className="text-gray-500 text-xl px-4 text-center">
         You have no orders yet!
       </div>
@@ -85,7 +93,7 @@ return (
               </tr>
             </thead>
             <tbody>
-              {myOrders?.map((order, index) => (
+              {orders?.map((order, index) => (
                 <tr
                   key={order?._id}
                   onClick={() => handleRowClick(order?._id)}

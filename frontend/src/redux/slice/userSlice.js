@@ -54,7 +54,7 @@ export const {
   deleteUserSuccess,
   updateUserSuccess,
   generateNewGuestId,   
-  logOutSuccess,
+  logOutSuccess,    
   setMyCart,
   setCartQuantity,
   clearMyCart,

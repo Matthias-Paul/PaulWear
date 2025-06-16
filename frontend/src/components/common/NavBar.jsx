@@ -1,6 +1,7 @@
 import {  Link } from "react-router-dom"
 import { HiOutlineUser, HiOutlineShoppingBag, HiBars3BottomRight } from "react-icons/hi2"
 import SearchBar from "./SearchBar"
+import { BsCart } from 'react-icons/bs';
 import CartDrawer from "../layout/CartDrawer"
 import {useEffect, useRef, useState } from "react"
 import { IoMdClose } from "react-icons/io" 
@@ -99,11 +100,11 @@ const handleClickOutside = (event) => {
                  
                     
                     <button onClick={toggleCartDrawer}  className=" relative hover:text-black cursor-pointer ">
-                        <HiOutlineShoppingBag className="w-5  h-5 text-gray-700 inline "  />
+                        <BsCart className="w-5  h-5 text-gray-700 inline "  />
                         
                         {
                           cartQuantity && (
-                            <span className=" absolute text-[8px] bg-[#ea2e0e] font-[700] -right-1 text-white rounded-full px-1.5 py-0.5 " >  {cartQuantity}   </span>
+                            <span className=" absolute text-[8px] bg-[#ea2e0e] font-[700] -right-1.5 text-white rounded-full px-1.5 py-0.5 " >  {cartQuantity}   </span>
 
                           )
                         }
@@ -122,18 +123,19 @@ const handleClickOutside = (event) => {
         <CartDrawer setDrawerOpen={setDrawerOpen} toggleCartDrawer={toggleCartDrawer} drawerOpen={drawerOpen} />
 
       {/* Mobile navigation */}
-      
+      <div ref={editRef} >
         <div  className={` fixed right-0  top-10 ${
           navDrawerOpen ? "translate-x-0" : "translate-x-full"
         } w-[300px] sm:w-[350px] xl:w-1/4 shadow-lg flex flex-col transform transition-transform duration-300  h-full bg-white `}
       >
          <div className="flex justify-end ">
+          
           <button onClick={toggleNavDrawer}>
             {" "}
             <IoMdClose className="w-6 cursor-pointer h-6 text-red-600 mt-3 mr-3  " />{" "}
           </button>
         </div>
-          <div ref={editRef} className="p-2 ">
+          <div  className="p-2 ">
             <nav>
               <h1  className="font-semibold mb-4 text-start text-xl " >Menu </h1>
               
@@ -144,6 +146,7 @@ const handleClickOutside = (event) => {
 
             </nav>  
 
+          </div>
           </div>  
         </div>  
     </>

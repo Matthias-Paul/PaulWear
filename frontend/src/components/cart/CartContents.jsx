@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link} from "react-router-dom";
 import { useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { RiDeleteBin3Line } from "react-icons/ri";
@@ -207,14 +207,18 @@ const CartContents = ({toggleCartDrawer}) => {
 
          
         ):(
-              <div className="text-center font-medium text-[16px] pb-7  " > No products found in your cart, start shopping!  </div>
-
+        <>
+        <div className="text-center font-medium text-[16px] pb-7  " > No products found in your cart, start shopping!  </div>
+        <div className=" px-4 xl:w-[460px] text-center mx-auto  bottom-8  bg-white "> 
+            <Link to="/collections/all" >  <button  onClick={toggleCartDrawer} className="w-full transition hover:bg-gray-800 text-white py-2 bg-black cursor-pointer rounded-md font-semibold  "> Start Shopping </button> </Link>
+        </div>
+        </>
         )
           
         }
         </div>  
         {
-          myCart.products &&(
+          myCart?.products?.length >=1 &&(
           <div className=" px-4 xl:w-[460px] text-center mx-auto  bottom-8 py-7 bg-white "> 
                     <button onClick={handleCheckout} className="w-full transition hover:bg-gray-800 text-white py-2 bg-black cursor-pointer rounded-md font-semibold  "> Checkout </button>
                     <div className="text-sm tracking-tighter text-center mt-2 text-gray-500  " > Delivery, taxes, with discount codes calculated at checkout. </div>
