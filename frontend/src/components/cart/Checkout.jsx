@@ -2,32 +2,16 @@ import pic from "../../assets/pic.jpg";
 import { useNavigate } from "react-router-dom"
 import { useState } from "react";
 import PayPalButton from "./PayPalButton"
+import { useSelector } from "react-redux";
 
 
 
 const Checkout = () => {
 
-const cart = {
-    products:[
-        {
-            _id:0,
-            name:"Stylish Jacket",
-            size: "M",
-            color:"black",
-            price:120,
-            image:pic
-        },
-        {
-            _id:1,
-            name:"Stylish Jacket2",
-            size: "L",
-            color:"red",
-            price:150,
-            image:pic
-        }
-    ],
-    totalPrice:270
-}
+    const { myCart, loginUser } = useSelector((state) => state.user);
+
+    console.log(myCart)
+
 
 
    const [checkoutId, setCheckoutId] = useState(null) 
@@ -42,14 +26,14 @@ const cart = {
         phone:""
     })
 
-    const handleCreateCheckout = (e)=>{
+    const handleCreateCheckout = async(e)=>{
         e.preventDefault()
 
 
-        setCheckoutId(1223)
+        setCheckoutId(myCart._id)
     }
 
-    const handlePaymentSuccess =(details)=>{
+    const handlePaymentSuccess = async(details)=>{
         console.log("Payment Successful", details)
 
         navigate("/order-confirmation")
@@ -65,7 +49,7 @@ const cart = {
                     <h1 className="text-lg mb-4 " >  Contact Details  </h1>
                     <div className="mb-4" >
                        <label className="text-gray-700 block "  > Email </label> 
-                       <input type="email" className="w-full mt-1 rounded p-2 border border-gray-400" value="user@gmail.com" disabled  />                                                                                                                                                                        
+                       <input type="email" className="w-full mt-1 rounded p-2 border border-gray-400" value={loginUser?.email} disabled  />                                                                                                                                                                        
 
                     </div> 
                        <h1 className="text-lg mb-4 " >  Delivery  </h1>
@@ -110,12 +94,12 @@ const cart = {
             </div>    
 
             {/* right section */}
-            <div className="bg-gray-50 py-4 lg:px-13 mb-15 lg:mb-0 rounded-lg" >
+            <div className="bg-gray-50 py-4 px-5 lg:px-13 mb-15 lg:mb-0 rounded-lg" >
             <h1 className="text-xl mb-4 mt-5 font-[500] " > Order Summary </h1>
                <div className="border-t border-gray-700 py-4 mb-4 " >
                             {
                               
-                                cart?.products?.map((product) => (
+                                myCart?.products?.map((product) => (
                                     <div key={product?._id} className="py-2  border-b border-gray-700 flex items-start justify-between " >
                                         <div className="flex  items-start  " >
 
@@ -124,11 +108,12 @@ const cart = {
                                             <h1 className="text-md" >     {product?.name}   </h1>
                                             <p className="text-gray-500" >    Size: {product?.size}   </p>
                                              <p className="text-gray-500" >    Color: {product?.color}   </p>
+                                             <p className="text-gray-500" >    Quantity: {product?.quantity}   </p>
 
                                           </div> 
 
                                         </div>    
-                                     <p className="text-xl" >  ₦{product?.price?.toFixed(2)} </p>   
+                                     <p className="text-xl" >  ₦{Number(product?.price).toFixed(2)} </p>   
 
                                      </div>   
                                 ))
@@ -137,7 +122,7 @@ const cart = {
 
                <div className=" text-lg mb-4 flex justify-between items-center" >
                             <p> SubTotal </p>
-                            <p className="text-xl" >  ₦{cart?.totalPrice?.toFixed(2)} </p>   
+                            <p className="text-xl" >  ₦{myCart?.totalPrice?.toFixed(2)} </p>   
 
                </div> 
                  <div className=" text-lg mb-4 flex justify-between items-center" >
@@ -147,7 +132,7 @@ const cart = {
                </div> 
                 <div className=" text-lg mb-4 flex justify-between items-center pb-4 border-t border-gray-700 " >
                             <p> Total </p>
-                            <p className="text-xl" >  ₦{cart?.totalPrice?.toFixed(2)} </p>   
+                            <p className="text-xl" >  ₦{myCart?.totalPrice?.toFixed(2)} </p>   
 
                </div> 
             </div>    

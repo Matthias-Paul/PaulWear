@@ -20,7 +20,7 @@ export const addCart = async(req, res, next)=>{
     if (!errors.isEmpty()) {
         // If there are validation errors, return the first error message
         return res.status(400).json({
-            statusCode: 400,
+            statusCode: 400, 
             success: false,        
             message: errors.array()[0].msg 
         }); 

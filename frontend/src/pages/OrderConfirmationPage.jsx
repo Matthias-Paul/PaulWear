@@ -89,7 +89,7 @@ const OrderConfirmationPage = () => {
 
                         <div className="  " >
                             <h4 className="text-mlgd font-bold mb-2 " >  Payment </h4>
-                            <p className=" text-gray-600 " > PayPal </p>
+                            <p className=" text-gray-600 " > Paystack </p>
                         </div>   
 
                         {/* Delivery info */}

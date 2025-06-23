@@ -13,6 +13,8 @@ const CartContents = ({toggleCartDrawer}) => {
   const navigate = useNavigate()
   const { myCart, loginUser, guestId } = useSelector((state) => state.user);
   const [quantity, setQuantity] = useState(1);
+  const [productId, setProductId] = useState("");
+
   const queryClient = useQueryClient();
 
 
@@ -138,6 +140,8 @@ const CartContents = ({toggleCartDrawer}) => {
         });
 
         const handleQuantityChange = (product, action) => {
+          setProductId(product?.productId)
+          console.log(productId)
             let newQuantity = product.quantity;
             if (action === "plus") {
               newQuantity += 1;
@@ -183,7 +187,16 @@ const CartContents = ({toggleCartDrawer}) => {
                              </div> 
                             <div className="mt-2 flex items-center gap-x-2 " >
                                  <button onClick={() => handleQuantityChange(product, "minus")} className="text-xl active:bg-gray-200 font-medium cursor-pointer px-2 border rounded " > - </button>    
-                                 <span className="mx-4" > {product?.quantity} </span>
+                                 <span className="mx-4" >
+                                 {updateCartMutation?.isPending && product.productId === productId ? (
+                                        <div className="flex items-center justify-center ">
+                                          <div className="w-4 h-4 border-4 border-dashed rounded-full animate-spin border-gray-400"></div>
+                                        </div>
+                                      ) : (
+                                       <span> {product?.quantity} </span>
+                                      )}
+                                   
+                                   </span>
                                  <button onClick={() => handleQuantityChange(product, "plus")} className="text-xl active:bg-gray-200 font-medium cursor-pointer px-2 border rounded " > + </button>    
 
                             </div>    
