@@ -14,6 +14,8 @@ const CartContents = ({toggleCartDrawer}) => {
   const { myCart, loginUser, guestId } = useSelector((state) => state.user);
   const [quantity, setQuantity] = useState(1);
   const [productId, setProductId] = useState("");
+  const [size, setSize] = useState("");
+  const [color, setColor] = useState("");
 
   const queryClient = useQueryClient();
 
@@ -80,13 +82,13 @@ const CartContents = ({toggleCartDrawer}) => {
           return res.json();
         },
         onSuccess: (data) => {
-        toast.success(data.message);
         const key = loginUser?.id
         ? ["cart", "user", loginUser.id]
         : ["cart", "guest", guestId];
 
         queryClient.invalidateQueries(key);
-    
+        toast.success(data.message);
+
     },
     onError: (error) => {
       toast.error(error.message);
@@ -127,12 +129,13 @@ const CartContents = ({toggleCartDrawer}) => {
             return data;
           },
           onSuccess: (data) => {
-            toast.success(data.message);
             const key = loginUser?.id
             ? ["cart", "user", loginUser.id]
             : ["cart", "guest", guestId];
 
-        queryClient.invalidateQueries(key);
+            queryClient.invalidateQueries(key);
+            toast.success(data.message);
+
           },
           onError: (err) => {
             toast.error(err.message);
@@ -141,6 +144,8 @@ const CartContents = ({toggleCartDrawer}) => {
 
         const handleQuantityChange = (product, action) => {
           setProductId(product?.productId)
+          setSize(product?.size)
+          setColor(product?.color)
           console.log(productId)
             let newQuantity = product.quantity;
             if (action === "plus") {
@@ -188,9 +193,9 @@ const CartContents = ({toggleCartDrawer}) => {
                             <div className="mt-2 flex items-center gap-x-2 " >
                                  <button onClick={() => handleQuantityChange(product, "minus")} className="text-xl active:bg-gray-200 font-medium cursor-pointer px-2 border rounded " > - </button>    
                                  <span className="mx-4" >
-                                 {updateCartMutation?.isPending && product.productId === productId ? (
+                                 {updateCartMutation?.isPending && product?.productId === productId && product?.size === size && product?.color === color ? (
                                         <div className="flex items-center justify-center ">
-                                          <div className="w-4 h-4 border-4 border-dashed rounded-full animate-spin border-gray-400"></div>
+                                          <div className="w-5 h-5 border-5 rounded-full animate-spin border-gray-400"></div>
                                         </div>
                                       ) : (
                                        <span> {product?.quantity} </span>

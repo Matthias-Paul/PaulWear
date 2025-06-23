@@ -94,18 +94,18 @@ const Checkout = () => {
             </div>    
 
             {/* right section */}
-            <div className="bg-gray-50 py-4 px-5 lg:px-13 mb-15 lg:mb-0 rounded-lg" >
+            <div className="bg-gray-50 py-4 px-2 sm:px-5 lg:px-13 mb-15 lg:mb-0 rounded-lg" >
             <h1 className="text-xl mb-4 mt-5 font-[500] " > Order Summary </h1>
                <div className="border-t border-gray-700 py-4 mb-4 " >
                             {
                               
                                 myCart?.products?.map((product) => (
-                                    <div key={product?._id} className="py-2  border-b border-gray-700 flex items-start justify-between " >
-                                        <div className="flex  items-start  " >
+                                    <div key={product?._id} className="py-2 text-sm  border-b border-gray-700 flex items-start justify-between " >
+                                        <div className="flex text-sm sm:text-lg  items-start justify-center " >
 
-                                           <img src={product?.image} alt={product?.name} className="w-20 h-24 object-cover rounded-sm flex-shrink-0 mr-4" />
+                                           <img src={product?.image} alt={product?.name} className="w-20 h-24 sm:w-26 sm:h-30 object-cover rounded-sm flex-shrink-0 mr-4" />
                                             <div>
-                                            <h1 className="text-md" >     {product?.name}   </h1>
+                                            <h1 className=" font-[400] " >     {product?.name}   </h1>
                                             <p className="text-gray-500" >    Size: {product?.size}   </p>
                                              <p className="text-gray-500" >    Color: {product?.color}   </p>
                                              <p className="text-gray-500" >    Quantity: {product?.quantity}   </p>
@@ -113,26 +113,26 @@ const Checkout = () => {
                                           </div> 
 
                                         </div>    
-                                     <p className="text-xl" >  ₦{Number(product?.price).toFixed(2)} </p>   
+                                     <p className=" text-md sm:text-xl" >  ₦{Number(product?.price).toFixed(2)} </p>   
 
                                      </div>   
                                 ))
                             }
                </div> 
 
-               <div className=" text-lg mb-4 flex justify-between items-center" >
+               <div className="  text-md sm:text-xl mb-4 flex justify-between items-center" >
                             <p> SubTotal </p>
-                            <p className="text-xl" >  ₦{myCart?.totalPrice?.toFixed(2)} </p>   
+                            <p className=" " >  ₦{myCart?.totalPrice?.toFixed(2)} </p>   
 
                </div> 
-                 <div className=" text-lg mb-4 flex justify-between items-center" >
+                 <div className=" text-md sm:text-xl mb-4 flex justify-between items-center" >
                             <p> Delivery </p>
-                            <p className="text-xl" > Free </p>   
+                            <p className=" " > Free </p>   
 
                </div> 
-                <div className=" text-lg mb-4 flex justify-between items-center pb-4 border-t border-gray-700 " >
+                <div className=" text-md sm:text-xl mb-4 flex justify-between items-center pb-4 border-t border-gray-700 " >
                             <p> Total </p>
-                            <p className="text-xl" >  ₦{myCart?.totalPrice?.toFixed(2)} </p>   
+                            <p className=" " >  ₦{myCart?.totalPrice?.toFixed(2)} </p>   
 
                </div> 
             </div>    
