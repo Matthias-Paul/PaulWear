@@ -78,9 +78,11 @@ export const webHook = async (req, res)=>{
     const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
     console.log("Hash", hash)
 
-    if (hash == req.headers['x-paystack-signature']) {
+    console.log( "headers", req.headers['x-paystack-signature'])
+    
+    if (hash === req.headers['x-paystack-signature']) {
            
-        
+                
         const event = JSON.parse(req.body.toString());
      
         console.log("Event", event)
