@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useState } from "react";
 import PayPalButton from "./PayPalButton"
 import { useSelector } from "react-redux";
-
+import Paystack from '@paystack/inline-js'
 
 
 const Checkout = () => {
@@ -26,12 +26,57 @@ const Checkout = () => {
         phone:""
     })
 
-    const handleCreateCheckout = async(e)=>{
-        e.preventDefault()
+    const totalPrice = Number(myCart?.totalPrice.toFixed(0) * 100) 
+    console.log("total price", totalPrice)
 
 
-        setCheckoutId(myCart._id)
-    }
+    const handleCreateCheckout = async (e) => {
+        e.preventDefault();
+      
+        try {
+          const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/pay/init`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: loginUser.email,
+                amount: totalPrice,
+                userId: myCart.user,
+                checkoutId: myCart._id,
+                myCart: myCart.products,
+                firstName: shippingAddress.firstName,
+                lastName: shippingAddress.lastName,
+                phone: shippingAddress.phone,
+              }),
+          });
+      
+          const { access_code,  reference  } = await res.json();
+          const key =  import.meta.env.VITE_PAYSTACK_PUBLIC_KEY
+
+
+          const popup = new Paystack()  
+
+          popup.newTransaction({
+            key,
+            reference,
+            email: loginUser.email,
+            amount: totalPrice,
+            onSuccess: (transaction) => {
+              console.log("Payment Success:", transaction);
+            //   // save order, show confirmation, etc.
+
+            //call API to save order
+            //   navigate("/order-confirmation");
+            },
+            onCancel: () => {
+              console.log("Transaction canceled");
+            },
+          });
+      
+        } catch (err) {
+          console.error("Payment failed:", err);
+        }
+      };
+      
 
     const handlePaymentSuccess = async(details)=>{
         console.log("Payment Successful", details)
@@ -77,18 +122,8 @@ const Checkout = () => {
 
                         <div className="mt-4  " >
 
-                            {!checkoutId ? (
-                                <button type="submit" className="w-full py-2 font-medium text-lg cursor-pointer bg-black text-white rounded  " > Continue To Payment  </button>
-                            ):(
-                                <div>
-                                <h1 className="text-lg mb-4" > Pay With Paypal </h1>   
-                                <PayPalButton
-                                 amount={100}
-                                 onSuccess={handlePaymentSuccess} 
-                                 onError={(err)=> alert("Payment failed. Try again.")}
-                                 /> 
-                                </div>
-                            )}
+                                <button   type="submit" className="w-full py-2 font-medium text-lg cursor-pointer bg-black text-white rounded  " > Continue To Payment  </button>
+                           
                         </div>    
                 </form>    
             </div>    

@@ -1,3 +1,6 @@
+import { FaCheck } from "react-icons/fa";
+
+
 
 const VendorOrderManagement = () => {
   const orders = [
@@ -7,7 +10,7 @@ const VendorOrderManagement = () => {
                 name:"Daniel James"
             },
             totalPrice: 110,
-            status:"Processing"
+            status:"Delivered"
         },
         {
             _id:1234,
@@ -77,19 +80,22 @@ const VendorOrderManagement = () => {
                             ₦{order?.totalPrice.toFixed(2)}                      
                          </td >
                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
-                        <select name="role" value={order.status} onChange={(e) => handleStatusChange(order._id, e.target.value) } className=" focus:ring-blue-500 focus:border-blue-500   w-full block cursor-pointer bg-gray-50 text-sm p-2 rounded border border-gray-400 mt-1 " >
-                            <option value="processing" > Processing </option>
-                            <option value="shipped" > Shipped </option>
-                            <option value="delivered" > Delivered </option>
-                            <option value="cancelled" > Cancelled </option>
-                        </select>                      
+                         <div> {order?.status}  </div>                      
                          </td >
 
-                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
+                         <td className="py-3  px-4 sm:py-4 sm:px-4" > 
                             
-                            <button className="bg-green-500 hover:bg-green-600 rounded py-2 px-2 cursor-pointer text-white  " onClick={()=> handleStatusChange(order._id, "delivered")}  >
-                                Mark as Delivered
-                            </button>    
+                            <div className="bg-green-500 rounded  py-2 px-2  text-white  "   >
+                                {
+                                    order?.status === "Delivered" ?(
+                                      <div  className="  flex items-center justify-center " >  Delivered  <FaCheck className="ml-2  text-center w-4 h-4" />    </div>
+
+                                    ):(
+                                      <button className="cursor-pointer" onClick={()=> handleStatusChange(order._id, "delivered")} >  Mark as Delivered </button>
+                                    )
+
+                                }
+                            </div>    
                          </td >
 
                         </tr>

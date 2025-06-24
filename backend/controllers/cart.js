@@ -41,7 +41,6 @@ export const addCart = async(req, res, next)=>{
 
             let cart = await getCart(userId, guestId);
 
-            console.log(cart)
 
             if (cart) {
                 const productIndex = cart.products.findIndex(
@@ -258,7 +257,6 @@ export const getUserCart = async(req, res, next)=>{
         }       
         const cart = await getCart(userId, guestId )
         
-        console.log(cart) 
         if(!cart){                 
             return res.status(404).json({
                 success: false,
