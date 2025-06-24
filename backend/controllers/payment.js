@@ -79,23 +79,11 @@ export const webHook = async (req, res)=>{
     console.log("Hash", hash)
 
     if (hash == req.headers['x-paystack-signature']) {
-      
-
-        const signature = req.headers['x-paystack-signature'];
-
-        // req.body is a Buffer, so we use it directly
-        const hash = crypto
-          .createHmac('sha512', secret)
-          .update(req.body)
-          .digest('hex');
-      
-        if (hash !== signature) {
-          return res.status(401).send('Invalid signature');
-        }     
-      
+           
+        
         const event = JSON.parse(req.body.toString());
-
-              console.log("Event", event)
+     
+        console.log("Event", event)
         if (event.event === 'charge.success') {
             const data = event.data;
             const metadata = data.metadata;
