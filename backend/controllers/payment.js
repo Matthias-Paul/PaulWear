@@ -83,7 +83,7 @@ export const webHook = async (req, res)=>{
   
     if (hash !== signature) {
       return res.status(401).send('Invalid signature');
-    }
+    }     
   
     const event = JSON.parse(req.body.toString());
   
@@ -104,12 +104,12 @@ export const webHook = async (req, res)=>{
         //   paidAt: data.paid_at,
         //   paymentGateway: 'paystack',
         // });
-  
+            console.log(metadata)
         return res.status(200).send('Order saved');
-      } catch (err) {
+      } catch (err) {   
         console.error('Error saving order:', err);
         return res.status(500).send('DB Error');
-      }
+      }      
     }
   
     return res.sendStatus(200); // Return 200

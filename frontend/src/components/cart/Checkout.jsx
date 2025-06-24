@@ -4,6 +4,7 @@ import { useState } from "react";
 import PayPalButton from "./PayPalButton"
 import { useSelector } from "react-redux";
 import Paystack from '@paystack/inline-js'
+import toast from "react-hot-toast";
 
 
 const Checkout = () => {
@@ -62,17 +63,16 @@ const Checkout = () => {
             amount: totalPrice,
             onSuccess: (transaction) => {
               console.log("Payment Success:", transaction);
-            //   // save order, show confirmation, etc.
-
-            //call API to save order
-            //   navigate("/order-confirmation");
+              toast.success("Payment Successful")
+              navigate("/order-confirmation");
             },
             onCancel: () => {
-              console.log("Transaction canceled");
+              toast.error("Transaction canceled");
             },
           });
       
         } catch (err) {
+            toast.error("Payment failed!")
           console.error("Payment failed:", err);
         }
       };
@@ -122,7 +122,7 @@ const Checkout = () => {
 
                         <div className="mt-4  " >
 
-                                <button   type="submit" className="w-full py-2 font-medium text-lg cursor-pointer bg-black text-white rounded  " > Continue To Payment  </button>
+                                <button   type="submit" className="w-full active:border active:border-gray-400 active:bg-white active:text-black py-2 font-medium text-lg cursor-pointer bg-black text-white rounded  " > Continue To Payment  </button>
                            
                         </div>    
                 </form>    

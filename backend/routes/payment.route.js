@@ -9,7 +9,7 @@ const router = express.Router()
 router.post("/pay/init", makePayment)    
 router.post("/webhook/paystack", webHook)    
 
-
+   
    
 export default router
 

@@ -9,7 +9,7 @@
     "start": "node backend/index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "", 
   "license": "ISC",
   "description": "",
   "dependencies": {
