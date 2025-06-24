@@ -75,16 +75,16 @@ export const webHook = async (req, res)=>{
 
     const secret = process.env.PAYSTACK_SECRET_KEY;
 
-    const hash = crypto.createHmac('sha512', secret)
-      .update(req.body)
-      .digest('hex');
-  
-    const signature = req.headers['x-paystack-signature'];
-  
+    const hash = crypto
+    .createHmac('sha512', secret)
+    .update(req.body) 
+    .digest('hex');
+
+  const signature = req.headers['x-paystack-signature'];
     if (hash !== signature) {
       return res.status(401).send('Invalid signature');
     }     
-  
+    
     const event = JSON.parse(req.body.toString());
   
     if (event.event === 'charge.success') {
