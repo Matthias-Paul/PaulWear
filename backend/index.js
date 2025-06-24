@@ -24,6 +24,10 @@ connectDatabase()
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+
+
+app.use("/api", paymentRoute)
+
 app.use(express.json());
 app.use(cookieParser());
 
@@ -56,7 +60,6 @@ app.use("/api", uploadRoute)
 app.use("/api", subscribeRoute)
 app.use("/api", adminRoute)  
 app.use("/api", vendorRoute)
-app.use("/api", paymentRoute)
 
 
 
