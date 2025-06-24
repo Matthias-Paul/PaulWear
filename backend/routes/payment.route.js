@@ -8,6 +8,6 @@ const router = express.Router();
 router.post("/webhook/paystack", bodyParser.raw({ type: "application/json" }), webHook);
 
 // Other routes
-router.post("/pay/init", makePayment);
+router.post("/pay/init", express.json(), makePayment);
 
 export default router;
