@@ -9,7 +9,7 @@ const router = express.Router()
 
 
 
-router.post("/webhook/paystack", webHook)          
+router.post("/webhook/paystack", express.raw({ type: 'application/json' }), webHook)          
 router.post("/pay/init", makePayment)    
 
 

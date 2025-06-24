@@ -74,10 +74,12 @@ export const makePayment = async (req, res)=>{
 export const webHook = async (req, res)=>{
 
     const secret = process.env.PAYSTACK_SECRET_KEY;
-
+    console.log("Secret", secret)
     const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
-    if (hash == req.headers['x-paystack-signature']) {
+    console.log("Hash", hash)
 
+    if (hash == req.headers['x-paystack-signature']) {
+      
         const event = req.body;
         if (event.event === 'charge.success') {
             const data = event.data;
