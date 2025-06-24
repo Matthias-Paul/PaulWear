@@ -81,6 +81,7 @@ export const webHook = async (req, res)=>{
     if (hash == req.headers['x-paystack-signature']) {
       
         const event = req.body;
+        console.log("Event", event)
         if (event.event === 'charge.success') {
             const data = event.data;
             const metadata = data.metadata;
