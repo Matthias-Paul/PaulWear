@@ -71,41 +71,50 @@ export const makePayment = async (req, res)=>{
 
 
 
-export const webHook = async (req, res) => {
+export const webHook = async (req, res)=>{
+
     const secret = process.env.PAYSTACK_SECRET_KEY;
-  
-    const signature = req.headers['x-paystack-signature'];
-  
-    // `req.body` is a raw Buffer here because of express.raw()
-    const hash = crypto
-      .createHmac('sha512', secret)
-      .update(req.body)
-      .digest('hex');
-  
-    console.log("Computed Hash:", hash);
-    console.log("Header Signature:", signature);
-  
-    if (hash !== signature) {
-      return res.status(401).send('Invalid signature');
-    }
-  
-    // Now safe to parse body
-    const event = JSON.parse(req.body.toString());
-  
-    if (event.event === 'charge.success') {
-      const data = event.data;
-      const metadata = data.metadata;
-  
-      console.log("✅ metadata", metadata);
-      console.log("✅ data", data);
-  
-      // Save order to DB here
-      return res.status(200).send('Webhook received');
-    }
-  
-    return res.sendStatus(200);
-  };
-  
+    console.log("Secret", secret)
+    const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
+    console.log("Hash", hash)
+
+    console.log( "headers", req.headers['x-paystack-signature'])
+    
+    if (hash == req.headers['x-paystack-signature']) {
+           
+                
+        const event = JSON.parse(req.body.toString());
+     
+        console.log("Event", event)
+        if (event.event === 'charge.success') {
+            const data = event.data;
+            const metadata = data.metadata;
+            console.log("metadata", metadata)
+            console.log("data", data)
+      
+            try {
+              // await Order.create({
+              //   user: metadata.userId,
+              //   checkoutId: metadata.checkoutId,
+              //   products: metadata.cartItems,
+              //   customer: metadata.customer,
+              //   amountPaid: data.amount / 100,
+              //   status: 'Paid',
+              //   reference: data.reference,
+              //   channel: data.channel,
+              //   paidAt: data.paid_at,
+              //   paymentGateway: 'paystack',
+              // });
+              return res.status(200).send('Order saved');
+            } catch (err) {   
+              console.error('Error saving order:', err);
+              return res.status(500).send('DB Error');
+            }      
+          }
+        
+    }    
+    return res.sendStatus(200); // Return 200
+}
 
 
 

@@ -1,10 +1,17 @@
-import express from "express";
-import { webHook, makePayment } from "../controllers/payment.js";
 
-const router = express.Router();
+import express from "express"
+import { makePayment, webHook } from "../controllers/payment.js"
+import { verifyUser } from "../middleware/verifyUser.js"
+import {  } from "../middleware/validation.js"
+       
 
-router.post("/webhook/paystack", express.raw({ type: 'application/json' }), webHook);
+const router = express.Router()
 
-router.post("/pay/init", express.json(), makePayment);
 
-export default router;
+router.post("/webhook/paystack", webHook)          
+router.post("/pay/init", makePayment)    
+
+
+   
+export default router
+
