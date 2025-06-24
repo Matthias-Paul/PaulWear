@@ -1,17 +1,13 @@
+import express from "express";
+import { webHook, makePayment } from "../controllers/payment.js";
+import bodyParser from "body-parser";
 
-import express from "express"
-import { makePayment, webHook } from "../controllers/payment.js"
-import { verifyUser } from "../middleware/verifyUser.js"
-import {  } from "../middleware/validation.js"
-       
+const router = express.Router();
 
-const router = express.Router()
+// Don't parse webhook body as JSON — use raw
+router.post("/webhook/paystack", bodyParser.raw({ type: "application/json" }), webHook);
 
+// Other routes
+router.post("/pay/init", makePayment);
 
-router.post("/webhook/paystack", webHook)          
-router.post("/pay/init", makePayment)    
-
-
-   
-export default router
-
+export default router;

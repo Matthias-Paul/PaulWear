@@ -71,49 +71,44 @@ export const makePayment = async (req, res)=>{
 
 
 
-export const webHook = async (req, res)=>{
-
-    // const secret = process.env.PAYSTACK_SECRET_KEY;
-    // console.log("Secret", secret)
-    // const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
-    // console.log("Hash", hash)
-
-    // console.log( "headers", req.headers['x-paystack-signature'])
-    
-    // if (hash == req.headers['x-paystack-signature']) {
-           
-                
-        const event = req.body
-     
-        console.log("Event", event)
-        if (event.event === 'charge.success') {
-            const data = event.data;
-            const metadata = data.metadata;
-            console.log("metadata", metadata)
-            console.log("data", data)
+export const webHook = async (req, res) => {
+    const secret = process.env.PAYSTACK_SECRET_KEY;
+  
+    try {
+      // Get raw body buffer
+      const rawBody = req.body; // This is already a buffer due to `bodyParser.raw`
+      const hash = crypto.createHmac("sha512", secret).update(rawBody).digest("hex");
+      const signature = req.headers["x-paystack-signature"];
+  
+      // Log hash & signature
+      console.log("Local Hash:", hash);
+      console.log("Header Signature:", signature);
+  
+      if (hash !== signature) {
+        console.log("❌ Invalid signature");
+        return res.status(401).send("Unauthorized request");
+      }
+  
+      const event = JSON.parse(rawBody.toString()); // Convert Buffer to JSON
+      console.log("✅ Verified Event:", event);
+  
+      if (event.event === "charge.success") {
+        const data = event.data;
+        const metadata = data.metadata;
+  
+        console.log("✅ Metadata received:", metadata);
+  
+        // Optional: Save to DB
+        // await Order.create({ ... });
+  
+        return res.status(200).send("Webhook received & verified");
+      }
       
-            try {
-              // await Order.create({
-              //   user: metadata.userId,
-              //   checkoutId: metadata.checkoutId,
-              //   products: metadata.cartItems,
-              //   customer: metadata.customer,
-              //   amountPaid: data.amount / 100,
-              //   status: 'Paid',
-              //   reference: data.reference,
-              //   channel: data.channel,
-              //   paidAt: data.paid_at,
-              //   paymentGateway: 'paystack',
-              // });
-              return res.status(200).send('Order saved');
-            } catch (err) {   
-              console.error('Error saving order:', err);
-              return res.status(500).send('DB Error');
-            }      
-          }
-        
-    }    
-
-
+      return res.status(200).send("Webhook received (non-success event)");
+    } catch (err) {
+      console.error("Webhook Error:", err.message);
+      return res.status(500).send("Internal server error");
+    }
+  };
 
 
