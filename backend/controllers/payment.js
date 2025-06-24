@@ -90,7 +90,9 @@ export const webHook = async (req, res)=>{
     if (event.event === 'charge.success') {
       const data = event.data;
       const metadata = data.metadata;
-  
+      console.log("metadata", metadata)
+      console.log("data", data)
+
       try {
         // await Order.create({
         //   user: metadata.userId,
@@ -104,7 +106,6 @@ export const webHook = async (req, res)=>{
         //   paidAt: data.paid_at,
         //   paymentGateway: 'paystack',
         // });
-            console.log(metadata)
         return res.status(200).send('Order saved');
       } catch (err) {   
         console.error('Error saving order:', err);
