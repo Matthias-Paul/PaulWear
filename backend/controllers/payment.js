@@ -80,7 +80,7 @@ export const webHook = async (req, res)=>{
 
     console.log( "headers", req.headers['x-paystack-signature'])
     
-    if (hash === req.headers['x-paystack-signature']) {
+    if (hash == req.headers['x-paystack-signature']) {
            
                 
         const event = JSON.parse(req.body.toString());
