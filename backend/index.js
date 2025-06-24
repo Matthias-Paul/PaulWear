@@ -26,9 +26,7 @@ const PORT = process.env.PORT || 8000;
 
 
 
-app.use("/api", paymentRoute)
 
-app.use(express.json());
 app.use(cookieParser());
 
 app.use(
@@ -39,7 +37,9 @@ app.use(
   })
 );
 
+app.use("/api", paymentRoute)
 
+app.use(express.json());
 
 
 const _dirname = path.resolve()
