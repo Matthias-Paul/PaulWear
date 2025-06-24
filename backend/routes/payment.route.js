@@ -7,11 +7,13 @@ import bodyParser from 'body-parser';
 
 
 const router = express.Router()
-          
-router.post("/pay/init", makePayment)    
-router.post("/webhook/paystack", bodyParser.raw({ type: 'application/json' }),  webHook)    
 
-   
+
+
+router.post("/webhook/paystack", bodyParser.raw({ type: 'application/json' }),  webHook)          
+router.post("/pay/init", makePayment)    
+
+         
    
 export default router
 
