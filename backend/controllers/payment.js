@@ -75,21 +75,27 @@ export const webHook = async (req, res)=>{
 
     const secret = process.env.PAYSTACK_SECRET_KEY;
     console.log("Secret", secret)
-    
-  const signature = req.headers['x-paystack-signature'];
+    const hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
+    console.log("Hash", hash)
 
-  const hash = crypto
-    .createHmac('sha512', secret)
-    .update(req.body)
-    .digest('hex');
+    if (hash == req.headers['x-paystack-signature']) {
+      
 
-  if (hash !== signature) {
-    return res.status(401).send('Invalid signature');
-  }
+        const signature = req.headers['x-paystack-signature'];
 
-  const event = JSON.parse(req.body.toString());
+        // req.body is a Buffer, so we use it directly
+        const hash = crypto
+          .createHmac('sha512', secret)
+          .update(req.body)
+          .digest('hex');
+      
+        if (hash !== signature) {
+          return res.status(401).send('Invalid signature');
+        }     
+      
+        const event = JSON.parse(req.body.toString());
 
-        console.log("Event", event)
+              console.log("Event", event)
         if (event.event === 'charge.success') {
             const data = event.data;
             const metadata = data.metadata;
@@ -115,8 +121,8 @@ export const webHook = async (req, res)=>{
               return res.status(500).send('DB Error');
             }      
           }
-          
-     
+        
+    }    
     return res.sendStatus(200); // Return 200
 }
 
