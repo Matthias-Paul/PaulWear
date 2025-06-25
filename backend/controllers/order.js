@@ -21,7 +21,7 @@ export const getOrders = async( req, res)=>{
         const limit = Number(req.query.limit) || 10;
         const skip = (page - 1) * limit;
    
-        const orders = await Order.find({user: req?.user?._id}).sort({ createdAt: -1}).skip(skip).limit(limit)
+        const orders = await Order.find({user: req?.user?._id}).populate("vendor", "email storeName contactNumber").sort({ createdAt: -1}).skip(skip).limit(limit)
         
         if (!orders || orders.length === 0) {
             return res.status(200).json({
@@ -75,7 +75,6 @@ export const  getOrderDetails = async(req, res)=>{
         return res.status(200).json({
           success: true,  
           orderDetails,
-          vendorDetails,
         });
   
     } catch (error) {
