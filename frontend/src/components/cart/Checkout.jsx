@@ -29,6 +29,7 @@ const Checkout = () => {
 
     const totalPrice = Number(myCart?.totalPrice.toFixed(0) * 100) 
     console.log("total price", totalPrice)
+    const totalPriceForDatabase = Number(myCart?.totalPrice.toFixed(0)) 
 
 
     const handleCreateCheckout = async (e) => {
@@ -42,11 +43,13 @@ const Checkout = () => {
                 email: loginUser.email,
                 amount: totalPrice,
                 userId: myCart.user,
-                checkoutId: myCart._id,
+                cartId: myCart._id,
                 myCart: myCart.products,
                 firstName: shippingAddress.firstName,
                 lastName: shippingAddress.lastName,
                 phone: shippingAddress.phone,
+                address: shippingAddress.address,
+                totalPrice:totalPriceForDatabase,
               }),
           });
       
@@ -111,7 +114,7 @@ const Checkout = () => {
 
                         </div>  
                        <div className="  " >
-                       <label className="text-gray-700 block "> Address </label> 
+                       <label className="text-gray-700 block ">Delivery Address </label> 
                        <input type="text" required className="w-full p-2 rounded p-2 border border-gray-400" value={shippingAddress.address} onChange={(e) => setShippingAddress({...shippingAddress, address: e.target.value})}  />                                                                                                                                                                        
                         </div>
 
