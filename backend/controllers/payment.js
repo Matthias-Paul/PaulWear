@@ -166,6 +166,7 @@ export const webHook = async (req, res) => {
   
         for (const vendorId in vendorGroups) {
           const group = vendorGroups[vendorId];
+          console.log("Group", group)
           const vendorDoc = await Vendor.findOne({ user: group.vendor });
             
           if (!vendorDoc) {
