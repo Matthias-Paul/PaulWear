@@ -2,14 +2,16 @@ import pic from "../../assets/pic.jpg";
 import { useNavigate } from "react-router-dom"
 import { useState } from "react";
 import PayPalButton from "./PayPalButton"
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch, } from "react-redux";
 import Paystack from '@paystack/inline-js'
 import toast from "react-hot-toast";
+import { clearMyCart }from "../../redux/slice/userSlice.js"; 
 
 
 const Checkout = () => {
 
     const { myCart, loginUser } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
 
     console.log(myCart)
 
@@ -67,6 +69,7 @@ const Checkout = () => {
             onSuccess: (transaction) => {
               console.log("Payment Success:", transaction);
               toast.success("Payment Successful")
+              dispatch(clearMyCart())
               navigate("/order-confirmation");
             },
             onCancel: () => {

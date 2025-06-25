@@ -113,7 +113,7 @@ const OrderDetailsPage = () => {
                                                     Shipping Info
                                             </h3>
                                             <p> Shipping Address: </p>
-                                            <p> { ` ${orderDetails?.shippingAddress?.address} ` } </p>
+                                            <p> { ` ${orderDetails?.shippingAddress} ` } </p>
 
                                          </div>  
 

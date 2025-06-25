@@ -58,8 +58,8 @@ export const  getOrderDetails = async(req, res)=>{
        
         const { id } = req.params
         const orderDetails = await Order.findById(id).populate(
-            "user",
-            "name email"
+            "user vendor",
+            "name email storeName storeLogo"
         )
         if (!orderDetails ) {
             return res.status(404).json({

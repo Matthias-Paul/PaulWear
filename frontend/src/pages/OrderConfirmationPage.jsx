@@ -25,11 +25,7 @@ const OrderConfirmationPage = () => {
                 image:pic
             }
         ],
-        shippingAddress:{
-             address:"123 Fashion Street",
-             city:"New York",
-             country:"USA"
-        },
+        shippingAddress:"",
 
 
     }
@@ -96,7 +92,7 @@ const OrderConfirmationPage = () => {
 
                         <div className="  ">
                             <h4 className="text-mlgd font-bold mb-2 " >  Delivery </h4>
-                            <p className=" text-gray-600 " > {checkout.shippingAddress.address} </p>
+                            <p className=" text-gray-600 " > {checkout?.shippingAddress} </p>
 
                         </div>
 

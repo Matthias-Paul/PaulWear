@@ -61,11 +61,11 @@ const MyOrdersPage = () => {
 
 
   if (isLoading) {
-    return <div className="mx-auto text-lg pt-[120px] md:pt-[90px] px-[12px] pb-10 w-full" >Loading your orders...</div>;
+    return <div className="mx-auto text-lg md:text-2xl md:font-semibold pt-[140px] md:pt-[100px] px-[12px] pb-10 w-full" >Loading your orders...</div>;
   }
   
   if (isError) {
-    return <div className="mx-auto text-lg pt-[120px] md:pt-[90px] px-[12px] pb-10 w-full">Failed to load orders: {error}</div>;
+    return <div className="mx-auto text-lg md:text-2xl md:font-semibold pt-[120px] md:pt-[140px] px-[12px] pb-10 w-full">Failed to load orders: {error}</div>;
   }
 
 return (
@@ -117,7 +117,7 @@ return (
                   </td>
                   <td className="py-2 px-4 sm:py-4 sm:px-4">
                     {order?.shippingAddress
-                      ? `${order?.shippingAddress?.address}`
+                      ? `${order?.shippingAddress}`
                       : "N/A"}
                   </td>
                   <td className="py-2 px-4 sm:py-4 sm:px-4">

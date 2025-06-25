@@ -38,9 +38,9 @@ const userSlice = createSlice({
     setMyOrders: (state, action) => {
       state.myOrders = action.payload;   
     },   
-    clearMyCart: (state, action) => {
-      state.myCart = [];  
-      state.cartQuantity = null; 
+    clearMyCart: (state) => {
+      state.cartQuantity = null;   
+      state.myCart = []; 
     },       
 
     setCartQuantity: (state, action) => {         
