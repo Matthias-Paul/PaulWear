@@ -212,7 +212,7 @@ export const webHook = async (req, res) => {
         reference: data.reference,
         user: metadata.userId,
         amount: data.amount / 100,
-        status: data.status,
+        status: "paid",
         channel: data.channel,
         currency: data.currency,
         paymentGateway: "paystack",
