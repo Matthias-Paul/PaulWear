@@ -138,7 +138,7 @@ export const webHook = async (req, res) => {
             };
           }
   
-          const itemTotal = item.price * item.quantity;
+          const itemTotal = item.price
           vendorGroups[vendorId].items.push({
             productId: product._id,
             name: product.name,
@@ -150,7 +150,8 @@ export const webHook = async (req, res) => {
           });
           vendorGroups[vendorId].total += itemTotal;
         }
-  
+        console.log(" vendorGroups ", vendorGroups)
+
         // 4. Create Orders per vendor
         const createdOrders = [];
   
@@ -173,6 +174,7 @@ export const webHook = async (req, res) => {
   
           createdOrders.push(newOrder);
         }
+        console.log("new orders ", newOrder)
   
         // 5. Finalize checkout and cleanup
         newCheckout.isFinalized = true;

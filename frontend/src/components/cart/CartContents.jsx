@@ -51,7 +51,6 @@ const CartContents = ({toggleCartDrawer}) => {
 
     useEffect(() => {
     if (data) {
-      console.log("cart:", data.cart);
       dispatch(setMyCart(data.cart))
       dispatch(setCartQuantity(data.cart.products.length || ""))
 

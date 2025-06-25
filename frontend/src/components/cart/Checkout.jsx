@@ -70,6 +70,7 @@ const Checkout = () => {
               console.log("Payment Success:", transaction);
               toast.success("Payment Successful")
               dispatch(clearMyCart())
+
               navigate("/order-confirmation");
             },
             onCancel: () => {
@@ -84,11 +85,8 @@ const Checkout = () => {
       };
       
 
-    const handlePaymentSuccess = async(details)=>{
-        console.log("Payment Successful", details)
+      console.log("MyCart", myCart)
 
-        navigate("/order-confirmation")
-    }
 
   return (
     <>
