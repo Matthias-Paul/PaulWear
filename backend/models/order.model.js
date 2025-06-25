@@ -31,12 +31,13 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
-    },
+    }, 
     vendor: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Vendor",
+        ref: "Vendor", 
         required: true
-    },
+    }, 
+            
     orderGroupId: {  
         type: mongoose.Schema.Types.ObjectId,
         ref: "Checkout"
@@ -44,7 +45,7 @@ const orderSchema = new mongoose.Schema({
     orderItems: [orderItemSchema],
     shippingAddress: {
             type: String, 
-            required: true 
+            required: true   
         },
     paymentMethod: { 
         type: String, 

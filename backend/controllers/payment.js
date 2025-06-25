@@ -7,6 +7,7 @@ import Order from '../models/order.model.js';
 import Checkout from '../models/checkout.model.js';
 import User from '../models/user.model.js';
 import Vendor from '../models/vendors.model.js';
+import Transaction from '../models/transaction.model.js';
 
 
 dotenv.config();
@@ -124,9 +125,7 @@ export const webHook = async (req, res) => {
           paidAt: Date.now(),
         });
   
-        console.log("new checkout", newCheckout)
-        console.log("checkoutItems", newCheckout.checkoutItems);
-        console.log("existingProducts", existingProducts.map(p => p._id.toString()));
+        
   
         // 3. Group items by vendor
         const vendorGroups = {};   
@@ -161,17 +160,24 @@ export const webHook = async (req, res) => {
           });
           vendorGroups[vendorId].total += itemTotal;
         }
-        console.log(" vendorGroups ", vendorGroups)
 
         // 4. Create Orders per vendor
         const createdOrders = [];
   
         for (const vendorId in vendorGroups) {
           const group = vendorGroups[vendorId];
-  
+          const vendorDoc = await Vendor.findOne({ user: group.vendor });
+     
+          if (!vendorDoc) {
+            return res.status(404).json({
+              success: false,
+              message: "Vendor not found!"
+            });
+          }
+          
           const newOrder = await Order.create({
             user: newCheckout.user,
-            vendor: group.vendor,
+            vendor: vendorDoc._id, 
             orderItems: group.items,
             shippingAddress: newCheckout.shippingAddress,
             paymentMethod: newCheckout.paymentMethod,
@@ -183,7 +189,6 @@ export const webHook = async (req, res) => {
             paymentStatus: "paid",
             paymentDetails: newCheckout.paymentDetails,
           });
-          console.log(" group ", group)
       
           createdOrders.push(newOrder);
         }
@@ -198,7 +203,19 @@ export const webHook = async (req, res) => {
         if (metadata.cartId) {
           await Cart.findByIdAndDelete(metadata.cartId);
         }
-  
+           
+         
+        await Transaction.create({
+          reference: data.reference,
+          user: metadata.userId,
+          amount: data.amount / 100, // convert kobo to naira
+          status: data.status, 
+          channel: data.channel,
+          currency: data.currency,
+          paymentGateway: 'paystack',
+          paymentResponse: data,
+        });   
+
         return res.status(200).json({
           success: true,
           message: "Orders created per vendor",

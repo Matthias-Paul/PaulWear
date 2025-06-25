@@ -30,8 +30,8 @@ const OrderDetailsPage = () => {
 
   useEffect(() => {
     if (data) {
-      setOrderDetails(data.orderDetails)
-      console.log("orderDetails:", data.orderDetails);
+      setOrderDetails(data)
+      console.log("orderDetails:", data);
     }
   }, [data]);
 
@@ -78,34 +78,44 @@ const OrderDetailsPage = () => {
       <div className=" pt-[90px] px-[12px] mx-auto max-w-[1000px] mb-20 " >
                 <h2 className="font-bold mb-5 text-xl md:text-2xl mt-6 " > Order Details </h2>
                 {
-                  !orderDetails  ? (<p className="  " > Loading order details... </p>) : (
+                  !orderDetails?.orderDetails  ? (<p className="  " > Loading order details... </p>) : (
                         <div className="p-4 sm:p-6 rounded border border-gray-400  " > 
-                            <div className="flex flex-col sm:flex-row justify-between mb-7  " >
+                            <div className="flex flex-col sm:flex-row justify-between  " >
                                 <div className="  " >
                                     <h3 className="text:lg  md:text-xl font-semibold    " > 
-                                        Order ID: #{orderDetails?._id}
+                                        Order ID: #{orderDetails?.orderDetails?._id}
                                     </h3>
-                                    <p className="text-gray-600  " > { new Date(orderDetails.createdAt).toLocaleDateString()  } </p>
+                                    <p className="text-gray-600  " > { new Date(orderDetails?.orderDetails?.createdAt).toLocaleDateString()  } </p>
                                 </div>  
 
                                 <div className="flex flex-col items-start sm:items-end mt-4 sm:mt-0  " >
-                                    <span className={` ${orderDetails.isPaid? "bg-green-100 text-green-700" : " bg-red-100 text-red-700" } py-1 px-3 rounded-lg text-sm mb-3    `}  > 
-                                       { orderDetails.isPaid ? "Approved" : "Pending"} 
+                                    <span className={` ${orderDetails?.orderDetails?.isPaid? "bg-green-100 text-green-700" : " bg-red-100 text-red-700" } py-1 px-3 rounded-lg text-sm mb-3    `}  > 
+                                       { orderDetails?.orderDetails?.isPaid ? "Approved" : "Pending"} 
                                     </span>
-                                    <span className={` ${orderDetails.isDelivered? "bg-green-100 text-green-700" : " bg-yellow-100 text-yellow-700" } py-1 px-3 rounded-lg text-sm mb-3    `}  > 
-                                       { orderDetails.isDelivered ? "Delivered" : "Pending Delivery"} 
+                                    <span className={` ${orderDetails?.orderDetails?.isDelivered? "bg-green-100 text-green-700" : " bg-yellow-100 text-yellow-700" } py-1 px-3 rounded-lg text-sm mb-3    `}  > 
+                                       { orderDetails?.orderDetails?.isDelivered ? "Delivered" : "Pending Delivery"} 
                                     </span>
+
+                                    <span>
+
+                                    <button onClick={handleMarkAsRead} 
+                                      className={`py-1 px-2 ${markMutation.isPending  ? "cursor-not-allowed " : "cursor-pointer "}  text-white hover:bg-green-600 bg-green-500 rounded-md`} > 
+                                        {
+                                          orderDetails?.orderDetails?.isReceived ? "Order received": "Mark order as received"
+                                        } 
+                                        </button>
+                                    </span>  
                                 </div>      
-                            </div>    
+                            </div>     
 
                             {/* customer, payment, shipping info */}
-                                <div className="grid mb-13 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-6  " >
+                                <div className="grid mb-13 mt-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-6  " >
                                         <div>
                                             <h3 className="text:lg  mb-2 font-semibold    " > 
                                                     Payment Info
                                             </h3>
-                                            <p> Payment Method: { orderDetails.paymentMethod} </p>
-                                            <p> Status: { orderDetails.isPaid ? "Paid" : "Unpaid"} </p>
+                                            <p> Payment Method: { orderDetails?.orderDetails?.paymentMethod} </p>
+                                            <p> Status: { orderDetails?.orderDetails?.isPaid ? "Paid" : "Unpaid"} </p>
 
                                          </div>   
                                           <div>
@@ -113,7 +123,17 @@ const OrderDetailsPage = () => {
                                                     Shipping Info
                                             </h3>
                                             <p> Shipping Address: </p>
-                                            <p> { ` ${orderDetails?.shippingAddress} ` } </p>
+                                            <p> { ` ${orderDetails?.orderDetails?.shippingAddress} ` } </p>
+
+                                         </div>  
+
+                                         <div>
+                                            <h3 className="text:lg  mb-2 font-semibold    " > 
+                                                    Vendor Info
+                                            </h3>
+                                            <p> Store Name: {orderDetails?.vendorDetails[0]?.storeName  } </p>
+                                            <p> Store Email: {orderDetails?.vendorDetails[0]?.email} </p>
+                                            <p> Store Phone Number: {orderDetails?.vendorDetails[0]?.contactNumber} </p>
 
                                          </div>  
 
@@ -122,7 +142,7 @@ const OrderDetailsPage = () => {
                                 {/* products list  */}
 
 
-         { orderDetails?.orderItems ? (
+         { orderDetails?.orderDetails?.orderItems ? (
             <div className={` shadow-md overflow-hidden  overflow-x-auto  relative rounded-sm lg:rounded-md `} >
             <table className="w-full  text-left min-w-[800px]  text-gray-500 " >
               <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
@@ -131,14 +151,13 @@ const OrderDetailsPage = () => {
                   <th className="py-2 px-4 sm:py-3 " > Unit Price </th>
                   <th className="py-2 px-4 sm:py-3 " > Quantity </th>
                   <th className="py-2 px-4 sm:py-3 " > Total </th>
-                  <th className="py-2 px-4 sm:py-3 " > Action </th>
 
 
                 </tr>
   
               </thead>
               <tbody>
-                   { orderDetails?.orderItems?.map((item, index)=>(
+                   { orderDetails?.orderDetails?.orderItems?.map((item, index)=>(
                         <tr key={item?.productId} className={`border-b cursor-pointer hover:border-gray-400 ${index === orderDetails?.orderItems?.length -1  ? "border-b-0": ""} `} >
                        <td className="py-2 px-4 flex items-center  sm:py-3 sm:px-4 " > 
                         <img src={item?.image} className="w-12 h-12 mr-2 rounded-lg sm:rounded-md object-cover flex-shrink-0 " alt={item?.name} />
@@ -156,15 +175,6 @@ const OrderDetailsPage = () => {
                         <td className="py-2 px-4 sm:py-4 sm:px-4" > 
                             ₦{item?.price * item?.quantity.toFixed(2)}                      
                          </td >
-
-                        <td className="py-2 px-4 sm:py-4 sm:px-4" > 
-                            <button onClick={handleMarkAsRead} 
-                            className={`py-1 px-2 ${markMutation.isPending  ? "cursor-not-allowed " : "cursor-pointer "}  text-white hover:bg-green-600 bg-green-500 rounded-md`} > 
-                               {
-                                orderDetails.isReceived ? "Received": "Mark as received"
-                               } 
-                               </button>
-                           </td >
 
                         </tr>
   

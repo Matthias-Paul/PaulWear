@@ -59,7 +59,8 @@ const MyOrdersPage = () => {
   //   }
   // }, [orders, myOrders, dispatch]);
 
-
+    console.log(orders)
+    
   if (isLoading) {
     return <div className="mx-auto text-lg md:text-2xl md:font-semibold pt-[140px] md:pt-[100px] px-[12px] pb-10 w-full" >Loading your orders...</div>;
   }
@@ -84,10 +85,10 @@ return (
             <thead className="uppercase bg-gray-100 text-xs text-gray-600">
               <tr>
                 <th className="py-2 px-4 sm:py-3">Image</th>
-                <th className="py-2 px-4 sm:py-3">Name</th>
+                <th className="py-2 px-4 sm:py-3">Store Name</th>
                 <th className="py-2 px-4 sm:py-3">Created</th>
                 <th className="py-2 px-4 sm:py-3">Shipping Address</th>
-                <th className="py-2 px-4 sm:py-3">Quantity</th>
+                <th className="py-2 px-4 sm:py-3"> No of Items</th>
                 <th className="py-2 px-4 sm:py-3">Price</th>
                 <th className="py-2 px-4 sm:py-3">Status</th>
               </tr>

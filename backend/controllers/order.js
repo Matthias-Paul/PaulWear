@@ -2,6 +2,8 @@ import express from "express"
 import Product from "../models/product.model.js"
 import Order from "../models/order.model.js"
 import User from "../models/user.model.js"
+import Vendor from "../models/vendors.model.js"
+
 import { validationResult, matchedData } from "express-validator"
 
 
@@ -57,19 +59,28 @@ export const  getOrderDetails = async(req, res)=>{
     try {
        
         const { id } = req.params
-        const orderDetails = await Order.findById(id).populate(
-            "user vendor",
-            "name email storeName storeLogo"
-        )
+        const orderDetails = await Order.findById(id).populate([
+          { path: "user", select: "name email" },
+          { path: "vendor", select: "name email " },
+        ]);
         if (!orderDetails ) {
             return res.status(404).json({
                 success: false,
                 message: "Order not found!"
-            });
-        }
+            });   
+        }  
+        const vendorDetails = await Vendor.find({user: orderDetails.vendor._id  })
+        if (!vendorDetails ) {
+          return res.status(404).json({
+              success: false,
+              message: "Vendor not found!"
+          });
+      }
+
         return res.status(200).json({
           success: true,  
           orderDetails,
+          vendorDetails,
         });
   
     } catch (error) {
