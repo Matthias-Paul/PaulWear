@@ -125,14 +125,22 @@ export const webHook = async (req, res) => {
         });
   
         console.log("new checkout", newCheckout)
+        console.log("checkoutItems", newCheckout.checkoutItems);
+        console.log("existingProducts", existingProducts.map(p => p._id.toString()));
+  
         // 3. Group items by vendor
         const vendorGroups = {};   
         for (const item of newCheckout.checkoutItems) {
-          const product = existingProducts.find(p => p._id.toString() === item.productId);
-          if (!product) continue;
-  
+          const itemProductId = item.productId?.toString?.();
+          const product = existingProducts.find(p => p._id.toString() === itemProductId);
+          
+          if (!product) {   
+            console.log(`Product not found for item: ${JSON.stringify(item)}`);
+            continue;
+          }
+        
           const vendorId = product.user.toString();
-          console.log("vendor id", vendorId)
+          console.log("VendorId", vendorId)
           if (!vendorGroups[vendorId]) {
             vendorGroups[vendorId] = {
               vendor: vendorId,
