@@ -61,21 +61,16 @@ export const  getOrderDetails = async(req, res)=>{
         const { id } = req.params
         const orderDetails = await Order.findById(id).populate([
           { path: "user", select: "name email" },
-          { path: "vendor", select: "name email " },
-        ]);
+          { path: "vendor", select: " email storeName contactNumber " },
+        ]);        
         if (!orderDetails ) {
             return res.status(404).json({
                 success: false,
                 message: "Order not found!"
             });   
-        }  
-        const vendorDetails = await Vendor.find({user: orderDetails.vendor._id  })
-        if (!vendorDetails ) {
-          return res.status(404).json({
-              success: false,
-              message: "Vendor not found!"
-          });
-      }
+        }      
+        
+      
 
         return res.status(200).json({
           success: true,  

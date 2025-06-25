@@ -167,13 +167,14 @@ export const webHook = async (req, res) => {
         for (const vendorId in vendorGroups) {
           const group = vendorGroups[vendorId];
           const vendorDoc = await Vendor.findOne({ user: group.vendor });
-     
+            
           if (!vendorDoc) {
             return res.status(404).json({
               success: false,
               message: "Vendor not found!"
             });
           }
+          console.log("vendor doc", vendorDoc)
           
           const newOrder = await Order.create({
             user: newCheckout.user,
