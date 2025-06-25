@@ -69,7 +69,6 @@ const Checkout = () => {
             onSuccess: (transaction) => {
               console.log("Payment Success:", transaction);
               toast.success("Payment Successful")
-              dispatch(clearMyCart())
 
               navigate("/order-confirmation");
             },

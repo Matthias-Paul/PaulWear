@@ -168,13 +168,15 @@ export const webHook = async (req, res) => {
             isPaid: true,
             paidAt: newCheckout.paidAt,
             isDelivered: false,
+            reference:data.reference,
             paymentStatus: "paid",
             paymentDetails: newCheckout.paymentDetails,
           });
-  
+          console.log(" group ", group)
+      
           createdOrders.push(newOrder);
         }
-        console.log("new orders ", newOrder)
+        console.log("createdOrders  ", createdOrders)
   
         // 5. Finalize checkout and cleanup
         newCheckout.isFinalized = true;
