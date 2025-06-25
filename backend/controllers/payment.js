@@ -6,6 +6,7 @@ import express from 'express';
 import Order from '../models/order.model.js';
 import Checkout from '../models/checkout.model.js';
 import User from '../models/user.model.js';
+import Vendor from '../models/vendors.model.js';
 
 
 dotenv.config();
@@ -123,13 +124,15 @@ export const webHook = async (req, res) => {
           paidAt: Date.now(),
         });
   
+        console.log("new checkout", newCheckout)
         // 3. Group items by vendor
-        const vendorGroups = {};
+        const vendorGroups = {};   
         for (const item of newCheckout.checkoutItems) {
           const product = existingProducts.find(p => p._id.toString() === item.productId);
           if (!product) continue;
   
           const vendorId = product.user.toString();
+          console.log("vendor id", vendorId)
           if (!vendorGroups[vendorId]) {
             vendorGroups[vendorId] = {
               vendor: vendorId,
@@ -177,7 +180,7 @@ export const webHook = async (req, res) => {
           createdOrders.push(newOrder);
         }
         console.log("createdOrders  ", createdOrders)
-  
+     
         // 5. Finalize checkout and cleanup
         newCheckout.isFinalized = true;
         newCheckout.finalizedAt = Date.now();

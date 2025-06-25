@@ -16,7 +16,6 @@ const Checkout = () => {
     console.log(myCart)
 
 
-
    const [checkoutId, setCheckoutId] = useState(null) 
   const navigate = useNavigate()
     const [ shippingAddress, setShippingAddress ] = useState({
@@ -29,9 +28,9 @@ const Checkout = () => {
         phone:""
     })
 
-    const totalPrice = Number(myCart?.totalPrice.toFixed(0) * 100) 
+    const totalPrice = Number(myCart?.totalPrice?.toFixed(0) * 100) 
     console.log("total price", totalPrice)
-    const totalPriceForDatabase = Number(myCart?.totalPrice.toFixed(0)) 
+    const totalPriceForDatabase = Number(myCart?.totalPrice?.toFixed(0)) 
 
 
     const handleCreateCheckout = async (e) => {
@@ -85,7 +84,9 @@ const Checkout = () => {
       
 
       console.log("MyCart", myCart)
-
+const handleCearCart = ()=>{
+ dispatch(clearMyCart())
+}
 
   return (
     <>
@@ -163,7 +164,7 @@ const Checkout = () => {
                             <p className=" " >  ₦{myCart?.totalPrice?.toFixed(2)} </p>   
 
                </div> 
-                 <div className=" text-md sm:text-xl mb-4 flex justify-between items-center" >
+                 <div onClick={handleCearCart} className=" text-md sm:text-xl mb-4 flex justify-between items-center" >
                             <p> Delivery </p>
                             <p className=" " > Free </p>   
 

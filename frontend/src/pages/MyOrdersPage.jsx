@@ -65,7 +65,7 @@ const MyOrdersPage = () => {
   }
   
   if (isError) {
-    return <div className="mx-auto text-lg md:text-2xl md:font-semibold pt-[120px] md:pt-[140px] px-[12px] pb-10 w-full">Failed to load orders: {error}</div>;
+    return <div className="mx-auto text-lg md:text-2xl md:font-semibold pt-[120px] md:pt-[140px] px-[12px] pb-10 w-full">Failed to load orders: </div>;
   }
 
 return (
