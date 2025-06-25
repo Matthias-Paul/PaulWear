@@ -176,7 +176,7 @@ const OrderDetailsPage = () => {
                             {item?.quantity}                      
                          </td >
                         <td className="py-2 px-4 sm:py-4 sm:px-4" > 
-                            ₦{item?.price}                      
+                            ₦{item?.price.toFixed(2)}                      
                          </td >
 
                         </tr>

@@ -117,9 +117,20 @@ export const webHook = async (req, res) => {
           return res.status(200).send("Duplicate webhook call prevented");
         }
         // 2. Create Checkout
+        const uniqueCartItems = [];
+        const seen = new Set();
+        for (const item of metadata.cartItems) {
+          const key = `${item.productId}-${item.size}-${item.color}`;
+          if (!seen.has(key)) {
+            seen.add(key);
+            uniqueCartItems.push(item);
+          }
+        }
+  
+        // ✅ Step 4: Create Checkout
         const newCheckout = await Checkout.create({
           user: metadata.userId,
-          checkoutItems: metadata.cartItems,
+          checkoutItems: uniqueCartItems,
           shippingAddress: metadata.customer.address,
           paymentMethod: "Paystack",
           totalPrice: metadata.totalPrice,
@@ -129,7 +140,6 @@ export const webHook = async (req, res) => {
           paidAt: Date.now(),
         });
   
-        
   
         // 3. Group items by vendor
         const vendorGroups = {};   
