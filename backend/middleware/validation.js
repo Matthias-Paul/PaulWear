@@ -267,7 +267,7 @@ export const validateCheckout = [
     .isInt({ min: 1 })
     .withMessage("Quantity must be a positive integer"),
 
-  body("shippingAddress.address")
+  body("shippingAddress")
     .notEmpty()
     .withMessage("Shipping address is required"),
 
