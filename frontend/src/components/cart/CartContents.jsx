@@ -166,7 +166,9 @@ const CartContents = ({toggleCartDrawer}) => {
 
 
           const handleCheckout= ()=>{
-    
+              if(data?.cart?.length === 0){
+                toast.error("Cart does not exist")
+              }
 
             navigate("/checkout")
             toggleCartDrawer()

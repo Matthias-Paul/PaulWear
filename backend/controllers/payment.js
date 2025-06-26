@@ -125,7 +125,6 @@ export const webHook = async (req, res) => {
 
 
               // 2. Create Checkout
-              // Step 1: Clean and group cartItems by product variant
               const cartMap = new Map();  // To deduplicate cartItems
               for (const item of metadata.cartItems) {
                 const key = `${item.productId}-${item.size}-${item.color}`;
@@ -186,7 +185,7 @@ export const webHook = async (req, res) => {
                   price: item.price,
                 });
 
-                vendorGroups[vendorId].total += item.price;
+                vendorGroups[vendorId].total += item.price * item.quantity;
               }
               // 4. Create Orders per vendor
               const createdOrders = [];
