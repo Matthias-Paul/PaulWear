@@ -173,7 +173,7 @@ export const webHook = async (req, res) => {
       if (!vendorDoc) continue;
 
       const group = vendorGroups[vendorId];
-
+        console.log("Group", group)
       const newOrder = await Order.create({
         user: metadata.userId,
         vendor: vendorDoc._id,
