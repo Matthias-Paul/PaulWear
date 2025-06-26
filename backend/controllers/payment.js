@@ -168,6 +168,7 @@ export const webHook = async (req, res) => {
         console.log("Invalid price:", item.price);
         continue;
       }
+      console.log("price", price)
 
       vendorGroups[vendorId].total += price;
     }
