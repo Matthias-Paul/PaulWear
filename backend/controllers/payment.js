@@ -160,7 +160,7 @@ export const webHook = async (req, res) => {
         size: item.size,
         color: item.color,
         quantity: item.quantity,
-        price: item.price,
+        group.total = parseFloat(group.total);
       });
 
       vendorGroups[vendorId].total += item.price;
