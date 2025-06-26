@@ -120,19 +120,27 @@ export const webHook = async (req, res) => {
       return res.status(400).json({ success: false, message: "Missing products", missingIds });
     }
 
+    const totalPrice = parseFloat(metadata.totalPrice);
+      if (isNaN(totalPrice)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid totalPrice in metadata",
+          received: metadata.totalPrice
+        });
+      }
     // ✅ Step 3: Save Checkout
     const newCheckout = await Checkout.create({
       user: metadata.userId,
       checkoutItems: cartItems,
       shippingAddress: metadata.customer.address,
       paymentMethod: "Paystack",
-      totalPrice: metadata.totalPrice,
+      totalPrice: totalPrice,
       paymentStatus: "paid",
       isPaid: true,
       paymentDetails: data,
       paidAt: Date.now(),
     });
-
+    console.log("New checkout", newCheckout)
     // ✅ Step 4: Group by vendor, including variant info
     const vendorGroups = {};
     for (const item of cartItems) {
@@ -143,6 +151,7 @@ export const webHook = async (req, res) => {
       if (!vendorGroups[vendorId]) {
         vendorGroups[vendorId] = { vendor: vendorId, items: [], total: 0 };
       }
+      console.log("vendor  id", vendorId)
 
       vendorGroups[vendorId].items.push({
         productId: product._id,
@@ -178,6 +187,7 @@ export const webHook = async (req, res) => {
         paymentStatus: "paid",
         paymentDetails: newCheckout.paymentDetails,
       });
+      console.log("New order", newOrder)
 
       createdOrders.push(newOrder);
     }
@@ -190,6 +200,8 @@ export const webHook = async (req, res) => {
     if (metadata.cartId) {
       await Cart.findByIdAndDelete(metadata.cartId);
     }
+    console.log("Created order", createdOrders)
+
 
     // ✅ Step 7: Save transaction to prevent future duplicates
     await Transaction.create({
