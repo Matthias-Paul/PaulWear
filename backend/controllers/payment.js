@@ -134,6 +134,8 @@ export const webHook = async (req, res) => {
         paidAt: Date.now(),
       });
 
+      console.log("New checkout", newCheckout)
+
       // ✅ Step 5: Group by vendor
       const vendorGroups = {};
       for (const item of newCheckout.checkoutItems) {
@@ -184,9 +186,10 @@ export const webHook = async (req, res) => {
           paymentStatus: "paid",
           paymentDetails: newCheckout.paymentDetails,
         });
-
+        console.log("New Orders", newOrder)
         createdOrders.push(newOrder);
       }
+      console.log("Created orders", createdOrders)
 
       // ✅ Step 7: Finalize & cleanup
       newCheckout.isFinalized = true;
