@@ -163,7 +163,13 @@ export const webHook = async (req, res) => {
         total = parseFloat(group.total);
       });
 
-      vendorGroups[vendorId].total += item.price;
+      const price = Number(item.price);
+      if (isNaN(price)) {
+        console.log("Invalid price:", item.price);
+        continue;
+      }
+
+      vendorGroups[vendorId].total += price;
     }
 
     // ✅ Step 5: Create Orders per vendor
