@@ -133,7 +133,7 @@ const OrderDetailsPage = () => {
                                             </h3>
                                             <p> Store Name: {orderDetails?.vendor?.storeName  } </p>
                                             <p> Store Email: {orderDetails?.vendor?.email} </p>
-                                            <p> Store Phone Number: {orderDetails?.vendor?.contactNumber} </p>
+                                            <p className="flex items-start  mt-1 " > Store Phone No: <a className="ml-2 text-sm sm:text-md  bg-green-100 text-green-700 px-2 py-1 rounded " href={`tel:${orderDetails?.vendor?.contactNumber}`} > {orderDetails?.vendor?.contactNumber} </a> </p>
 
                                          </div>  
 

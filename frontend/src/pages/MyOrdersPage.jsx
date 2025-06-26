@@ -81,16 +81,16 @@ return (
       <>
         {/* Orders Table */}
         <div className="shadow-md overflow-x-auto relative rounded-sm lg:rounded-md">
-          <table className="w-full text-left min-w-[850px] md:min-w-full text-gray-500">
+          <table className="w-full text-left min-w-[1100px] md:min-w-full text-gray-500">
             <thead className="uppercase bg-gray-100 text-xs text-gray-600">
               <tr>
-                <th className="py-2 px-4 sm:py-3">order</th>
-                <th className="py-2 px-4 sm:py-3">Vendor</th>
-                <th className="py-2 px-4 sm:py-3">Items</th>
-                <th className="py-2 px-4 sm:py-3">Total</th>
-                <th className="py-2 px-4 sm:py-3"> Status</th>
-                <th className="py-2 px-4 sm:py-3">Address </th>
-                <th className="py-2 px-4 sm:py-3">Created</th>
+                <th className=" px-4 py-3">order</th>
+                <th className=" px-4 py-3">Vendor</th>
+                <th className=" px-4 py-3">Items</th>
+                <th className=" px-4 py-3">Total</th>
+                <th className=" px-4 py-3"> Status</th>
+                <th className=" px-4 py-3">Address </th>
+                <th className=" px-4 py-3">Created</th>
               </tr>
             </thead>
             <tbody>
@@ -102,23 +102,23 @@ return (
                     index === orders?.length - 1 ? "border-b-0 mb-3" : ""
                   }`}
                 >
-                  <td className="px-4 font-medium text-gray-800 sm:px-4">
+                  <td className="font-medium text-gray-800 px-4">
                   #{order._id.slice(-6).toUpperCase()}
                   </td>
-                  <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800">
+                  <td className=" py-4 px-4 font-medium text-gray-800">
                   {order.vendor?.storeName || "Vendor"}
                   </td>
-                  <td className="py-2 px-4 sm:py-4 sm:px-4">
+                  <td className="py-4 px-4">
                   {order.orderItems.length} item{order.orderItems.length > 1 ? "s" : ""}
                     
                   </td>
-                  <td className="py-2 px-4 sm:py-4 sm:px-4">
+                  <td className="  py-4 px-4">
                   ₦{order.totalPrice.toFixed(2)}
 
                   </td>
-                  <td className="py-2 px-4 sm:py-4 sm:px-4">
+                  <td className=" py-4 px-4">
                   <span
-                    className={`px-2 py-1 rounded text-md font-medium ${
+                    className={`px-4 py-1 rounded text-md font-medium ${
                       order.status === "delivered"
                         ? "bg-green-100 text-green-700"
                         : order.status === "processing"
@@ -128,11 +128,11 @@ return (
                     {order.status}
                     </span>
                     </td>
-                  <td className="py-2 px-4 sm:py-4 sm:px-4">
+                  <td className=" py-4 px-4">
                     {order?.shippingAddress
                       ? `${order?.shippingAddress}`
                       : "N/A"}                  </td>
-                  <td className="py-2 px-4 sm:py-4 sm:px-4">
+                  <td className=" py-4 px-4">
                    
                   {new Date(order.createdAt).toLocaleDateString()}{" "}
                   {new Date(order.createdAt).toLocaleTimeString()}

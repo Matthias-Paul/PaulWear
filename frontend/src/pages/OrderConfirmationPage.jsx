@@ -38,9 +38,31 @@ const OrderConfirmationPage = () => {
 
         if (res.ok && data?.order?.length > 0) {
           clearInterval(interval);
-          setOrders(data.order);
+          await dispatch(clearMyCart());
 
-          setLoading(false);
+          const hasRefreshed = localStorage.getItem("orderRefreshed");
+        
+          if (!hasRefreshed) {
+            localStorage.setItem("orderRefreshed", "true"); 
+            await dispatch(clearMyCart());
+            setOrders(data.order);
+            setLoading(false);
+            console.log("Clearing cart....");
+        
+            setTimeout(() => {
+              window.location.reload();
+               dispatch(clearMyCart());
+
+              console.log("Refreshing...");
+            }, 6000);
+          } else {
+            // If already refreshed, don't reload again
+            setOrders(data.order);
+            setLoading(false);
+             dispatch(clearMyCart());
+
+            localStorage.removeItem("orderRefreshed"); // Clear flag for future orders
+          }
         } else {
           attempts++;
           if (attempts >= maxAttempts) {
@@ -57,16 +79,9 @@ const OrderConfirmationPage = () => {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [reference, ]);
+  }, [reference, dispatch ]);
 
   
-        useEffect(()=>{
-            if(orders){
-                dispatch(clearMyCart());
-
-            }
-
-        },[dispatch, orders])
 
 
   const calculateEstimatedDelivery = (createdAt) => {
@@ -76,15 +91,15 @@ const OrderConfirmationPage = () => {
   };
 
   if (loading) {
-    return <div className="text-center py-[120px] mb-15 mx-auto px-[12px]  text-lg">Verifying your order...</div>;
+    return <div className="text-center py-[100px] mb-15 mx-auto px-[12px]  text-lg">Verifying your order...</div>;
   }
 
   if (error) {
-    return <div className="text-center text-red-500py-[120px] mb-15 mx-auto px-[12px] ">{error}</div>;
+    return <div className="text-center text-red-500py-[100px] mb-15 mx-auto px-[12px] ">{error}</div>;
   }
 
-  if (!orders.length) {
-    return <div className="text-center text-gray-600 py-[120px] mb-15 mx-auto px-[12px] ">No order was found. Please contact support.</div>;
+  if (!orders) {
+    return <div className="text-center text-gray-600 py-[100px] mb-15 mx-auto px-[12px] ">No order was found. Please contact support.</div>;
   }
 
   return (
@@ -96,7 +111,7 @@ const OrderConfirmationPage = () => {
       {orders.map((order) => (
         <div key={order._id} className="rounded-lg border border-gray-400 p-3 sm:p-6 mb-12">
           {/* Order header */}
-          <div className="flex justify-between mb-12 sm:mb-20">
+          <div className="      flex flex-col sm:flex-row justify-between  mb-12 sm:mb-20">
             <div>
               <h2 className="text-md sm:text-xl font-semibold">Order ID: {order._id}</h2>
               <p className="text-gray-500 text-sm sm:text-[16px]">
@@ -105,7 +120,7 @@ const OrderConfirmationPage = () => {
             </div>
             <div>
               <p className="text-emerald-700 text-sm">
-                Estimated Delivery: {calculateEstimatedDelivery(order.createdAt)}
+                Estimated Delivery: {calculateEstimatedDelivery(order?.createdAt)}
               </p>
             </div>
           </div>
@@ -113,19 +128,19 @@ const OrderConfirmationPage = () => {
           {/* Order items */}
           <div className="mb-10 lg:mb-20">
             {order.orderItems?.map((item) => (
-              <div key={item.productId} className="flex mb-4 items-center">
+              <div key={`${item.productId}-${item.size}-${item.color}`} className="flex mb-4 gap-x-2 items-start">
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-16 h-16 rounded object-cover mr-4 flex-shrink-0"
+                  className="w-16 h-16 rounded object-cover  flex-shrink-0"
                 />
                 <div>
-                  <h4 className="text-md font-semibold">{item.name}</h4>
+                  <h4 className="text-sm sm:text-md  font-semibold">{item.name}</h4>
                   <p className="text-sm text-gray-500">
                     {item.color} | {item.size}
                   </p>
                 </div>
-                <div className="ml-auto text-right">
+                <div className="ml-auto  text-right">
                   <p className="text-md">₦{item.price.toFixed(2)}</p>
                   <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
                 </div>
@@ -134,7 +149,7 @@ const OrderConfirmationPage = () => {
           </div>
 
           {/* Payment and delivery info */}
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 ">
             <div>
               <h4 className="text-mlgd font-bold mb-2">Payment</h4>
               <p className="text-gray-600">Paystack</p>

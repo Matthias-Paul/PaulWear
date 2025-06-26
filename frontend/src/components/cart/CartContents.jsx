@@ -181,7 +181,7 @@ const CartContents = ({toggleCartDrawer}) => {
         <div>
         { myCart?.products?.length >= 1 ? (
           myCart?.products?.map((product)=>(
-            <div className=" flex overflow-y-auto items-start gap-x-3 justify-between py-4 border-b " key={product?.productId}>
+            <div className=" flex overflow-y-auto items-start gap-x-3 justify-between py-4 border-b " key={`${product.productId}-${product.size}-${product.color}`}>
                 <div className=" flex items-start " >
                         <img className="w-20 h-24 object-cover flex-shrink-0 mr-4 rounded " src={product?.image} alt={product?.image} />
                         <div>
