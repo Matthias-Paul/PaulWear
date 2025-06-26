@@ -120,21 +120,11 @@ export const webHook = async (req, res) => {
         });
       }
 
-      // ✅ Step 3: Deduplicate cart items
-      const uniqueCartItems = [];
-      const seen = new Set();
-      for (const item of metadata.cartItems) {
-        const key = `${item.productId}-${item.size}-${item.color}`;
-        if (!seen.has(key)) {
-          seen.add(key);
-          uniqueCartItems.push(item);
-        }
-      }
 
       // ✅ Step 4: Create Checkout
       const newCheckout = await Checkout.create({
         user: metadata.userId,
-        checkoutItems: uniqueCartItems,
+        checkoutItems: metadata.cartItems,
         shippingAddress: metadata.customer.address,
         paymentMethod: "Paystack",
         totalPrice: metadata.totalPrice,
