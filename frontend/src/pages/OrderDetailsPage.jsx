@@ -98,8 +98,8 @@ const OrderDetailsPage = () => {
 
                                     <span>
 
-                                    <button onClick={handleMarkAsRead} 
-                                      className={`py-1 px-2 ${markMutation.isPending  ? "cursor-not-allowed " : "cursor-pointer "}  text-white hover:bg-green-600 bg-green-500 rounded-md`} > 
+                                    <button onClick={handleMarkAsRead} disabled={orderDetails?.isReceived}
+                                      className={`py-1 px-2 ${markMutation.isPending || orderDetails?.isReceived  ? "cursor-not-allowed " : "cursor-pointer "}  text-white hover:bg-green-600 bg-green-500 rounded-md`} > 
                                         {
                                           orderDetails?.isReceived ? "Order received": "Mark order as received"
                                         } 
