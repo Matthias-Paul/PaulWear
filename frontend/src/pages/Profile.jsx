@@ -25,7 +25,7 @@ const Profile = () => {
       }
 
       dispatch(logOutSuccess());
-      toast.success("Log out successfully!");
+      toast.success("Log out successful!");
 
     } catch (error) {
       console.log(error.message);

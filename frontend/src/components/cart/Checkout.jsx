@@ -69,7 +69,7 @@ const Checkout = () => {
               console.log("Payment Success:", transaction);
               toast.success("Payment Successful")
 
-              navigate("/order-confirmation");
+              navigate(`/order-confirmation?reference=${transaction.reference}`);
             },
             onCancel: () => {
               toast.error("Transaction canceled");
@@ -84,9 +84,7 @@ const Checkout = () => {
       
 
       console.log("MyCart", myCart)
-const handleCearCart = ()=>{
- dispatch(clearMyCart())
-}
+
 
   return (
     <>
@@ -164,7 +162,7 @@ const handleCearCart = ()=>{
                             <p className=" " >  ₦{myCart?.totalPrice?.toFixed(2)} </p>   
 
                </div> 
-                 <div onClick={handleCearCart} className=" text-md sm:text-xl mb-4 flex justify-between items-center" >
+                 <div  className=" text-md sm:text-xl mb-4 flex justify-between items-center" >
                             <p> Delivery </p>
                             <p className=" " > Free </p>   
 

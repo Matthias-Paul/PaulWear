@@ -167,7 +167,7 @@ export const webHook = async (req, res) => {
       if (isNaN(price)) {
         console.log("Invalid price:", item.price);
         continue;
-      }
+      }  
       console.log("price", price)
 
       vendorGroups[vendorId].total += price;
@@ -232,3 +232,42 @@ export const webHook = async (req, res) => {
     return res.status(500).send("Internal server error");
   }
 };
+
+export const verifyOrder = async (req, res) => {
+  const { reference } = req.query;
+  if (!reference) {
+    return res.status(400).json({ success: false, message: "Missing reference" });
+  }
+
+  try {
+    // Check transaction first
+    const transaction = await Transaction.findOne({ reference });
+    if (!transaction || transaction.status !== "paid") {
+      return res.status(404).json({ success: false, message: "Transaction not found or unpaid" });
+    }
+
+    // Then confirm order creation
+    const order = await Order.find({reference: reference });
+    if (!order) {
+      return res.status(202).json({
+        success: true,
+        orderCreated: false,
+        message: "Payment succeeded, but order not yet created",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      order,
+    });
+  } catch (err) {
+    console.error("Order Verify Error:", err.message);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+
+
+
+

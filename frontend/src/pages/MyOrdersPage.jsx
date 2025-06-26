@@ -81,16 +81,16 @@ return (
       <>
         {/* Orders Table */}
         <div className="shadow-md overflow-x-auto relative rounded-sm lg:rounded-md">
-          <table className="w-full text-left min-w-[900px] lg:min-w-full text-gray-500">
+          <table className="w-full text-left min-w-[850px] md:min-w-full text-gray-500">
             <thead className="uppercase bg-gray-100 text-xs text-gray-600">
               <tr>
-                <th className="py-2 px-4 sm:py-3">Image</th>
-                <th className="py-2 px-4 sm:py-3">Store Name</th>
+                <th className="py-2 px-4 sm:py-3">order</th>
+                <th className="py-2 px-4 sm:py-3">Vendor</th>
+                <th className="py-2 px-4 sm:py-3">Items</th>
+                <th className="py-2 px-4 sm:py-3">Total</th>
+                <th className="py-2 px-4 sm:py-3"> Status</th>
+                <th className="py-2 px-4 sm:py-3">Address </th>
                 <th className="py-2 px-4 sm:py-3">Created</th>
-                <th className="py-2 px-4 sm:py-3">Shipping Address</th>
-                <th className="py-2 px-4 sm:py-3"> No of Items</th>
-                <th className="py-2 px-4 sm:py-3">Price</th>
-                <th className="py-2 px-4 sm:py-3">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -102,41 +102,40 @@ return (
                     index === orders?.length - 1 ? "border-b-0 mb-3" : ""
                   }`}
                 >
-                  <td className="px-4 sm:px-4">
-                    <img
-                      src={order?.orderItems[0]?.image}
-                      className="w-12 h-12 rounded-lg my-2 sm:rounded-md object-cover flex-shrink-0"
-                      alt={order?.orderItems[0]?.name}
-                    />
+                  <td className="px-4 font-medium text-gray-800 sm:px-4">
+                  #{order._id.slice(-6).toUpperCase()}
                   </td>
                   <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800">
-                    {order?.orderItems[0]?.name}
+                  {order.vendor?.storeName || "Vendor"}
                   </td>
                   <td className="py-2 px-4 sm:py-4 sm:px-4">
-                    {new Date(order.createdAt).toLocaleDateString()}{" "}
-                    {new Date(order.createdAt).toLocaleTimeString()}
+                  {order.orderItems.length} item{order.orderItems.length > 1 ? "s" : ""}
+                    
                   </td>
+                  <td className="py-2 px-4 sm:py-4 sm:px-4">
+                  ₦{order.totalPrice.toFixed(2)}
+
+                  </td>
+                  <td className="py-2 px-4 sm:py-4 sm:px-4">
+                  <span
+                    className={`px-2 py-1 rounded text-md font-medium ${
+                      order.status === "delivered"
+                        ? "bg-green-100 text-green-700"
+                        : order.status === "processing"
+                        ? "bg-yellow-100 text-yellow-700"
+                        : "bg-gray-100 text-gray-600"
+                    }`}>
+                    {order.status}
+                    </span>
+                    </td>
                   <td className="py-2 px-4 sm:py-4 sm:px-4">
                     {order?.shippingAddress
                       ? `${order?.shippingAddress}`
-                      : "N/A"}
-                  </td>
+                      : "N/A"}                  </td>
                   <td className="py-2 px-4 sm:py-4 sm:px-4">
-                    {order?.orderItems[0]?.quantity}
-                  </td>
-                  <td className="py-2 px-4 sm:py-4 sm:px-4">
-                    ₦{order?.totalPrice.toFixed(2)}
-                  </td>
-                  <td className="py-2 px-4 sm:py-4 sm:px-4">
-                    <span
-                      className={`${
-                        order.isPaid
-                          ? "bg-green-100 text-green-600"
-                          : "bg-red-100 text-red-600"
-                      } px-3 py-2 rounded text-sm font-medium`}
-                    >
-                      {order.isPaid ? "Paid" : "Pending"}
-                    </span>
+                   
+                  {new Date(order.createdAt).toLocaleDateString()}{" "}
+                  {new Date(order.createdAt).toLocaleTimeString()}
                   </td>
                 </tr>
               ))}

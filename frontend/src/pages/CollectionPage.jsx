@@ -38,7 +38,7 @@ const CollectionPage = () => {
 
   const fetchProducts = async ({ pageParam = 1 }) => {
     const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/product?${searchParams.toString()}&page=${pageParam}&limit=12`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/product?${searchParams.toString()}&page=${pageParam}&limit=20`,
       {
         method: "GET",
         credentials: "include",
@@ -58,7 +58,7 @@ const CollectionPage = () => {
     queryKey: ["products", searchParams.toString()],
     queryFn: fetchProducts,
     getNextPageParam: (lastPage, pages) => {
-      if (lastPage.products.length < 10) return undefined;
+      if (lastPage.products.length < 20) return undefined;
       return pages.length + 1;
     },
   });

@@ -1,107 +1,153 @@
-import pic from "../assets/pic.jpg";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { clearMyCart } from "../redux/slice/userSlice";
+import toast from "react-hot-toast";
 
 const OrderConfirmationPage = () => {
+  const [searchParams] = useSearchParams();
+  const reference = searchParams.get("reference");
+  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
+  const [error, setError] = useState(null);
 
-    const checkout = {
-        _id:1122998,
-        createdAt: new Date(),
-        checkoutItems:[
-            {
-                productId:1,
-                name:"Jacket",
-                color:"Black",
-                size:"M",
-                price:150,
-                quantity:1,
-                image:pic
-            },
-            {
-                productId:2,
-                name:"T-Shirt",
-                color:"Red",
-                size:"M",
-                price:130,
-                quantity:1,
-                image:pic
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!reference) {
+      setError("Missing reference");
+      setLoading(false);
+      return;
+    }
+
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/orders/verify?reference=${reference}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+
+        const data = await res.json();
+
+        if (res.ok && data?.order?.length > 0) {
+          clearInterval(interval);
+          setOrders(data.order);
+
+          setLoading(false);
+        } else {
+          attempts++;
+          if (attempts >= maxAttempts) {
+            clearInterval(interval);
+            toast.error("Order creation timed out. Please refresh later.");
+            setLoading(false);
+          }
+        }
+      } catch (err) {
+        clearInterval(interval);
+        toast.error("Something went wrong verifying your order.");
+        setLoading(false);
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [reference, ]);
+
+  
+        useEffect(()=>{
+            if(orders){
+                dispatch(clearMyCart());
+
             }
-        ],
-        shippingAddress:"",
+
+        },[dispatch, orders])
 
 
-    }
+  const calculateEstimatedDelivery = (createdAt) => {
+    const orderDate = new Date(createdAt);
+    orderDate.setDate(orderDate.getDate() + 10);
+    return orderDate.toLocaleDateString();
+  };
 
-    const calculateEstimatedDelivery = (createdAt)=>{
-        const orderDate = new Date(createdAt)
-        orderDate.setDate(orderDate.getDate() + 10) 
-        return orderDate.toLocaleDateString()
-    }
+  if (loading) {
+    return <div className="text-center py-[120px] mb-15 mx-auto px-[12px]  text-lg">Verifying your order...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center text-red-500py-[120px] mb-15 mx-auto px-[12px] ">{error}</div>;
+  }
+
+  if (!orders.length) {
+    return <div className="text-center text-gray-600 py-[120px] mb-15 mx-auto px-[12px] ">No order was found. Please contact support.</div>;
+  }
 
   return (
-    <>
-      <div className="max-w-[800px] py-[120px] mb-15 mx-auto px-[12px] bg-white  " >
-            <h1 className=" text-emerald-800 text-2xl lg:text-4xl font-bold text-center mb-4 sm:mb-8 " > Thank you for your order!  </h1>
+    <div className="max-w-[800px] py-[120px] mb-15 mx-auto px-[12px] bg-white">
+      <h1 className="text-emerald-800 text-2xl lg:text-4xl font-bold text-center mb-4 sm:mb-8">
+        Thank you for your order!
+      </h1>
 
-            {checkout && <div className="  rounded-lg border border-gray-400 p-3 sm:p-6 " >  
-                <div className="flex justify-between mb-12 sm:mb-20 " >
-                        {/* order id and date */}
-                    <div> 
-                        <h2 className=" text-md sm:text-xl font-semibold " > Order ID: {checkout._id} </h2>
-                        <p className="text-gray-500 text-sm sm:text-[16px]  "> Order Date: {new Date(checkout.createdAt).toLocaleDateString() } </p>
-                     </div>
+      {orders.map((order) => (
+        <div key={order._id} className="rounded-lg border border-gray-400 p-3 sm:p-6 mb-12">
+          {/* Order header */}
+          <div className="flex justify-between mb-12 sm:mb-20">
+            <div>
+              <h2 className="text-md sm:text-xl font-semibold">Order ID: {order._id}</h2>
+              <p className="text-gray-500 text-sm sm:text-[16px]">
+                Order Date: {new Date(order.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+            <div>
+              <p className="text-emerald-700 text-sm">
+                Estimated Delivery: {calculateEstimatedDelivery(order.createdAt)}
+              </p>
+            </div>
+          </div>
 
-                    {/* Estimated delivery */}
+          {/* Order items */}
+          <div className="mb-10 lg:mb-20">
+            {order.orderItems?.map((item) => (
+              <div key={item.productId} className="flex mb-4 items-center">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-16 h-16 rounded object-cover mr-4 flex-shrink-0"
+                />
+                <div>
+                  <h4 className="text-md font-semibold">{item.name}</h4>
+                  <p className="text-sm text-gray-500">
+                    {item.color} | {item.size}
+                  </p>
+                </div>
+                <div className="ml-auto text-right">
+                  <p className="text-md">₦{item.price.toFixed(2)}</p>
+                  <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                </div>
+              </div>
+            ))}
+          </div>
 
-                    <div className=" " >
-                        <p className="text-emerald-700 text-sm " > Estimated Delivery: {calculateEstimatedDelivery(checkout.createdAt)} </p>
+          {/* Payment and delivery info */}
+          <div className="grid grid-cols-2 gap-8">
+            <div>
+              <h4 className="text-mlgd font-bold mb-2">Payment</h4>
+              <p className="text-gray-600">Paystack</p>
+            </div>
+            <div>
+              <h4 className="text-mlgd font-bold mb-2">Delivery</h4>
+              <p className="text-gray-600">{order.shippingAddress}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
-                    </div>
-                 </div>   
-                    {/* ordered item */}
-
-                    <div className="mb-10 lg:mb-20   " >
-                        {
-                            checkout?.checkoutItems.map((item)=>(
-                                <div key={item.productId} className="flex mb-4 items-center   "  >
-                                        <img src={item.image} alst={item.name} className="w-16 h-16 rounded object-cover mr-4 flex-shrink-0" />
-                                            <div>
-                                                    <h4 className="text-md font-semibold  " >  { item.name } </h4>
-                                                    <p className="text-sm text-gray-500 " > {item.color} | { item.size  } </p>
-                                            </div>   
-                                            <div className=" ml-auto text-right " >
-                                                    <p className="text-md " > ₦{item.price.toFixed(2)}  </p>
-                                                    <p className="text-sm text-gray-500 " > Qty: { item.quantity  } </p>
-
-                                            </div>     
-
-                                </div>    
-                            ))
-                        }
-
-                    </div>    
-
-                    {/* payment and delivery info */}
-                    <div className="grid grid-cols-2 gap-8  " >
-                        {/* payment info */}
-
-                        <div className="  " >
-                            <h4 className="text-mlgd font-bold mb-2 " >  Payment </h4>
-                            <p className=" text-gray-600 " > Paystack </p>
-                        </div>   
-
-                        {/* Delivery info */}
-
-                        <div className="  ">
-                            <h4 className="text-mlgd font-bold mb-2 " >  Delivery </h4>
-                            <p className=" text-gray-600 " > {checkout?.shippingAddress} </p>
-
-                        </div>
-
-                    </div>    
-            </div>    
-            }
-      </div>  
-    </>
-  )
-}
-
-export default OrderConfirmationPage
+export default OrderConfirmationPage;

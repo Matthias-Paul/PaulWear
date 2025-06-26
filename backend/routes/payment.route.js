@@ -1,5 +1,5 @@
 import express from "express";
-import { webHook, makePayment } from "../controllers/payment.js";
+import { webHook, makePayment, verifyOrder } from "../controllers/payment.js";
 import bodyParser from "body-parser";
 
 const router = express.Router();
@@ -9,5 +9,10 @@ router.post("/webhook/paystack", bodyParser.raw({ type: "application/json" }), w
 
 // Other routes
 router.post("/pay/init", express.json(), makePayment);
+router.get("/orders/verify", express.json(), verifyOrder);
+
+
+
+
 
 export default router;

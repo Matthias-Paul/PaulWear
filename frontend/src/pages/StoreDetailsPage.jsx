@@ -90,7 +90,7 @@ const StoreDetailsPage = () => {
 
   const fetchVendorProducts = async ({ pageParam = 1 }) => {
     const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/product/vendor-products/${storeDetails.user}?${searchParams.toString()}&page=${pageParam}&limit=8`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/product/vendor-products/${storeDetails.user}?${searchParams.toString()}&page=${pageParam}&limit=20`,
       {
         method: "GET",
         credentials: "include",
@@ -132,7 +132,7 @@ const StoreDetailsPage = () => {
       {/* Filter sidebar */}
       <div
         ref={sidebarRef}
-        className={`absolute left-0 top-[88px] w-50 z-50 px-3 inset-y-0 bg-white overflow-y-auto transition-transform duration-300 lg:translate-x-0 ${
+        className={`absolute lg:border-r-2 border-gray-400 left-0 top-[88px] w-50 z-50 px-3 inset-y-0 bg-white overflow-y-auto transition-transform duration-300 lg:translate-x-0 ${
           isSidebarOpen ? "fixed px-[12px] translate-x-0" : " -translate-x-full"
         }`}
       >
