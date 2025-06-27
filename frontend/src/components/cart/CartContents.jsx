@@ -2,7 +2,7 @@ import { useNavigate, Link} from "react-router-dom";
 import { useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { RiDeleteBin3Line } from "react-icons/ri";
-import { setMyCart, setCartQuantity } from "../../redux/slice/userSlice.js";
+import { setMyCart, clearMyCart, setCartQuantity } from "../../redux/slice/userSlice.js";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 
@@ -19,6 +19,9 @@ const CartContents = ({toggleCartDrawer}) => {
 
   const queryClient = useQueryClient();
 
+  const key = loginUser?.id
+  ? ["cart", "user", loginUser.id]
+  : ["cart", "guest", guestId];
 
   const isLoggedIn = Boolean(loginUser?.id);
 
@@ -166,12 +169,16 @@ const CartContents = ({toggleCartDrawer}) => {
 
 
           const handleCheckout= ()=>{
-              if(data?.cart?.length === 0){
+              if(!data?.cart){
+                queryClient.invalidateQueries(key);
                 toast.error("Cart does not exist")
+                dispatch(clearMyCart())
+              }else{
+                navigate("/checkout")
+                toggleCartDrawer()
               }
 
-            navigate("/checkout")
-            toggleCartDrawer()
+            
           }
 
   return (

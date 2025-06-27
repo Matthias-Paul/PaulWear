@@ -220,7 +220,8 @@ export const webHook = async (req, res) => {
 
       // send mail to each vendor
 
-       const buyerName = metadata.customer?.name || "A customer";
+       const buyerName = metadata.customer?.firstName || "A customer";
+       const buyerSecondName = metadata.customer?.lastName || "";
 
       for (const vendorId in vendorGroups) {
         const vendorDoc = await Vendor.findOne({ user: vendorId }).populate("user");
@@ -242,19 +243,19 @@ export const webHook = async (req, res) => {
         const mailOptions = {
           from: process.env.EMAIL_USER,
           to: vendorDoc.user.email,
-          subject: `New Order from ${buyerName}`,
+          subject: `New Order from ${buyerName} ${buyerSecondName}`,
           html: `
-            <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
+            <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 10px;">
               <div style="max-width: 600px; margin: auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
                 <div style="background-color: #111827; padding: 20px; color: white; text-align: center;">
                   <h2>New Order Notification</h2>
                 </div>
-                <div style="padding: 20px;">
+                <div style="padding: 15px;">
                   <p style="font-size: 16px;">Hello ${vendorDoc.storeName || "Vendor"},</p>
-                  <p style="font-size: 15px;">You have received a new order from <strong>${buyerName}</strong>.</p>
+                  <p style="font-size: 15px;">You have received a new order from <strong>${buyerName} ${buyerSecondName} </strong>.</p>
                   <p style="font-size: 15px;">Here are the details of the products they ordered from your store:</p>
 
-                  <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px;">
+                  <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px;">
                     <thead>
                       <tr style="background-color: #f0f0f0;">
                         <th style="padding: 8px; text-align: left;">Product</th>
