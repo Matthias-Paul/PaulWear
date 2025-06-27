@@ -8,7 +8,7 @@ import Checkout from '../models/checkout.model.js';
 import User from '../models/user.model.js';
 import Vendor from '../models/vendors.model.js';
 import Transaction from '../models/transaction.model.js';
-
+import transporter from "../utils/emailTransporter.js";
 
 dotenv.config();
 
@@ -73,10 +73,6 @@ export const makePayment = async (req, res)=>{
     }
 }  
 
-    
-
-
-
 
 export const webHook = async (req, res) => {
   const secret = process.env.PAYSTACK_SECRET_KEY;
@@ -102,14 +98,14 @@ export const webHook = async (req, res) => {
 
     console.log("Received metadata:", metadata);
 
-    // ✅ Step 1: Check if transaction already processed
+    // Step 1: Check if transaction already processed
     const existingTransaction = await Transaction.findOne({ reference: data.reference });
     if (existingTransaction) {
       console.log("Duplicate webhook call for reference:", data.reference);
       return res.status(200).send("Already processed");
     }
 
-    // ✅ Step 2: Validate products
+    // Step 2: Validate products
     const cartItems = metadata.cartItems || [];
     const productIds = cartItems.map(item => item.productId);
     const existingProducts = await Product.find({ _id: { $in: productIds } });
@@ -128,7 +124,7 @@ export const webHook = async (req, res) => {
           received: metadata.totalPrice
         });
       }
-    // ✅ Step 3: Save Checkout
+    // Step 3: Save Checkout
     const newCheckout = await Checkout.create({
       user: metadata.userId,
       checkoutItems: cartItems,
@@ -141,7 +137,7 @@ export const webHook = async (req, res) => {
       paidAt: Date.now(),
     });
     console.log("New checkout", newCheckout)
-    // ✅ Step 4: Group by vendor, including variant info
+    //  Step 4: Group by vendor, including variant info
     const vendorGroups = {};
     for (const item of cartItems) {
       const product = existingProducts.find(p => p._id.toString() === item.productId);
@@ -173,7 +169,7 @@ export const webHook = async (req, res) => {
       vendorGroups[vendorId].total += price;
     }
 
-    // ✅ Step 5: Create Orders per vendor
+    // Step 5: Create Orders per vendor
     const createdOrders = [];
     for (const vendorId in vendorGroups) {
       const vendorDoc = await Vendor.findOne({ user: vendorId });
@@ -199,7 +195,7 @@ export const webHook = async (req, res) => {
       createdOrders.push(newOrder);
     }
 
-    // ✅ Step 6: Finalize & clean
+    // Step 6: Finalize & clean
     newCheckout.isFinalized = true;
     newCheckout.finalizedAt = Date.now();
     await newCheckout.save();
@@ -210,7 +206,7 @@ export const webHook = async (req, res) => {
     console.log("Created order", createdOrders)
 
 
-    // ✅ Step 7: Save transaction to prevent future duplicates
+    // Step 7: Save transaction to prevent future duplicates
     await Transaction.create({
       reference: data.reference,
       user: metadata.userId,
@@ -221,6 +217,76 @@ export const webHook = async (req, res) => {
       paymentGateway: "paystack",
       paymentResponse: data,
     });
+
+      // send mail to each vendor
+
+       const buyerName = metadata.customer?.name || "A customer";
+
+      for (const vendorId in vendorGroups) {
+        const vendorDoc = await Vendor.findOne({ user: vendorId }).populate("user");
+        if (!vendorDoc || !vendorDoc.user?.email) continue;
+
+        const group = vendorGroups[vendorId];
+
+        // Create a table of products ordered
+        const productListHtml = group.items.map(item => `
+          <tr style="border-bottom: 1px solid #ddd;">
+            <td style="padding: 8px;">${item.name}</td>
+            <td style="padding: 8px;">${item.size || "-"}</td>
+            <td style="padding: 8px;">${item.color || "-"}</td>
+            <td style="padding: 8px;">${item.quantity}</td>
+            <td style="padding: 8px;">₦${Number(item.price).toLocaleString()}</td>
+          </tr>
+        `).join("");
+
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: vendorDoc.user.email,
+          subject: `New Order from ${buyerName}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
+              <div style="max-width: 600px; margin: auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                <div style="background-color: #111827; padding: 20px; color: white; text-align: center;">
+                  <h2>New Order Notification</h2>
+                </div>
+                <div style="padding: 20px;">
+                  <p style="font-size: 16px;">Hello ${vendorDoc.storeName || "Vendor"},</p>
+                  <p style="font-size: 15px;">You have received a new order from <strong>${buyerName}</strong>.</p>
+                  <p style="font-size: 15px;">Here are the details of the products they ordered from your store:</p>
+
+                  <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px;">
+                    <thead>
+                      <tr style="background-color: #f0f0f0;">
+                        <th style="padding: 8px; text-align: left;">Product</th>
+                        <th style="padding: 8px; text-align: left;">Size</th>
+                        <th style="padding: 8px; text-align: left;">Color</th>
+                        <th style="padding: 8px; text-align: left;">Quantity</th>
+                        <th style="padding: 8px; text-align: left;">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${productListHtml}
+                    </tbody>
+                  </table>
+
+                  <p style="margin-top: 20px; font-size: 15px;">Total: <strong>₦${group.total.toLocaleString()}</strong></p>
+
+                  <div style="margin-top: 30px; text-align: center;">
+                    <a href="https://stylenest-ax2d.onrender.com/vendor/orders" style="background-color: #111827; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; display: inline-block;">View Order</a>
+                  </div>
+
+                  <p style="margin-top: 30px; font-size: 13px; color: #666;">Thank you for selling with StyleNest.</p>
+                  <p style="font-size: 13px; color: #666;"><strong>- The StyleNest Team</strong></p>
+                </div>
+              </div>
+            </div>
+          `,
+        };
+
+        await transporter.sendMail(mailOptions);
+      }
+
+
 
     return res.status(200).json({
       success: true,
