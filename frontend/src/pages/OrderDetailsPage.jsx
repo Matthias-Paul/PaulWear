@@ -40,16 +40,15 @@ const OrderDetailsPage = () => {
   const markMutation = useMutation({
     mutationFn: async ()=>{
   
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/buyer/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor/markAsReceived/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ markAsReceived: true }),
       });
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to mark as");
+        throw new Error(errorData.message || "Failed to mark as received");
       }
 
       const data = await res.json();
@@ -99,7 +98,7 @@ const OrderDetailsPage = () => {
                                     <span>
 
                                     <button onClick={handleMarkAsRead} disabled={orderDetails?.isReceived}
-                                      className={`py-1 px-2 ${markMutation.isPending || orderDetails?.isReceived  ? "cursor-not-allowed " : "cursor-pointer "}  text-white hover:bg-green-600 bg-green-500 rounded-md`} > 
+                                      className={`py-1 px-2 ${markMutation.isPending || orderDetails?.isReceived  ? "cursor-not-allowed bg-green-100 text-green-700 " : "cursor-pointer text-white hover:bg-green-600 bg-green-500 "}    rounded-md`} > 
                                         {
                                           orderDetails?.isReceived ? "Order received": "Mark order as received"
                                         } 

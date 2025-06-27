@@ -167,6 +167,7 @@ const CartContents = ({toggleCartDrawer}) => {
             });
           };
 
+          queryClient.invalidateQueries(key);
 
           const handleCheckout= ()=>{
               if(!data?.cart){

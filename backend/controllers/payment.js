@@ -8,7 +8,13 @@ import Checkout from '../models/checkout.model.js';
 import User from '../models/user.model.js';
 import Vendor from '../models/vendors.model.js';
 import Transaction from '../models/transaction.model.js';
+import VendorAccount from '../models/vendorAccount.model.js';
 import transporter from "../utils/emailTransporter.js";
+import { validationResult, matchedData } from "express-validator"
+import { triggerPayout } from "../utils/triggerPaystackPayout.js"
+  
+
+
 
 dotenv.config();
 
@@ -245,7 +251,7 @@ export const webHook = async (req, res) => {
           to: vendorDoc.user.email,
           subject: `New Order from ${buyerName} ${buyerSecondName}`,
           html: `
-            <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 10px;">
+            <div style="font-family: Arial, sans-serif;">
               <div style="max-width: 600px; margin: auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
                 <div style="background-color: #111827; padding: 20px; color: white; text-align: center;">
                   <h2>New Order Notification</h2>
@@ -333,8 +339,294 @@ export const verifyOrder = async (req, res) => {
   }
 };
 
+export const accountCreation = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      statusCode: 400,
+      success: false,
+      message: errors.array()[0].msg,
+    });
+  }
+
+  try {
+    if (!req.user || req.user.role !== "vendor") {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized access",
+      });
+    }
+
+    const { bankAccountNumber, bankCode, accountName } = matchedData(req);
+    const loginUserId = req.user._id;
+
+    // Confirm user exists
+    const loginUser = await User.findById(loginUserId);
+    if (!loginUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User does not exist.",
+      });
+    }
+
+    // Confirm vendor profile exists
+    const vendor = await Vendor.findOne({ user: loginUserId });
+    if (!vendor) {
+      return res.status(404).json({
+        success: false,
+        message: "Vendor does not exist.",
+      });
+    }
+
+    // Prevent duplicate account
+    const existingVendor = await VendorAccount.findOne({ vendor: vendor._id });
+    if (existingVendor) {
+      return res.status(400).json({
+        success: false,
+        message: "Vendor already created an account.",
+      });
+    }
+
+    // Create vendor account
+    const newAccount = new VendorAccount({
+      vendor: vendor._id,
+      user:loginUserId,
+      bankAccountNumber,
+      bankCode,
+      accountName,
+    });   
+
+    await newAccount.save();
+
+    return res.status(201).json({
+      success: true,
+      account: newAccount,
+      message: "Vendor account created.",
+    });
+  } catch (error) {
+    console.error("Account creation error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const accountUpdate = async (req, res)=>{
+
+  try {
+    const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      statusCode: 400,
+      success: false,
+      message: errors.array()[0].msg,
+    });
+  }
+
+    if (!req.user || req.user.role !== "vendor") {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized access",
+      });
+    }
+
+    const { bankAccountNumber, bankCode, accountName } = matchedData(req);
+    const loginUserId = req.user._id;
+
+    const vendor = await Vendor.findOne({user: loginUserId })
+      if (!vendor) {
+      return res.status(404).json({
+        success: false,
+        message: "Vendor  not found.",
+      });
+    }
+    const vendorAccount = await VendorAccount.findOne({user: loginUserId })
+      if (!vendorAccount) {
+      return res.status(404).json({
+        success: false,
+        message: "Vendor account not found.",
+      });
+    }
+    
+    vendorAccount.accountName = accountName
+    vendorAccount.bankAccountNumber = bankAccountNumber
+    vendorAccount.bankCode = bankCode
+   
+
+    await vendorAccount.save()
+
+    return res.status(200).json({
+      success: true,
+      account: vendorAccount,
+      message: "Vendor account updated.",
+    });
 
 
+  } catch (error) {
+    console.error("Account update error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
+
+
+
+
+export const getAccountDetails = async(req, res)=>{
+
+
+  try {
+    if (!req.user || req.user.role !== "vendor") {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized access",
+      });
+    }
+    const loginUserId = req.user._id;
+
+
+    const vendorAccount = await VendorAccount.findOne({ user: loginUserId })
+    .populate("vendor", "storeName storeLogo") 
+    .populate("user", "name email");  
+
+    if (!vendorAccount) {
+    return res.status(404).json({
+      success: false,  
+      message: "Vendor account not found.",
+    });
+     }
+
+  return res.status(200).json({
+    success: true,
+    account: vendorAccount,
+  });
+
+
+  } catch (error) {
+    console.error("Get account error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
+
+export const markAsDelivered = async (req, res) => {
+  try {
+    if (!req.user || req.user.role !== "vendor") {
+      return res.status(403).json({
+        success: false,
+        message: "Unauthorized access",
+      });
+    }
+
+     const loginUserId = req.user._id
+    const { orderId } = req.params;
+
+    const vendor = await Vendor.findOne({ user: loginUserId  })
+    if (!vendor) {
+      return res.status(404).json({
+        success: false,  
+        message: "Vendor  not found.",
+      });
+       }
+    const order = await Order.findOne({ _id: orderId, vendor: vendor._id });
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    order.isDelivered = true;
+    order.deliveredAt = new Date();
+    order.status = "delivered";
+
+    await order.save();
+
+    // Check if buyer has already confirmed
+    if (order.isReceived && order.receivedAt) {
+      await triggerPayout(order);
+    }
+
+    return res.status(200).json({ success: true, message: "Order marked as delivered" });
+
+  } catch (error) {
+    console.error("Mark as delivered error:", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+  
+export const markAsReceived = async (req, res) => {
+  try {
+
+    const userId = req.user._id;
+    const { orderId } = req.params;
+
+    const order = await Order.findOne({ _id: orderId, user: userId });
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    order.isReceived = true;
+    order.receivedAt = new Date();
+
+    await order.save();
+
+    // Check if vendor already delivered
+    if (order.isDelivered && order.deliveredAt && order.status === "delivered") {
+      await triggerPayout(order);
+    }
+
+    return res.status(200).json({ success: true, message: "Order marked as received" });
+
+  } catch (error) {
+    console.error("Mark as received error:", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+export const getListOfBanks = async (req, res) => {
+  try {
+    const response = await fetch("https://api.paystack.co/bank?country=nigeria", {
+      headers: {
+        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        "Content-Type": "application/json"
+      }
+    });
+
+    const data = await response.json();
+
+    if (!data.status) {
+      return res.status(400).json({
+        success: false,
+        message: data.message || "Failed to fetch banks"
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      banks: data.data  // this is the list of banks with name + code
+    });
+
+  } catch (error) {
+    console.error("Get list of banks error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    });
+  }
+};
+
+
+
+
+
+ 
 
 
 

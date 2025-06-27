@@ -1,6 +1,9 @@
 import express from "express"
 import Product from "../models/product.model.js"
 import Vendor from "../models/vendors.model.js"
+import VendorAccount from '../models/vendorAccount.model.js';
+
+
 
 import { validationResult, matchedData } from "express-validator"
 
@@ -23,13 +26,23 @@ export const createProduct = async (req, res, next) => {
       });
     }
 
-    if (req.user.role !== "admin" && req.user.role !== "vendor") {
+    if (req.user.role !== "vendor") {
       return res.status(403).json({
         success: false,
         message: "You are not authorized to create a product.",
       });
     }
 
+    if(req.user.role === "vendor"){
+        const vendorAcc = await VendorAccount.findOne({  user: req.user._id })
+        if(!vendorAcc || !vendorAcc.bankAccountNumber || !vendorAcc.bankCode || !vendorAcc.recipientCode || !vendorAcc.accountName  ){
+            return res.status(400).json({
+                success: false,  
+                message: "Update your bank details at payout page before creating a product.",
+            });        
+        }
+    }     
+             
     const {
       name,
       description,
@@ -133,7 +146,7 @@ export const editProduct = async(req, res, next)=>{
             statusCode: 400,
             success: false,  
             message: errors.array()[0].msg 
-        }); 
+        });   
     }
 
     try {

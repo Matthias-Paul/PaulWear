@@ -353,3 +353,23 @@ export const validateVendor = [
     .custom((arr) => arr.every(item => /^https?:\/\/.+/.test(item)))
     .withMessage('KYC docs must contain valid URLs'),
 ];
+
+
+
+export const validateVendorAccount = [
+  body("bankAccountNumber")
+    .trim()
+    .notEmpty().withMessage("Bank account number is required")
+    .isLength({ min: 10, max: 10 }).withMessage("Bank account number must be 10 digits"),
+
+  body("bankCode")
+    .trim()
+    .notEmpty().withMessage("Bank code is required")
+    .isLength({ min: 3 }).withMessage("Bank code is invalid"),
+
+  body("accountName")
+    .optional()
+    .trim()
+    .isString().withMessage("Account name must be a string"),
+];
+
