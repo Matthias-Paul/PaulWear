@@ -69,9 +69,9 @@ const Payout = () => {
 
                 <div className="mb-6 " >
                     <label   className=" block font-semibold " > Select Bank </label>
-                    <select defaultValue="" className="w-full py-2  cursor-pointer focus:outline-none p-2 rounded border border-gray-400 mt-1 lg:mt-2 " onChange={(e) => setBankCode(e.target.value)}>
+                    <select defaultValue="" className="w-full py-[10px]  cursor-pointer focus:outline-none p-2 rounded border border-gray-400 mt-1 lg:mt-2 " onChange={(e) => setBankCode(e.target.value)}>
                     <option value="" disabled>
-                    Select a bank
+                    Select bank
                     </option>
                         {banks.map((bank) => (
                         <option key={`${bank?.code}-${bank?.name}-${bank?.slug}`} value={bank?.code}>

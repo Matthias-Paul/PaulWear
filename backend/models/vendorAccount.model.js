@@ -33,7 +33,7 @@ const vendorAccountSchema = new mongoose.Schema({
     type: String, // Paystack recipient code
     trim: true
   },
-  currentBalance: {
+  totalBalance: {
     type: Number,
     default: 0
   },

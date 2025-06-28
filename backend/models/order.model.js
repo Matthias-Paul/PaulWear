@@ -59,6 +59,10 @@ const orderSchema = new mongoose.Schema({
         type: Number, 
         required: true 
     },
+    buyerPhoneNumber: { 
+        type: String, 
+        required: true 
+    },
     isPaid: { 
         type: Boolean, 
         default: false 
@@ -72,7 +76,14 @@ const orderSchema = new mongoose.Schema({
     },
     deliveredAt: { 
         type: Date 
-    },           
+    },  
+    isPayoutSuccess: { 
+        type: Boolean, 
+        default: false 
+    },
+    isPayoutDate: { 
+        type: Date 
+    },         
      isReceived: { 
         type: Boolean, 
         default: false    

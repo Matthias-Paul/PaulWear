@@ -190,8 +190,9 @@ export const webHook = async (req, res) => {
         shippingAddress: newCheckout.shippingAddress,
         paymentMethod: newCheckout.paymentMethod,
         totalPrice: group.total,
-        isPaid: true,
-        paidAt: newCheckout.paidAt,
+        isPaid: true,   
+        buyerPhoneNumber:metadata.customer.phone,
+        paidAt: newCheckout.paidAt,   
         reference: data.reference,
         paymentStatus: "paid",
         paymentDetails: newCheckout.paymentDetails,
@@ -293,6 +294,26 @@ export const webHook = async (req, res) => {
         await transporter.sendMail(mailOptions);
       }
 
+      // Step 8: Add total to each vendor's pending balance
+      for (const vendorId in vendorGroups) {
+        const group = vendorGroups[vendorId];
+        const vendorDoc = await Vendor.findOne({ user: vendorId });
+
+        if (!vendorDoc) {
+          console.log(`Vendor not found for user ID: ${vendorId}`);
+          continue;
+        }
+
+        const vendorAccount = await VendorAccount.findOne({ vendor: vendorDoc._id });
+
+        if (!vendorAccount) {
+          console.log(`VendorAccount not found for vendor ID: ${vendorDoc._id}`);
+          continue;
+        }
+
+        vendorAccount.pendingBalance += group.total;
+        await vendorAccount.save();
+      }
 
 
     return res.status(200).json({
@@ -517,6 +538,7 @@ export const getAccountDetails = async(req, res)=>{
   }
 }
 
+
 export const markAsDelivered = async (req, res) => {
   try {
     if (!req.user || req.user.role !== "vendor") {
@@ -525,20 +547,25 @@ export const markAsDelivered = async (req, res) => {
         message: "Unauthorized access",
       });
     }
-
-     const loginUserId = req.user._id
+  
+    const loginUserId = req.user._id;
     const { orderId } = req.params;
-
-    const vendor = await Vendor.findOne({ user: loginUserId  })
+           
+    const vendor = await Vendor.findOne({ user: loginUserId });
     if (!vendor) {
       return res.status(404).json({
-        success: false,  
-        message: "Vendor  not found.",
+        success: false,
+        message: "Vendor not found.",
       });
-       }
-    const order = await Order.findOne({ _id: orderId, vendor: vendor._id });
+    }
+
+    const order = await Order.findOne({ _id: orderId, vendor: vendor._id }).populate("user");
     if (!order) {
       return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    if (order.isDelivered || order.deliveredAt || order.status === "delivered") {
+      return res.status(400).json({ success: false, message: "Order has already been marked as delivered." });
     }
 
     order.isDelivered = true;
@@ -547,18 +574,65 @@ export const markAsDelivered = async (req, res) => {
 
     await order.save();
 
-    // Check if buyer has already confirmed
+    // Send email to buyer
+    const buyer = order.user;
+    const buyerName = buyer.name?.split(" ")[0] || "there";
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: buyer.email,
+      subject: `Your order has been delivered - please confirm`,
+      html: `
+        <div style="font-family: Arial, sans-serif;">
+          <div style="max-width: 600px; margin: auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <div style="background-color: #111827; padding: 20px; color: white; text-align: center;">
+              <h2>Delivery Confirmation Needed</h2>
+            </div>
+            <div style="padding: 20px;">
+              <p style="font-size: 16px;">Hi ${buyerName},</p>
+              <p style="font-size: 15px;">
+                The vendor has marked your order <strong>#${order._id}</strong> as delivered.
+              </p>
+              <p style="font-size: 15px;">
+                If you've received your items, please take a moment to confirm by clicking the button below.
+              </p>
+
+              <div style="margin-top: 30px; text-align: center;">
+                <a href="https://stylenest-ax2d.onrender.com/order/${order._id}" 
+                   style="background-color: #111827; color: white; padding: 12px 24px; border-radius: 5px; text-decoration: none; display: inline-block;">
+                   Confirm Delivery
+                </a>
+              </div>
+
+              <p style="margin-top: 30px; font-size: 14px; color: #555;">
+                Confirming helps us ensure fast payouts to vendors and improves the shopping experience for everyone.
+              </p>
+
+              <p style="margin-top: 20px; font-size: 13px; color: #888;">
+                Thank you for shopping with <strong>StyleNest</strong>.<br/>
+                — The StyleNest Team
+              </p>
+            </div>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    // Trigger payout only if buyer has already confirmed receipt
     if (order.isReceived && order.receivedAt) {
       await triggerPayout(order);
     }
 
-    return res.status(200).json({ success: true, message: "Order marked as delivered" });
+    return res.status(200).json({ success: true, message: "Order marked as delivered and email sent to buyer." });
 
   } catch (error) {
     console.error("Mark as delivered error:", error);
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
 
   
 export const markAsReceived = async (req, res) => {
@@ -570,6 +644,10 @@ export const markAsReceived = async (req, res) => {
     const order = await Order.findOne({ _id: orderId, user: userId });
     if (!order) {
       return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    if (order.isReceived || order.receivedAt !== null) {
+      return res.status(404).json({ success: false, message: "Order has already been mark as received" });
     }
 
     order.isReceived = true;
@@ -610,7 +688,7 @@ export const getListOfBanks = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      banks: data.data  // this is the list of banks with name + code
+      banks: data.data  
     });
 
   } catch (error) {

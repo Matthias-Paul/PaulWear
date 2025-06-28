@@ -6,7 +6,8 @@ export const triggerPayout = async (order) => {
   if (
     !order.isDelivered || !order.deliveredAt ||
     !order.isReceived || !order.receivedAt ||
-    order.status !== "delivered"
+    order.status !== "delivered" ||
+    order.isPayoutSuccess === true
   ) {
     return;
   }
@@ -20,17 +21,13 @@ export const triggerPayout = async (order) => {
   const total = order.totalPrice;
   const fee = Math.round(total * 0.03);
   const payoutAmount = total - fee;
-  console.log("Fee", fee)
-  console.log("payoutAmount", payoutAmount)
 
-  // Send transfer
   const result = await transferToVendor({
     amount: payoutAmount,
     recipient: vendorAccount.recipientCode,
     reason: `Order payout for order ${order._id}`
   });
 
-  // Log payout
   await VendorPayout.create({
     vendor: order.vendor,
     user: order.user,
@@ -44,7 +41,13 @@ export const triggerPayout = async (order) => {
     completedAt: result.status === "success" ? new Date() : null
   });
 
-  // Optional: update balance
-  vendorAccount.pendingBalance -= payoutAmount;
-  await vendorAccount.save();
+  order.isPayoutSuccess = result.status === "success";
+  order.isPayoutDate = new Date();
+  await order.save();
+
+  if (result.status === "success") {
+    vendorAccount.pendingBalance -= payoutAmount;
+    vendorAccount.totalBalance += payoutAmount;
+    await vendorAccount.save();
+  }
 };
