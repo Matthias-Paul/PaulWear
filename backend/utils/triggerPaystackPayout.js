@@ -11,7 +11,7 @@ export const triggerPayout = async (order) => {
   ) {         
     return;   
   }
-
+   
   const vendorAccount = await VendorAccount.findOne({ vendor: order.vendor });
   if (!vendorAccount || !vendorAccount.recipientCode) {
     console.error("Vendor payout info missing");
@@ -27,7 +27,7 @@ export const triggerPayout = async (order) => {
     recipient: vendorAccount.recipientCode,
     reason: `Order payout for order ${order._id}`
   });
-
+  
   await VendorPayout.create({
     vendor: order.vendor,
     user: order.user,
@@ -51,3 +51,4 @@ export const triggerPayout = async (order) => {
     await vendorAccount.save();
   }
 };
+                

@@ -294,24 +294,34 @@ export const webHook = async (req, res) => {
         await transporter.sendMail(mailOptions);
       }
 
-      // Step 8: Add total to each vendor's pending balance
+    // Step 8: Add each vendor's payoutAmount to their pendingBalance
       for (const vendorId in vendorGroups) {
         const group = vendorGroups[vendorId];
+        
         const vendorDoc = await Vendor.findOne({ user: vendorId });
-
         if (!vendorDoc) {
           console.log(`Vendor not found for user ID: ${vendorId}`);
           continue;
         }
 
         const vendorAccount = await VendorAccount.findOne({ vendor: vendorDoc._id });
-
         if (!vendorAccount) {
           console.log(`VendorAccount not found for vendor ID: ${vendorDoc._id}`);
           continue;
         }
 
-        vendorAccount.pendingBalance += group.total;
+        const total = group.total || 0;
+        const fee = Math.round(total * 0.03); 
+        const payoutAmount = total - fee;
+
+        // Ensure no negative balances
+        if (payoutAmount < 0) {
+          console.warn(`Payout amount is negative for vendor ${vendorId}, skipping.`);
+          continue;   
+        }
+
+        vendorAccount.pendingBalance += payoutAmount;
+
         await vendorAccount.save();
       }
 
@@ -561,13 +571,13 @@ export const markAsDelivered = async (req, res) => {
 
     const order = await Order.findOne({ _id: orderId, vendor: vendor._id }).populate("user");
     if (!order) {
-      return res.status(404).json({ success: false, message: "Order not found" });
+      return res.status(404).json({ success: false, message: "Order not found, please log in to your account." });
     }
 
     if (order.isDelivered || order.deliveredAt || order.status === "delivered") {
       return res.status(400).json({ success: false, message: "Order has already been marked as delivered." });
     }
-
+  
     order.isDelivered = true;
     order.deliveredAt = new Date();
     order.status = "delivered";
@@ -646,10 +656,10 @@ export const markAsReceived = async (req, res) => {
       return res.status(404).json({ success: false, message: "Order not found, Please log in to your account" });
     }
                          
-    if (order.isReceived || order.receivedAt !== null) {
+    if (order.isReceived || order.receivedAt ) {
       return res.status(404).json({ success: false, message: "Order has already been mark as received" });
     }
-   
+                  
     order.isReceived = true;
     order.receivedAt = new Date();
 
@@ -669,6 +679,13 @@ export const markAsReceived = async (req, res) => {
 };
 
 export const getListOfBanks = async (req, res) => {
+
+  if (!req.user || req.user.role !== "vendor") {
+    return res.status(403).json({
+      success: false,
+      message: "Unauthorized access",
+    });
+  }
   try {
     const response = await fetch("https://api.paystack.co/bank?country=nigeria", {
       headers: {
@@ -699,6 +716,49 @@ export const getListOfBanks = async (req, res) => {
     });
   }
 };
+
+export const resolveName = async (req, res) => {
+
+  if (!req.user || req.user.role !== "vendor") {
+    return res.status(403).json({
+      success: false,
+      message: "Unauthorized access",
+    });
+  }
+
+  const { accountNumber, bankCode } = req.query;
+  
+  try {
+    const response = await fetch(`https://api.paystack.co/bank/resolve?account_number=${accountNumber}&bank_code=${bankCode}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`
+      }
+    });
+
+    const data = await response.json();
+
+    if (!data.status) {
+      return res.status(400).json({ success: false, message: data.message });
+    }
+
+    return res.json({
+      success: true,
+      accountName: data.data.account_name
+    });
+
+  } catch (err) {
+    console.error("Resolve error:", err);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+
+
+
+
+
+
+
 
 
 
