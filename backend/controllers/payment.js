@@ -625,7 +625,7 @@ export const markAsDelivered = async (req, res) => {
       await triggerPayout(order);
     }
 
-    return res.status(200).json({ success: true, message: "Order marked as delivered and email sent to buyer." });
+    return res.status(200).json({ success: true, message: "Order marked as delivered." });
 
   } catch (error) {
     console.error("Mark as delivered error:", error);
@@ -643,13 +643,13 @@ export const markAsReceived = async (req, res) => {
 
     const order = await Order.findOne({ _id: orderId, user: userId });
     if (!order) {
-      return res.status(404).json({ success: false, message: "Order not found" });
+      return res.status(404).json({ success: false, message: "Order not found, Please log in to your account" });
     }
-
+                         
     if (order.isReceived || order.receivedAt !== null) {
       return res.status(404).json({ success: false, message: "Order has already been mark as received" });
     }
-
+   
     order.isReceived = true;
     order.receivedAt = new Date();
 

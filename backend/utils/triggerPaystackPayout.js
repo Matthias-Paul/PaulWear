@@ -8,8 +8,8 @@ export const triggerPayout = async (order) => {
     !order.isReceived || !order.receivedAt ||
     order.status !== "delivered" ||
     order.isPayoutSuccess === true
-  ) {
-    return;
+  ) {         
+    return;   
   }
 
   const vendorAccount = await VendorAccount.findOne({ vendor: order.vendor });
