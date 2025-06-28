@@ -547,7 +547,7 @@ export const markAsDelivered = async (req, res) => {
         message: "Unauthorized access",
       });
     }
-  
+
     const loginUserId = req.user._id;
     const { orderId } = req.params;
            

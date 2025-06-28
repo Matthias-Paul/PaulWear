@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 const Payout = () => {
     const [accountNumber, setAccountNumber] = useState("")
     const [bankCode, setBankCode] = useState("")
+    const [bankName, setBankName] = useState("")
+
     const [banks, setBanks] = useState([])
 
     const fetchListOfBanks = async () => {
@@ -32,6 +34,13 @@ const Payout = () => {
         }
       }, [data]);
     
+      const handleSelectChange = async(e)=>{
+        e.target.value.split("|")
+        setBankCode(e.target.value[0])
+        setBankName(e.target.value[1])
+
+
+      }
       console.log(bankCode, accountNumber)
 
   return (
@@ -69,12 +78,12 @@ const Payout = () => {
 
                 <div className="mb-6 " >
                     <label   className=" block font-semibold " > Select Bank </label>
-                    <select defaultValue="" className="w-full py-[10px]  cursor-pointer focus:outline-none p-2 rounded border border-gray-400 mt-1 lg:mt-2 " onChange={(e) => setBankCode(e.target.value)}>
+                    <select defaultValue="" className="w-full py-[10px]  cursor-pointer focus:outline-none p-2 rounded border border-gray-400 mt-1 lg:mt-2 " onChange={(e) => handleSelectChange(e)}>
                     <option value="" disabled>
                     Select bank
                     </option>
                         {banks.map((bank) => (
-                        <option key={`${bank?.code}-${bank?.name}-${bank?.slug}`} value={bank?.code}>
+                        <option key={`${bank?.code}-${bank?.name}-${bank?.slug}`} value={`${bank?.code} | ${bank.name}`}>
                             {bank?.name}
                         </option>
                         ))}

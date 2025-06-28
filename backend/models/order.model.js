@@ -61,12 +61,11 @@ const orderSchema = new mongoose.Schema({
     },
     buyerPhoneNumber: { 
         type: String, 
-        required: true 
     },
     isPaid: { 
         type: Boolean, 
         default: false 
-    },
+    },   
     paidAt: { 
         type: Date 
     },
