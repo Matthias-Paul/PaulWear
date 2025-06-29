@@ -153,7 +153,7 @@ const StoreDetailsPage = () => {
               />
               <div className="absolute inset-0 rounded-md sm:rounded-xl bg-black opacity-50"></div>
               <div className="absolute font-bold px-[12px] md:px-[25px] inset-0 flex flex-col text-white justify-center items-start text-start">
-                <h1 className="text-2xl max-w-[800px] md:text-4xl leading-[35px] sm:leading-[60px] tracking-tighter uppercase">
+                <h1 className="text-xl max-w-[800px] md:text-4xl leading-[35px] sm:leading-[60px] tracking-tighter uppercase">
                   {storeDetails.storeName}
                 </h1>
                 <p className="text-sm sm:text-xl max-w-[900px]">{storeDetails.bio}  </p>

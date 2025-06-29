@@ -119,9 +119,9 @@ const OrderDetailsPage = () => {
                                          </div>   
                                           <div>
                                             <h3 className="text:lg  mb-2 font-semibold    " > 
-                                                    Shipping Info
+                                                    Delivery Info
                                             </h3>
-                                            <p> Shipping Address: </p>
+                                            <p> Delivery Address: </p>
                                             <p> { ` ${orderDetails?.shippingAddress} ` } </p>
 
                                          </div>  

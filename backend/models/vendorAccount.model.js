@@ -29,8 +29,12 @@ const vendorAccountSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  bankName:{
+    type: String,
+    required: true,
+  },
   recipientCode: {
-    type: String, // Paystack recipient code
+    type: String, 
     trim: true
   },
   totalBalance: {

@@ -21,7 +21,7 @@ export const triggerPayout = async (order) => {
   const total = order.totalPrice;
   const fee = Math.round(total * 0.03);
   const payoutAmount = total - fee;
-
+   
   const result = await transferToVendor({
     amount: payoutAmount,
     recipient: vendorAccount.recipientCode,
@@ -40,11 +40,11 @@ export const triggerPayout = async (order) => {
     reason: result.message,
     completedAt: result.status === "success" ? new Date() : null
   });
-
+ 
   order.isPayoutSuccess = result.status === "success";
   order.isPayoutDate = new Date();
-  await order.save();
-
+  await order.save();   
+            
   if (result.status === "success") {
     vendorAccount.pendingBalance -= payoutAmount;
     vendorAccount.totalBalance += payoutAmount;

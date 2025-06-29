@@ -357,7 +357,7 @@ export const validateVendor = [
 
 
 export const validateVendorAccount = [
-  body("bankAccountNumber")
+  body("accountNumber")
     .trim()
     .notEmpty().withMessage("Bank account number is required")
     .isLength({ min: 10, max: 10 }).withMessage("Bank account number must be 10 digits"),
@@ -367,9 +367,12 @@ export const validateVendorAccount = [
     .notEmpty().withMessage("Bank code is required")
     .isLength({ min: 3 }).withMessage("Bank code is invalid"),
 
-  body("accountName")
-    .optional()
-    .trim()
+  body("userBankName")
+    .notEmpty().withMessage("Account name is required")
     .isString().withMessage("Account name must be a string"),
+  
+    body("bankName")
+    .notEmpty().withMessage("Bank name is required")
+    .isString().withMessage("Bank name must be a string"),
 ];
 

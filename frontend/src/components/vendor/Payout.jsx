@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useMutation,  useQueryClient, useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
+
 
 const Payout = () => {
   const [accountNumber, setAccountNumber] = useState("");
@@ -9,6 +11,9 @@ const Payout = () => {
   const [userBankName, setUserBankName] = useState("");
   const [banks, setBanks] = useState([]);
   const [nameError, setNameError] = useState("");
+  const queryClient = useQueryClient();
+  const { loginUser } = useSelector((state) => state.user);
+
 
   // Fetch banks
   const fetchListOfBanks = async () => {
@@ -80,8 +85,69 @@ const Payout = () => {
   useEffect(() => {
     if (resolveError) {
       setNameError("Could not resolve account name. Check parameters or try again.");
-    }
+    } 
   }, [resolveError]);
+
+
+  const fetchBankDetails = async () => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor/account`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!res.ok) throw new Error("Failed to fetch bank details");
+    return res.json();
+  };
+
+  const { data: bankDetails, isLoading: bankDetailsIsLoading } = useQuery({
+    queryKey: ["bankDetails"],
+    queryFn: fetchBankDetails,
+    enabled: !!loginUser?.id,
+    retry:false,
+});
+
+  console.log("bank details", bankDetails)
+
+
+
+  const createAccountMutation = useMutation({
+    mutationFn: async ()=>{
+  
+      // Send user details to the backend
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor/account`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          userBankName,
+          accountNumber,
+          bankName,
+          bankCode,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to submit account");
+      }
+
+      const data = await res.json();
+        
+      return data;
+    },
+     onSuccess: (data) => {
+      toast.success("Account submitted successfully");
+      console.log("User acc:", data.account);
+      queryClient.invalidateQueries(["bankDetails", loginUser.id]);
+
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      console.error(error.message)
+    },
+
+  })
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -90,6 +156,7 @@ const Payout = () => {
       return;
     }
 
+    createAccountMutation.mutate({ userBankName, accountNumber, bankName, bankCode });
 
 
 
@@ -103,11 +170,11 @@ const Payout = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="p-4 rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold mb-2">Total Amount Of Payout</h2>
-          <p className="text-2xl">₦10000</p>
+          <p className="text-2xl">₦{bankDetails?.account?.totalBalance.toFixed(2) || 0}</p>
         </div>
         <div className="p-4 rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold mb-2">Pending Balance</h2>
-          <p className="text-2xl">₦200</p>
+          <p className="text-2xl">₦{bankDetails?.account?.pendingBalance.toFixed(2)  || 0}</p>
         </div>
         <div className="p-4 rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold mb-2">Total Number Of Payout</h2>
@@ -115,63 +182,90 @@ const Payout = () => {
         </div>
       </div>
 
-      <h2 className="text-xl font-semibold mb-2 mt-12">Submit Account Details</h2>
+        {
+           bankDetails?.account || bankDetailsIsLoading  ?(
+            <>
+                {
+                bankDetails && (
+                    <h5 className="mt-10 text-lg  " > Payout Account </h5>  
+                )}
 
-      <form onSubmit={handleSubmit}>
-        <div className="mb-8">
-          <label className="block font-semibold">Account Number</label>
-          <input
-            required
-            type="number"
-            value={accountNumber}
-            onChange={(e) => setAccountNumber(e.target.value)}
-            className="w-full focus:outline-none p-2 rounded border border-gray-400 mt-1 lg:mt-2"
-            maxLength={10}
-          />
-        </div>
 
-        <div className="mb-6">
-          <label className="block font-semibold">Select Bank</label>
-          <select
-            required
-            defaultValue=""
-            className="w-full py-[10px] cursor-pointer focus:outline-none p-2 rounded border border-gray-400 mt-1 lg:mt-2"
-            onChange={handleSelectChange}
-          >
-            <option value="" disabled>
-              Select bank
-            </option>
-            {banks.map((bank) => (
-              <option key={`${bank?.code}-${bank?.name}-${bank?.slug}`} value={`${bank?.code} | ${bank?.name}`}>
-                {bank?.name}
-              </option>
-            ))}
-          </select>
-        </div>
+            <div className={` ${bankDetails && "border flex gap-x-2 justify-between items-start border-gray-400 mt-2 p-4 sm:p-6 rounded-lg shadow-md"}    `}  >
+                <div>
+                  
+                <h2 className="text-xl font-semibold mb-2 " > {bankDetails?.account?.accountName} </h2>
+                <h2 className="text-md mb-1 " > {bankDetails?.account?.bankAccountNumber} </h2>
+                <h2 className="text-md " > {bankDetails?.account?.bankName} </h2>
+                </div>  
+               {
+                bankDetails && (
+                <button className="px-2 p-1 rounded bg-green-600 hover:bg-green-500 cursor-pointer text-white   " >
+                    Change
+                </button>   
+                )
+               }   
+            </div>    
+           </>
+           ):(
+            <>
+            <h2 className="text-xl font-semibold mb-2 mt-12">Submit Account Details</h2>
 
-        {/* Account name or error */}
+            <form onSubmit={handleSubmit}>
+            <div className="mb-8">
+                <label className="block font-semibold">Account Number</label>
+                <input
+                required
+                type="number"
+                value={accountNumber}
+                onChange={(e) => setAccountNumber(e.target.value)}
+                className="w-full focus:outline-none p-2 rounded border border-gray-400 mt-1 lg:mt-2"
+                maxLength={10}
+                />
+            </div>
+
+            <div className="mb-6">
+                <label className="block font-semibold">Select Bank</label>
+                <select
+                required
+                defaultValue=""
+                className="w-full py-[10px] cursor-pointer focus:outline-none p-2 rounded border border-gray-400 mt-1 lg:mt-2"
+                onChange={handleSelectChange}
+                >
+                <option value="" disabled>
+                    Select bank
+                </option>
+                {banks.map((bank) => (
+                    <option key={`${bank?.code}-${bank?.name}-${bank?.slug}`} value={`${bank?.code} | ${bank?.name}`}>
+                    {bank?.name}
+                    </option>
+                ))}
+                </select>
+            </div>
+
+            {/* Account name or error */}
         {userBankName && !nameError && (
-          <div className="mb-4">
+            <div className="mb-4">
             <p className="text-md bg-green-100 p-2 rounded border border-green-400">{userBankName}</p>
-          </div>
+            </div>
         )}
         {nameError && (
-          <div className="mb-4">
+            <div className="mb-4">
             <p className="text-md bg-red-100 p-2 rounded border border-red-400 text-red-600">{nameError}</p>
-          </div>
+            </div>
         )}
 
 
-            {/* <button type="submit"  disabled={registrationMutation.isPending } className={`rounded w-full font-semibold text-lg ${registrationMutation.isPending  ? "bg-green-500 cursor-not-allowed text-white " : "bg-green-600 hover:bg-green-500 cursor-pointer text-white"} py-2 mt-5 text-center `} >
-              {isFetching ? "Validating..." : "Submit"}
-            </button> */}
-        <button
-          type="submit"
-          className="rounded w-full font-semibold text-lg bg-green-600 hover:bg-green-500 cursor-pointer text-white py-2 mt-5 text-center"
-        >
-          {isFetching ? "Validating..." : "Submit"}
-        </button>
-      </form>
+      <button type="submit"  disabled={createAccountMutation.isPending  } className={`rounded w-full font-semibold text-lg ${createAccountMutation.isPending  ? "bg-green-500 cursor-not-allowed text-white " : "bg-green-600 hover:bg-green-500 cursor-pointer text-white"} py-2 mt-5 text-center `} >
+        {isFetching ? "Validating..." : "Submit"}
+      </button>
+    </form>
+        </>
+           )
+        }
+      
+
+
     </div>
   );
 };

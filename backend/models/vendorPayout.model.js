@@ -13,7 +13,7 @@ const vendorPayoutSchema = new mongoose.Schema({
     required: true
   },
   transaction: {
-    type: mongoose.Schema.Types.ObjectId,
+    type:String,
     ref: "Transaction",
     required: true
   },
@@ -23,12 +23,12 @@ const vendorPayoutSchema = new mongoose.Schema({
   },
   feeDeducted: {
     type: Number,
-    required: true
+    required: true       
   },
   transferReference: {
     type: String,
     trim: true
-  },
+  },    
   status: {
     type: String,
     enum: ["pending", "success", "failed"],
@@ -38,7 +38,7 @@ const vendorPayoutSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  initiatedAt: {
+  initiatedAt: {  
     type: Date,
     default: Date.now
   },

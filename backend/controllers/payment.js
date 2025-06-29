@@ -388,7 +388,7 @@ export const accountCreation = async (req, res) => {
       });
     }
 
-    const { bankAccountNumber, bankCode, accountName } = matchedData(req);
+    const { accountNumber, bankCode, userBankName, bankName } = matchedData(req);
     const loginUserId = req.user._id;
 
     // Confirm user exists
@@ -397,8 +397,8 @@ export const accountCreation = async (req, res) => {
       return res.status(404).json({
         success: false,
         message: "User does not exist.",
-      });
-    }
+      });   
+    }   
 
     // Confirm vendor profile exists
     const vendor = await Vendor.findOne({ user: loginUserId });
@@ -418,16 +418,41 @@ export const accountCreation = async (req, res) => {
       });
     }
 
+    const response = await fetch("https://api.paystack.co/transferrecipient", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        "Content-Type": "application/json"
+      },   
+      body: JSON.stringify({  
+        type: "nuban",
+        name: userBankName,
+        account_number: accountNumber,
+        bank_code: bankCode,
+        currency: "NGN"
+      })
+    }); 
+
+    const data = await response.json();
+
+    if (!data.status) {
+      return res.status(400).json({ success: false, message: data.message });
+    }
+
+    const recipientCode = data.data.recipient_code;
+    console.log("recipient code", recipientCode)
     // Create vendor account
     const newAccount = new VendorAccount({
       vendor: vendor._id,
       user:loginUserId,
-      bankAccountNumber,
+      bankAccountNumber:accountNumber,
       bankCode,
-      accountName,
+      bankName,
+      recipientCode,
+      accountName:userBankName, 
     });   
-
-    await newAccount.save();
+  
+    await newAccount.save();      
 
     return res.status(201).json({
       success: true,
@@ -569,7 +594,7 @@ export const markAsDelivered = async (req, res) => {
       });
     }
 
-    const order = await Order.findOne({ _id: orderId, vendor: vendor._id }).populate("user");
+    const order = await Order.findOne({ _id: orderId, vendor: vendor._id }).populate("user").populate("vendor");
     if (!order) {
       return res.status(404).json({ success: false, message: "Order not found, please log in to your account." });
     }
@@ -587,6 +612,8 @@ export const markAsDelivered = async (req, res) => {
     // Send email to buyer
     const buyer = order.user;
     const buyerName = buyer.name?.split(" ")[0] || "there";
+    const VendorName = order.vendor.storeName;
+
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -601,7 +628,7 @@ export const markAsDelivered = async (req, res) => {
             <div style="padding: 20px;">
               <p style="font-size: 16px;">Hi ${buyerName},</p>
               <p style="font-size: 15px;">
-                The vendor has marked your order <strong>#${order._id}</strong> as delivered.
+                ${ VendorName || "The vendor" } has marked your order <strong>#${order._id}</strong> as delivered.
               </p>
               <p style="font-size: 15px;">
                 If you've received your items, please take a moment to confirm by clicking the button below.
