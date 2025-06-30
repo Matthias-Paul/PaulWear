@@ -24,7 +24,7 @@ const vendorAccountSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true
-  },
+  },    
   accountName: {
     type: String,
     trim: true

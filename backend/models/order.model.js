@@ -62,6 +62,9 @@ const orderSchema = new mongoose.Schema({
     buyerPhoneNumber: { 
         type: String, 
     },
+    buyerName: { 
+        type: String, 
+    },
     isPaid: { 
         type: Boolean, 
         default: false 

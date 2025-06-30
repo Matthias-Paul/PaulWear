@@ -176,6 +176,7 @@ export const webHook = async (req, res) => {
     }
 
     // Step 5: Create Orders per vendor
+    const buyerFullName = `${metadata.customer.firstName} ${metadata.customer.lastName}`
     const createdOrders = [];
     for (const vendorId in vendorGroups) {
       const vendorDoc = await Vendor.findOne({ user: vendorId });
@@ -184,16 +185,17 @@ export const webHook = async (req, res) => {
       const group = vendorGroups[vendorId];
         console.log("Group", group)
       const newOrder = await Order.create({
-        user: metadata.userId,
+        user: metadata.userId,  
         vendor: vendorDoc._id,
-        orderItems: group.items,
+        orderItems: group.items,  
         shippingAddress: newCheckout.shippingAddress,
         paymentMethod: newCheckout.paymentMethod,
         totalPrice: group.total,
-        isPaid: true,   
+        isPaid: true,     
         buyerPhoneNumber:metadata.customer.phone,
+        buyerName: buyerFullName,
         paidAt: newCheckout.paidAt,   
-        reference: data.reference,
+        reference: data.reference,  
         paymentStatus: "paid",
         paymentDetails: newCheckout.paymentDetails,
       });
