@@ -10,6 +10,7 @@ import {
        markAsReceived,  
         getListOfBanks,
         resolveName,
+        payoutHistory,
     } from "../controllers/payment.js";
 import bodyParser from "body-parser";
 import { verifyUser } from "../middleware/verifyUser.js"
@@ -26,6 +27,7 @@ router.get("/orders/verify", express.json(), verifyUser, verifyOrder);
 router.get("/listOfBanks",  express.json(), verifyUser, getListOfBanks  )
 router.get("/vendor/resolveName", express.json(), verifyUser, resolveName );
 router.post("/vendor/account", express.json(), verifyUser, validateVendorAccount, accountCreation);
+router.get("/vendor/payout/history", express.json(), verifyUser, payoutHistory);
 router.put("/vendor/account/update", express.json(), verifyUser, validateVendorAccount, accountUpdate);
 router.get("/vendor/account", express.json(), verifyUser, getAccountDetails);
 router.put("/vendor/markAsDelivered/:orderId", express.json(), verifyUser, markAsDelivered);

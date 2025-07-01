@@ -22,7 +22,7 @@ const OrderConfirmationPage = () => {
     }
 
     let attempts = 0;
-    const maxAttempts = 10;
+    const maxAttempts = 20;
 
     const interval = setInterval(async () => {
       try {

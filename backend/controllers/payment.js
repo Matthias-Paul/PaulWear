@@ -9,6 +9,7 @@ import User from '../models/user.model.js';
 import Vendor from '../models/vendors.model.js';
 import Transaction from '../models/transaction.model.js';
 import VendorAccount from '../models/vendorAccount.model.js';
+import VendorPayout from '../models/vendorPayout.model.js';
 import transporter from "../utils/emailTransporter.js";
 import { validationResult, matchedData } from "express-validator"
 import { triggerPayout } from "../utils/triggerPaystackPayout.js"
@@ -490,7 +491,15 @@ export const accountUpdate = async (req, res)=>{
       });
     }
 
-    const { bankAccountNumber, bankCode, accountName } = matchedData(req);
+    const { accountNumber, bankCode, userBankName, bankName } = matchedData(req);
+
+    if (!accountNumber || !bankCode || !userBankName || !bankName) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required.",
+      });
+    }
+
     const loginUserId = req.user._id;
 
     const vendor = await Vendor.findOne({user: loginUserId })
@@ -507,11 +516,36 @@ export const accountUpdate = async (req, res)=>{
         message: "Vendor account not found.",
       });
     }
+    const response = await fetch("https://api.paystack.co/transferrecipient", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        "Content-Type": "application/json"
+      },   
+      body: JSON.stringify({  
+        type: "nuban",
+        name: userBankName,
+        account_number: accountNumber,
+        bank_code: bankCode,
+        currency: "NGN"
+      })
+    }); 
+
+    const data = await response.json();
+
+    if (!data.status) {
+      return res.status(400).json({ success: false, message: data.message });
+    }
+
+    const recipientCode = data.data.recipient_code;
+    console.log("recipient code", recipientCode)
     
-    vendorAccount.accountName = accountName
-    vendorAccount.bankAccountNumber = bankAccountNumber
+    vendorAccount.accountName = userBankName
+    vendorAccount.bankAccountNumber = accountNumber
     vendorAccount.bankCode = bankCode
-   
+    vendorAccount.recipientCode = recipientCode
+    vendorAccount.bankName = bankName
+
 
     await vendorAccount.save()
 
@@ -780,6 +814,61 @@ export const resolveName = async (req, res) => {
     return res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
+
+export const payoutHistory = async (req, res) => {
+  if (!req.user || req.user.role !== "vendor" || !req.user._id) {
+    return res.status(403).json({
+      success: false,
+      message: "Unauthorized access",
+    });
+  }
+
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  try {
+    const loginUser = req.user._id;
+    const vendor = await Vendor.findOne({ user: loginUser });
+
+    if (!vendor) {
+      return res.status(404).json({
+        success: false,
+        message: "Vendor not found",
+      });
+    }
+
+    const totalPayoutHistory = await VendorPayout.countDocuments({
+      vendor: vendor._id,
+      status: "success",
+    });
+
+    const vendorPayoutHistory = await VendorPayout.find({
+      vendor: vendor._id,
+      status: "success",
+    })        
+      .sort({ completedAt: -1 })
+      .skip(skip)
+      .limit(limit);
+      
+    const hasNextPage = page * limit < totalPayoutHistory;
+     
+    return res.status(200).json({
+      success: true,
+      vendorPayoutHistory,
+      hasNextPage,
+    });
+  } catch (err) {
+    console.error("Resolve error:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+
 
 
 

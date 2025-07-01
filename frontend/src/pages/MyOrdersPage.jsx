@@ -13,7 +13,7 @@ const MyOrdersPage = () => {
 
   const fetchOrders = async ({ pageParam = 1 }) => {
     const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/orders?page=${pageParam}&limit=8`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/orders?page=${pageParam}&limit=15`,
       {
         method: "GET",
         credentials: "include",
@@ -47,17 +47,6 @@ const MyOrdersPage = () => {
   };
 
   const orders = data?.pages.flatMap((page) => page.orders) || [];
-
-  // useEffect(() => {
-  //   // Only dispatch if orders from the query !== Redux state
-  //   const areOrdersDifferent =
-  //     orders.length !== myOrders.length ||
-  //     orders.some((order, i) => order._id !== myOrders[i]?._id);
-  
-  //   if (orders.length > 0 && areOrdersDifferent) {
-  //     dispatch(setMyOrders(orders));
-  //   }
-  // }, [orders, myOrders, dispatch]);
 
     console.log(orders)
     
