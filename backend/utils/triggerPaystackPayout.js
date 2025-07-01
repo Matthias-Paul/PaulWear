@@ -27,6 +27,7 @@ export const triggerPayout = async (order) => {
     recipient: vendorAccount.recipientCode,
     reason: `Order payout for order ${order._id}`
   });
+  console.log("result", result)
   
   await VendorPayout.create({
     vendor: order.vendor,

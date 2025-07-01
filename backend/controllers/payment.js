@@ -318,7 +318,7 @@ export const webHook = async (req, res) => {
 
         // Ensure no negative balances
         if (payoutAmount < 0) {
-          console.warn(`Payout amount is negative for vendor ${vendorId}, skipping.`);
+          console.log(`Payout amount is negative for vendor ${vendorId}, skipping.`);
           continue;   
         }
 
