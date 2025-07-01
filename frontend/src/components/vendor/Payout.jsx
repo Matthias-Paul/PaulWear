@@ -167,18 +167,24 @@ const Payout = () => {
     <div className="w-full pb-20 pt-[90px] md:pt-4 mx-auto pr-[12px] md:pr-0">
       <h1 className="text-2xl font-bold mb-6">Payout Management</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         <div className="p-4 rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold mb-2">Total Amount Of Payout</h2>
-          <p className="text-2xl">₦{bankDetails?.account?.totalBalance.toFixed(2) || 0}</p>
+          <p className="     text-2xl  md:text-[17px] lg:text-[20px] truncate ">₦{bankDetails?.account?.totalBalance
+            ? bankDetails.account.totalBalance.toLocaleString()
+            : "0"}</p>
         </div>
         <div className="p-4 rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold mb-2">Pending Balance</h2>
-          <p className="text-2xl">₦{bankDetails?.account?.pendingBalance.toFixed(2)  || 0}</p>
+          <p className="text-2xl md:text-[17px] lg:text-[20px] truncate  ">₦{bankDetails?.account?.pendingBalance
+            ? bankDetails.account.pendingBalance.toLocaleString()
+            : "0"}
+            </p>
         </div>
         <div className="p-4 rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold mb-2">Total Number Of Payout</h2>
-          <p className="text-2xl">100</p>
+          <p className="text-2xl md:text-[17px] lg:text-[20px] truncate ">  {(1000).toLocaleString()}
+          </p>
         </div>
       </div>
 

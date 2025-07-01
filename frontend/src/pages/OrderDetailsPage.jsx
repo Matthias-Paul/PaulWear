@@ -158,7 +158,7 @@ const OrderDetailsPage = () => {
               </thead>
               <tbody>
                    { orderDetails?.orderItems?.map((item, index)=>(
-                        <tr key={item?.productId} className={`border-b cursor-pointer hover:border-gray-400 ${index === orderDetails?.orderItems?.length -1  ? "border-b-0": ""} `} >
+                        <tr key={`${item.productId}-${item.size}-${item.color}`} className={`border-b cursor-pointer hover:border-gray-400 ${index === orderDetails?.orderItems?.length -1  ? "border-b-0": ""} `} >
                        <td className="py-2 px-4 flex items-center  sm:py-3 sm:px-4 " > 
                         <img src={item?.image} className="w-12 h-12 mr-2 rounded-lg sm:rounded-md object-cover flex-shrink-0 " alt={item?.name} />
                             <Link to={`/product/${item.productId}`} className="text-blue-500 hover:underline" >

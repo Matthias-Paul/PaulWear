@@ -2,14 +2,18 @@ import { useState } from "react"
 import { Outlet } from "react-router-dom"
 import { FaBars } from "react-icons/fa"
 import VendorSidebar from "./VendorSidebar"
+import { useSelector, useDispatch } from "react-redux";
+import { toggleSidebar } from "../../redux/slice/vendorSlice";
+
 
 const VendorLayout = () => {
-    const [isSideBarOpen, setIsSideBarOpen] = useState(false)
+    const dispatch = useDispatch();
+    const isSidebarOpen = useSelector((state) => state.sidebar.isSidebarOpen);
 
-    const toggleSideBar = ()=>{
-        setIsSideBarOpen(!isSideBarOpen)
+    const toggleSideBar = () => {
+      dispatch(toggleSidebar());
+    };
 
-    }
 
   return (
     <>
@@ -29,7 +33,7 @@ const VendorLayout = () => {
             fixed md:static top-0 left-0 z-50
             w-[270px] lg:w-[350px] bg-gray-900 text-white min-h-full
             transform transition-transform duration-300
-            ${isSideBarOpen ? "translate-x-0" : "-translate-x-full"}
+            ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
             md:translate-x-0 md:flex
           `}
         >
@@ -38,7 +42,7 @@ const VendorLayout = () => {
         
           {/*  overlay for mobile sidebar  */}
 
-          {isSideBarOpen && (
+          {isSidebarOpen && (
           <div
             onClick={toggleSideBar}
             className="fixed inset-0 bg-black opacity-60 z-40 md:hidden"
