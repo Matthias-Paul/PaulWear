@@ -30,20 +30,9 @@ const ProductDetailsGrid = ({ products }) => {
                     </h3>
 
                     <div className="flex items-center gap-2 mt-2">
-                      {product.discountPrice && product.discountPrice > 0 ? (
-                        <>
-                          <span className="text-sm font-bold text-red-500">
-                            ₦{product.discountPrice.toFixed(2)}
-                          </span>
-                          <span className="text-sm line-through text-gray-400">
-                            ₦{product.price.toFixed(2)}
-                          </span>
-                        </>
-                      ) : (
                         <span className="text-sm font-bold text-gray-800">
                           ₦{product.price.toFixed(2)}
                         </span>
-                      )}
                     </div>
                       <div className="mt-3 flex items-center gap-2">
                         <img

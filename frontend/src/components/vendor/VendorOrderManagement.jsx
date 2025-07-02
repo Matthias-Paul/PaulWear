@@ -3,15 +3,18 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { useMutation,  useQueryClient, useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import VendorSearchBar from "./VendorSearchBar";
+import { useParams, useSearchParams } from "react-router-dom";
 
 
 
 const VendorOrderManagement = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const fetchVendorOrders = async ({ pageParam = 1 }) => {
     const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/orders/vendor?page=${pageParam}&limit=15`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/orders/vendor?${searchParams.toString()}&page=${pageParam}&limit=15`,
       {
         method: "GET",
         credentials: "include",
@@ -29,12 +32,13 @@ const VendorOrderManagement = () => {
     isFetchingNextPage,
     isLoading,
   } = useInfiniteQuery({
-    queryKey: ["vendorOrders"],
+    queryKey: ["vendorOrders",  searchParams.toString()],
     queryFn: fetchVendorOrders,
     getNextPageParam: (lastPage, pages) => {
       return lastPage.hasNextPage ? pages.length + 1 : undefined;
     },
-  });
+    refetchOnMount: true,
+  });  
 
   console.log("Pages:", data?.pages);
 
@@ -54,13 +58,18 @@ console.log(vendorOrders)
       navigate(`/vendor/orders/${orderId}`);
     };
 
+    
   return (
     <>
-      <div className=" mt-[80px] pb-30 pr-[12px] md:pr-0 md:mt-3 mx-auto   ">
-            <h1 className="text-2xl font-bold mb-6 mt-3  " > Order Management  </h1>
-
+      <div className=" mt-[68px] pb-30 pr-[12px] md:pr-0 md:mt-3 mx-auto   ">
+            <div className="flex justify-between items-start gap-x-2 "  >
+              <h1 className="text-xl sm:text-2xl font-bold mb-6 mt-3  " > Order Management  </h1>
+              <div className="  mt-3 " > <VendorSearchBar />
+            </div>
+        </div> 
 
              {
+              
       vendorOrders.length > 0 || isLoading ? (
         <>
           <div className={` shadow-md  overflow-x-auto relative rounded-sm lg:rounded-md `} >

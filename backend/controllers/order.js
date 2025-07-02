@@ -99,6 +99,9 @@ export const getVendorOrders = async (req, res) => {
       });
     }
 
+       
+
+        const search = req.query.search
         const page = Number(req.query.page) || 1;
         const limit = Number(req.query.limit) || 10;
         const skip = (page - 1) * limit;
@@ -110,7 +113,22 @@ export const getVendorOrders = async (req, res) => {
             message: "Vendor  not found.",
           });
           }
-    const vendorOrders = await Order.find({ vendor: vendor._id  }).populate("user", "name email").sort({ createdAt: -1}).skip(skip).limit(limit)
+
+          let filter = {
+            $and: [{ vendor: vendor._id }],
+          };
+          
+          if (search) {
+            filter.$and.push({
+              $or: [
+                { buyerName: { $regex: search, $options: "i" } },
+                { buyerPhoneNumber: { $regex: search, $options: "i" } },
+              ],
+            });
+          }
+            
+
+    const vendorOrders = await Order.find(filter).populate("user", "name email").sort({ createdAt: -1}).skip(skip).limit(limit)
 
     if (vendorOrders.length === 0) {
       return res.status(200).json({
@@ -120,7 +138,7 @@ export const getVendorOrders = async (req, res) => {
       });
     }
         
-    const totalOrders = await Order.countDocuments({ vendor: vendor._id});
+    const totalOrders = await Order.countDocuments(filter);
         console.log(totalOrders)
         const hasNextPage = page * limit < totalOrders
         console.log(hasNextPage)

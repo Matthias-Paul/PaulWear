@@ -38,7 +38,7 @@ export const createProduct = async (req, res, next) => {
         if(!vendorAcc || !vendorAcc.bankAccountNumber || !vendorAcc.bankCode || !vendorAcc.recipientCode || !vendorAcc.accountName  ){
             return res.status(400).json({
                 success: false,  
-                message: "Update your bank details at payout page before creating a product.",
+                message: "Submit your bank details at payout page before creating a product.",
             });        
         }
     }     
@@ -102,9 +102,6 @@ export const createProduct = async (req, res, next) => {
       images,
       isFeatured,
       isPublished,
-      tags,
-      dimensions,
-      weight,
       sku,
       user: req.user._id,
       ...vendorInfo, 
@@ -172,9 +169,6 @@ export const editProduct = async(req, res, next)=>{
             images,
             isFeatured,
             isPublished,
-            tags,
-            dimensions,
-            weight,
             sku
             
         }
@@ -219,9 +213,6 @@ export const editProduct = async(req, res, next)=>{
                 images,
                 isFeatured,
                 isPublished,
-                tags,
-                dimensions,
-                weight,
                 sku
             },
             { new: true, runValidators: true }
@@ -556,6 +547,16 @@ export const getVendorProducts = async (req, res) => {
         message: "Unauthorized access",
       });
     }     
+    const {
+        size,
+        color,
+        gender,
+        minPrice,
+        maxPrice,
+        search,
+        category,
+
+    } =req.query
 
     let filter = { user: req.user._id  };
 
@@ -583,7 +584,7 @@ export const getVendorProducts = async (req, res) => {
             if(maxPrice) filter.price.$lte = Number(maxPrice)
 
         }
-
+       
         if(search){
             filter.$or = [
                 {name : {$regex: search, $options: "i"  }},

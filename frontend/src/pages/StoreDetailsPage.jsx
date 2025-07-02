@@ -192,7 +192,7 @@ const StoreDetailsPage = () => {
                 </button>
               </div>
             )}
-             <h2 className="text-lg xl:text-2xl font-bold text-center mt-5 text-center uppercase">About this store</h2>
+             <h2 className="text-lg xl:text-2xl font-bold text-center mt-18 text-center uppercase">About this store</h2>
             <p  className="text-center text-gray-600 mt-2  text-md sm:text-lg" >Your trusted source for affordable and quality products—meet the seller..</p>
   
             < AboutVendor productVendorCount={productVendorCount} storeDetails={storeDetails} />

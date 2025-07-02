@@ -104,18 +104,6 @@ export const validateProduct = [
   body("numReviews")
     .optional().isInt({ min: 0 }),
 
-  body("tags")
-    .optional().isArray(),
-
-  body("metaTitle").optional().isString(),
-  body("metaDescription").optional().isString(),
-  body("metaKeywords").optional().isString(),
-
-  body("dimensions.length").optional().isNumeric(),
-  body("dimensions.width").optional().isNumeric(),
-  body("dimensions.height").optional().isNumeric(),
-
-  body("weight").optional().isNumeric()
 ];
 
 

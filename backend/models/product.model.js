@@ -10,12 +10,9 @@ const productSchema = new mongoose.Schema({
         type:String,
         required: true
     },
-    price: {
+    price: {   
         type:Number,
         required: true
-    },
-    discountPrice: {
-        type:Number
     },
     countInStock: {    
         type:Number,  
@@ -24,12 +21,12 @@ const productSchema = new mongoose.Schema({
     },
     sku: {    
         type:String,       
-        unique:true,
+        unique:true,  
         index: true,
-        required: true          
-    },          
-   
-
+        required: true,
+        trim: true,
+        lowercase: true         
+    },            
     category: {
         type:String,
         enum: ["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions", "Health and Personal Care Products","Others"],
@@ -89,27 +86,14 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    tags: [String],
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref:"User",
         required:true
     },
-    metaTitle: {
-        type: String
-    },
-    metaDescription: {
-        type: String
-    },
-    metaKeywords: {
-        type: String
-    },
-    dimensions: {
-        length: Number,
-        height: Number,
-        width: Number
-    },    
-    weight: Number   
+    
+
+   
 
 },{ timestamps: true })   
 

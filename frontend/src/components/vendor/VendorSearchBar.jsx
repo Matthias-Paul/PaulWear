@@ -3,7 +3,7 @@ import { HiMagnifyingGlass, HiMiniXMark } from "react-icons/hi2"
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 
-const SearchBar = () => {
+const VendorSearchBar = () => {
   const editRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -51,24 +51,23 @@ const SearchBar = () => {
 
   return (
     <>
-      <div className=" flex  items-center ">
+      <div className=" flex items-end ">
         {isOpen ? (
           <div
-            className={`flex  transition-all ${
-              isOpen ? "absolute w-full  top-10.5 sm:top-12 z-50 left-0" : "w-auto"
-            } duration-300 items-center justify-center   `}
+            className={`flex   transition-all ${
+              isOpen ? "absolute  w-full  top-17 md:top-4  left-0" : "w-auto"
+            } duration-300 items-center justify-end   `}
           >
-            <div ref={editRef}  className="w-full  relative md:w-1/2 mx-[12px] ">
-              <input
-                
-                type="text"
-                className="px-4 pr-[30px] w-full bg-gray-100 focus:outline-none rounded-lg py-[7px] pl-[4px] "
-                value={searchTerm}
-                placeholder="Search..."
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+            <div ref={editRef}  className="w-full  relative md:w-[300px] flex justify-end mx-[12px]   ">
+            <input
+              type="text"
+              className="w-full px-4 pr-10 py-2 text-black bg-gray-100 rounded-lg focus:outline-none"
+              value={searchTerm}
+              placeholder="Search..."
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
               <button
-                className=" right-2 top-[8px] absolute cursor-pointer "
+                className="  right-2 top-[8px] absolute cursor-pointer "
               >
             <HiMagnifyingGlass className="w-5 h-5     " />
               </button>
@@ -78,7 +77,7 @@ const SearchBar = () => {
           <button
             onClick={handleSearchToggle}
           
-            className="   cursor-pointer "
+            className="bg-black  text-white rounded-lg px-2 sm:px-3 py-1   cursor-pointer "
           >
             <HiMagnifyingGlass className="w-5 h-5     " />
           </button>
@@ -88,7 +87,7 @@ const SearchBar = () => {
   );
 }
 
-export default SearchBar
+export default VendorSearchBar
 
 
 

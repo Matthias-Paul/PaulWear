@@ -1,40 +1,55 @@
 import { Link } from "react-router-dom"
+import { useState, useRef, useEffect } from "react";
+import toast from "react-hot-toast";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { useParams, useSearchParams } from "react-router-dom";
+import FilterSidebar from "../products/FilterSidebar";
+import VendorSearchBar from "./VendorSearchBar";
 
+import { FaFilter } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 
 const VendorProductManagement = () => {
-    const products = [
+
+  const { loginUser } = useSelector((state) => state.user);
+
+  const [searchParams] = useSearchParams();
+
+
+
+
+    const fetchVendorProducts = async ({ pageParam = 1 }) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/product/vendor?${searchParams.toString()}&page=${pageParam}&limit=15`,
         {
-            _id:11,
-            name:" Shirt V",
-            price:200,
-            sku:"65-k6"
-        },
-        {
-            _id:112,
-            name:" Shirt K",
-            price:250,
-            sku:"65ee-k6"
-        }, 
-        {
-            _id:113,
-            name:" Skirt V",
-            price:300,
-            sku:"65-k6"
-        }, 
-        {
-            _id:114,
-            name:" Trouser",
-            price:800,
-            sku:"65ee-k6"
-        },
-        {
-            _id:115,
-            name:" T- Shirt",
-            price:40,
-            sku:"656u-k6"
+          method: "GET",
+          credentials: "include",
         }
-    ]
+      );
+      if (!res.ok) throw new Error("Failed to fetch products");
+      return res.json();
+    };
+  
+    const {
+      data,
+      fetchNextPage,
+      hasNextPage,
+      isFetchingNextPage,
+      isLoading,
+    } = useInfiniteQuery({
+      queryKey: ["vendorProducts", searchParams.toString(), loginUser.id],
+      queryFn: fetchVendorProducts,
+      getNextPageParam: (lastPage, pages) => {
+        return lastPage.hasNextPage ? pages.length + 1 : undefined;
+      },
+      enabled: !!loginUser?.id, 
+    });
+  
+    const products = data?.pages.flatMap((page) => page.vendorProducts) || [];
+    console.log(products)
+
+
 
         const handleDeleteProduct =(productId)=>{
             if(window.confirm("Are you sure you want to delete this product?")){
@@ -46,19 +61,24 @@ const VendorProductManagement = () => {
 
   return (
     <>
-      <div className="pt-[70px] md:pt-3  "  >
-        <h1 className="text-2xl font-bold mb-6 " > Product Management  </h1>
-
+      <div className="pt-[82px] md:pt-5 pb-20 "  >
+        <div className="flex justify-between items-start mr-3 md:mr-0 gap-x-2 "  >
+          <div className=" text-xl sm:text-2xl font-bold mb-6 " > Product Management  </div>
+          <div className="   " > <VendorSearchBar /> </div>
+        </div>  
                 {
 
-            products.length > 0 ? (
-          <div className={`mb-20 max-w-[800px] mr-[12px] md:mr-0 shadow-md overflow-hidden overflow-x-auto  relative rounded-sm lg:rounded-md `} >
-            <table className="  text-left min-w-[611px] sm:min-w-[800px] md:min-w-full  text-gray-500 " >
+            products.length > 0 || isLoading ? (
+              <>
+          <div className={` mr-[12px] md:mr-0 shadow-md overflow-hidden overflow-x-auto  relative rounded-sm lg:rounded-md `} >
+            <table className="  text-left min-w-[900px] md:min-w-[1000px]  text-gray-500 " >
               <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
                 <tr>
+                  <th className="py-3 px-4  " > Image </th>
                   <th className="py-3 px-4  " > Name </th>
                   <th className="py-3 px-4  " > Price </th>
-                  <th className="py-3 px-4  " > SKU </th>
+                  <th className="py-3 px-4  " > Count In Stock </th>
+                  <th className="py-3 px-4  " > category </th>
                   <th className="py-3 px-4  " > Actions </th>
 
                 </tr>
@@ -68,6 +88,9 @@ const VendorProductManagement = () => {
                    { products?.map((product, index)=>(
                         <tr key={product?._id} className={`border-b cursor-pointer hover:border-gray-400 ${index === products?.length -1  ? "border-b-0": ""} `} >
                          <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                            <img src={product?.images[0]?.url} className=" h-18 w-18  sm:h-20 sm:w-20 flex-shrink-0  object-cover rounded-lg shadow-md   " />
+                         </td >
+                         <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             {product?.name}
                          </td >
                          <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
@@ -75,9 +98,13 @@ const VendorProductManagement = () => {
                          </td >
 
                          <td className="py-3 px-4 sm:py-4 sm:px-4" > 
-                            {product?.sku}
+                            {product?.countInStock}
+                         </td >
+                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
+                            {product?.category}
                          </td >
                         <td className="py-3 sm:py-4   " > 
+                          <div className="flex pr-4  "  >
                             <Link to={`/vendor/products/${product._id}/edit`} >
                             <button  className="py-1 px-2 rounded bg-yellow-500 hover:bg-yellow-600 text-white cursor-pointer  "  >
                                 Edit
@@ -85,19 +112,33 @@ const VendorProductManagement = () => {
                             </Link>
                             <button onClick={()=> handleDeleteProduct(product._id) } className="py-1 px-2 rounded bg-red-500 hover:bg-red-600 text-white cursor-pointer ml-2  "  >
                                 Delete
-                            </button>    
+                            </button>  
+                            </div>  
                          </td >
 
                         </tr>
   
                     )
                 )}
+
+
               </tbody>
               
             </table>  
   
         </div>
-            ): (
+            {hasNextPage && (
+              <div className="flex justify-center items-center">
+                <button
+                  className="rounded py-1 px-4 bg-green-600 hover:bg-green-500 mt-8 text-white cursor-pointer"
+                  onClick={() => fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                >
+                  {isFetchingNextPage ? "Loading more..." : "Load more"}
+                </button>
+              </div>
+            )}
+            </>): (
                 <div className="text-gray-700 font-semibold text-lg " >
                     No Products Found.
                  </div>   

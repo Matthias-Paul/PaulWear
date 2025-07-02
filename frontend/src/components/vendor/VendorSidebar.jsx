@@ -4,7 +4,7 @@ import { MdOutlinePayment } from "react-icons/md";
 import { logOutSuccess } from "../../redux/slice/userSlice.js";
 import { useSelector, useDispatch } from "react-redux";
 import { closeSidebar } from "../../redux/slice/vendorSlice";
-
+import { MdDashboard } from "react-icons/md";
 
 
 
@@ -48,14 +48,17 @@ const VendorSidebar = () => {
     <>
       <div className="min-h-screen w-full px-[12px] pt-4 pb-9 " >
             <div className="mb-6 " >
-                <Link onClick={handleCloseSideBar} to="/vendor" className="font-medium text-2xl  " >
+                <Link onClick={handleCloseSideBar} to="/" className="font-medium text-2xl  " >
                     StyleNest
                 </Link>
             </div>
-            <Link onClick={handleCloseSideBar} to="/vendor"  > <h2 className="text-xl font-semibold text-center w-full mb-9  " >  Vendor Dashboard </h2>   </Link>
+            <h2 className="text-xl font-semibold text-center w-full mb-9  " >  Vendor Dashboard </h2>
 
             <nav className="flex flex-col gap-y-6 " >
-
+               <NavLink onClick={handleCloseSideBar} to="/vendor" end className={ ({isActive }) => isActive? "border border-gray-400  bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2 ":  " text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2  border border-gray-400 " } >
+                    <MdDashboard />
+                    <span className="font-semibold text-md " > Dashboard </span>
+                </NavLink>
 
                  <NavLink onClick={handleCloseSideBar} to="/vendor/payout" className={ ({isActive }) => isActive? "border border-gray-400  bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2 ":  " text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2  border border-gray-400 " } >
                     <MdOutlinePayment />
