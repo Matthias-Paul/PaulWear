@@ -110,7 +110,7 @@ const OrderDetailsPage = () => {
                             </div>     
 
                             {/* customer, payment, shipping info */}
-                                <div className="grid mb-13 mt-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-6  " >
+                                <div className="grid mb-13 mt-8 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 mb-6  " >
                                         <div>
                                             <h3 className="text:lg  mb-2 font-semibold    " > 
                                                     Payment Info

@@ -73,7 +73,7 @@ const VendorOrderDetails = () => {
 
   return (
     <>
-      <div className=" pt-12 px-[12px] mx-auto max-w-[1000px] mb-20 " >
+      <div className=" pt-12 md:pt-0 pr-[12px] mx-auto max-w-[1000px] mb-20 " >
                 <h2 className="font-bold mb-2 text-xl md:text-2xl mt-6 " > Order Details </h2>
                 {
                   !orderDetails  ? (<p className="  " > Loading order details... </p>) : (
@@ -109,7 +109,7 @@ const VendorOrderDetails = () => {
                             </div>     
 
                             {/* customer, payment, shipping info */}
-                                <div className="grid mb-13 mt-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-6  " >
+                                <div className="grid mb-13 mt-8 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 mb-6  " >
                                         <div>
                                             <h3 className="text:lg  mb-2 font-semibold    " > 
                                                     Payment Info
