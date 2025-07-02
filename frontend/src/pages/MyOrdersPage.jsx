@@ -120,7 +120,8 @@ return (
                   <td className=" py-4 px-4">
                     {order?.shippingAddress
                       ? `${order?.shippingAddress}`
-                      : "N/A"}                  </td>
+                      : "N/A"}                  
+                    </td>
                   <td className=" py-4 px-4">
                    
                   {new Date(order.createdAt).toLocaleDateString()}{" "}

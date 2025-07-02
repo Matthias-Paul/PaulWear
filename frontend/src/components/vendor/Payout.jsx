@@ -276,18 +276,18 @@ const Payout = () => {
           <h2 className="text-xl font-semibold mb-2">Total Amount Of Payout</h2>
           <p className="     text-2xl  md:text-[17px] lg:text-[20px] truncate ">₦{bankDetails?.account?.totalBalance
             ? bankDetails.account.totalBalance.toLocaleString()
-            : "0"}</p>
+            : "--"}</p>
         </div>
         <div className="p-4 rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold mb-2">Pending Balance</h2>
           <p className="text-2xl md:text-[17px] lg:text-[20px] text-gray-400 truncate  ">₦{bankDetails?.account?.pendingBalance
             ? bankDetails.account.pendingBalance.toLocaleString()
-            : "0"}
+            : "--"}
             </p>
         </div>
         <div className="p-4 rounded-lg shadow-lg">
           <h2 className="text-xl font-semibold mb-2">Total Number Of Payout</h2>
-          <p className="text-2xl md:text-[17px] lg:text-[20px] truncate ">  {vendorPayoutHistory?.length?.toLocaleString() || "0"  }
+          <p className="text-2xl md:text-[17px] lg:text-[20px] truncate ">  {vendorPayoutHistory?.length?.toLocaleString() || "--"  }
           </p>
         </div>
       </div>

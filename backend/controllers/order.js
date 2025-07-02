@@ -119,11 +119,12 @@ export const getVendorOrders = async (req, res) => {
         message: "No orders found for your products",
       });
     }
-
-    const totalOrders = await Order.countDocuments({ vendor: req.user._id });
+        
+    const totalOrders = await Order.countDocuments({ vendor: vendor._id});
         console.log(totalOrders)
         const hasNextPage = page * limit < totalOrders
-
+        console.log(hasNextPage)
+  
     return res.status(200).json({
       success: true,
       orders: vendorOrders,
@@ -183,7 +184,7 @@ export const getAllOrders = async( req, res)=>{
             success: false,  
             message: "Internal Server Error",
         });
-    }
+    }    
 }
 
 

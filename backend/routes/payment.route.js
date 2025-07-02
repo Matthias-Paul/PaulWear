@@ -32,8 +32,8 @@ router.put("/vendor/account/update", express.json(), verifyUser, validateVendorA
 router.get("/vendor/account", express.json(), verifyUser, getAccountDetails);
 router.put("/vendor/markAsDelivered/:orderId", express.json(), verifyUser, markAsDelivered);
 router.put("/vendor/markAsReceived/:orderId", express.json(), verifyUser, markAsReceived );
-
-
+  
+     
     
 
 

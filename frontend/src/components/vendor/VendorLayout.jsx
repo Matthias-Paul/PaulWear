@@ -30,7 +30,7 @@ const VendorLayout = () => {
      {/* Sidebar */}
         <div
           className={`
-            fixed md:static top-0 left-0 z-50
+            fixed md:static top-0 left-0 z-99
             w-[270px] lg:w-[350px] bg-gray-900 text-white min-h-full
             transform transition-transform duration-300
             ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
@@ -50,7 +50,7 @@ const VendorLayout = () => {
         )}
 
                 {/* main content */}
-        <div className="flex-grow ml-[12px] md:ml-[50px] overflow--auto " >
+        <div className="flex-grow ml-[12px] md:ml-[50px] overflow-auto " >
             <Outlet />
         </div>    
       </div>  

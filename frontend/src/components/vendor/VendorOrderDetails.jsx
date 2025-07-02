@@ -1,12 +1,11 @@
 import { useParams, Link } from "react-router-dom"
 import { useState, useEffect } from "react"
-import pic from "../assets/pic.jpg"
 import { useQuery } from "@tanstack/react-query";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 
-const OrderDetailsPage = () => {
+const VendorOrderDetails = () => {
     const { id } = useParams()
     const [orderDetails, setOrderDetails] = useState(null)
     const queryClient = useQueryClient();
@@ -40,7 +39,7 @@ const OrderDetailsPage = () => {
   const markMutation = useMutation({
     mutationFn: async ()=>{
   
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor/markAsReceived/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor/markAsDelivered/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -48,7 +47,7 @@ const OrderDetailsPage = () => {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to mark as received");
+        throw new Error(errorData.message || "Failed to mark as delivered");
       }
 
       const data = await res.json();
@@ -65,7 +64,7 @@ const OrderDetailsPage = () => {
     },
 
   })
-  const handleMarkAsRead = async()=>{
+  const handleMarkAsDelivered = async()=>{
  
     markMutation.mutate();
 
@@ -74,8 +73,8 @@ const OrderDetailsPage = () => {
 
   return (
     <>
-      <div className=" pt-[90px] px-[12px] mx-auto max-w-[1000px] mb-20 " >
-                <h2 className="font-bold mb-5 text-xl md:text-2xl mt-6 " > Order Details </h2>
+      <div className=" pt-12 px-[12px] mx-auto max-w-[1000px] mb-20 " >
+                <h2 className="font-bold mb-2 text-xl md:text-2xl mt-6 " > Order Details </h2>
                 {
                   !orderDetails  ? (<p className="  " > Loading order details... </p>) : (
                         <div className="p-4 sm:p-6 rounded border border-gray-400  " > 
@@ -91,19 +90,19 @@ const OrderDetailsPage = () => {
                                     <span className={` ${orderDetails?.isPaid? "bg-green-100 text-green-700" : " bg-red-100 text-red-700" } py-1 px-3 rounded-lg text-sm mb-3    `}  > 
                                        { orderDetails?.isPaid ? "Approved" : "Pending"} 
                                     </span>
-                                    <span className={` ${orderDetails?.isDelivered? "bg-green-100 text-green-700" : " bg-yellow-100 text-yellow-700" } py-1 px-3 rounded-lg text-sm mb-3    `}  > 
-                                       { orderDetails?.isDelivered ? "Delivered" : "Pending Delivery"} 
+                                    <span className={` ${orderDetails?.isReceived? "bg-green-100 text-green-700" : " bg-yellow-100 text-yellow-700" } py-1 px-3 rounded-lg text-sm mb-3    `}  > 
+                                       { orderDetails?.isReceived ? "Received" : "Pending Received"} 
                                     </span>
 
                                     <span>
 
-                                    <button onClick={handleMarkAsRead} disabled={orderDetails?.isReceived}
-                                      className={`py-1 px-2 ${markMutation.isPending || orderDetails?.isReceived  ? "cursor-not-allowed bg-green-100 text-green-700 " : "cursor-pointer text-white hover:bg-green-600 bg-green-500 "}    rounded-md`} > 
+                                    <button onClick={handleMarkAsDelivered} disabled={orderDetails?.isDelivered}
+                                      className={`py-1 px-2 ${markMutation.isPending || orderDetails?.isDelivered  ? "cursor-not-allowed bg-green-100 text-green-700 " : "cursor-pointer text-white hover:bg-green-600 bg-green-500 "}    rounded-md`} > 
                                         {markMutation.isPending
                                             ? "Processing..."
-                                            : orderDetails?.isReceived
-                                                ? "Order received"
-                                                : "Mark order as received"} 
+                                            : orderDetails?.isDelivered
+                                                ? "Order delivered"
+                                                : "Mark order as delivered"}
                                         </button>
                                     </span>  
                                 </div>      
@@ -117,23 +116,33 @@ const OrderDetailsPage = () => {
                                             </h3>
                                             <p> Payment Method: { orderDetails?.paymentMethod} </p>
                                             <p> Status: { orderDetails?.isPaid ? "Paid" : "Unpaid"} </p>
+                                           
+                                            
+
 
                                          </div>   
                                           <div>
                                             <h3 className="text:lg  mb-2 font-semibold    " > 
                                                     Delivery Info
                                             </h3>
-                                            <p> Delivery Address:  { ` ${orderDetails?.shippingAddress} ` } </p>
-
+                                            <p>Delivery Address: { ` ${orderDetails?.shippingAddress} ` } </p>
+                                            {
+                                            orderDetails?.deliveredAt && (
+                                                <p> Delivered At: {" "}
+                                                {new Date(orderDetails?.deliveredAt).toLocaleDateString()}{" "}
+                                                {new Date(orderDetails?.deliveredAt).toLocaleTimeString()}
+                                                </p>
+                                            )
+                                           }
                                          </div>  
 
                                          <div>
                                             <h3 className="text:lg  mb-2 font-semibold    " > 
-                                                    Vendor Info
+                                                    Customer Info
                                             </h3>
-                                            <p> Store Name: {orderDetails?.vendor?.storeName  } </p>
-                                            <p> Store Email: {orderDetails?.vendor?.email} </p>
-                                            <p className="flex items-start  mt-1 " > Store Phone No: <a className="ml-2 text-sm sm:text-md  bg-green-100 text-green-700 px-2 py-1 rounded " href={`tel:${orderDetails?.vendor?.contactNumber}`} > {orderDetails?.vendor?.contactNumber} </a> </p>
+                                            <p> Customer Name: {orderDetails?.buyerName  } </p>
+                                            <p> Customer Email: {orderDetails?.user?.email} </p>
+                                            <p className="flex items-start  mt-1 " > Customer Phone No: <a className="ml-2 text-sm sm:text-md  bg-green-100 text-green-700 px-2 py-1 rounded " href={`tel:${orderDetails?.buyerPhoneNumber}`} > {orderDetails?.buyerPhoneNumber} </a> </p>
 
                                          </div>  
 
@@ -192,7 +201,7 @@ const OrderDetailsPage = () => {
 
           ):(
             isLoading ? (
-            <div className=" text-gray-500 text-xl px-4 text-center" > Loading your order details... </div>
+            <div className=" text-gray-500 text-xl px-4 text-center" > Loading  order details... </div>
           ):(
           <div className=" text-gray-500 text-xl px-4 text-center" >
             No order details found!
@@ -204,7 +213,7 @@ const OrderDetailsPage = () => {
         }
 
                     <div className="mt-5" >    
-                        <Link to={`/my-orders`}  className="text-blue-500 pt-4 hover:underline" >
+                        <Link to={`/vendor/orders`}  className="text-blue-500 pt-4 hover:underline" >
                                 Back to my orders
                         </Link>
                     </div>
@@ -217,4 +226,7 @@ const OrderDetailsPage = () => {
   )
 }
 
-export default OrderDetailsPage
+export default VendorOrderDetails
+
+
+
