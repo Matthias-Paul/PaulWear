@@ -91,11 +91,11 @@ const CategoryPage = () => {
               description="Freshly made treats and snacks you'll crave all day"
             />
           )}
-          {category === "Beverages" && (
+          {category === "Electronics And Gadgets" && (
             <CategoryBanner
               image={pic}
-              title="Beverages"
-              description="From refreshing to energizing — drinks for every mood"
+              title="Electronics And Gadgets"
+              description="Shop phones, laptops, and the latest tech gadgets at unbeatable prices"
             />
           )}
           {category === "Foodstuff And Provisions" && (

@@ -15,7 +15,7 @@ const FilterSidebar = () => {
   })
 
   const [priceRange, setPriceRange] = useState([0, 100])
-  const categories = ["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions","Others"]
+  const categories = ["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Electronics And Gadgets", " Foodstuff And Provisions","Others"]
   const colors = [
     "Red",
     "Blue",
@@ -33,7 +33,7 @@ const FilterSidebar = () => {
   
 
 
-  const genders = ["Men", "Women"]
+  const genders = ["Men", "Women", "Unisex"]
 
   useEffect(() => {
       const params = Object.fromEntries([...searchParams])

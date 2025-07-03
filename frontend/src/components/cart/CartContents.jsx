@@ -219,7 +219,7 @@ const CartContents = ({toggleCartDrawer}) => {
                 </div>
                <div> 
                 <div className=" text-end " >
-                <div> ₦{Number(product?.price).toFixed(2)} </div>
+                <div> ₦{Number(product?.price).toLocaleString()} </div>
                 <button onClick={()=> handleDeleteProduct(product) } > <RiDeleteBin3Line className="h-6 cursor-pointer w-6 mt-[4px] text-red-600 " />  </button>
                 </div>
               </div>

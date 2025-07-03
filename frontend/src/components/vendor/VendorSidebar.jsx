@@ -77,7 +77,7 @@ const VendorSidebar = () => {
                 </NavLink>
 
             
-                <NavLink  to="/" className={ ({isActive }) => isActive? "bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2 border border-gray-400 ":  " text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2  border border-gray-400 " } >
+                <NavLink  to="/collections/all" className={ ({isActive }) => isActive? "bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2 border border-gray-400 ":  " text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2  border border-gray-400 " } >
                     <FaStore />
                     <span className="font-semibold text-md " > Shop </span>
                 </NavLink>

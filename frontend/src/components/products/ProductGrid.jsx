@@ -34,7 +34,7 @@ const ProductGrid = ({ products, isLoading }) => {
                     <div className="flex items-center gap-2 mt-2">
                       
                         <span className="text-sm font-bold text-gray-800">
-                          ₦{product.price.toFixed(2)}
+                          ₦{product.price.toLocaleString()}
                         </span>
                     
                     </div>

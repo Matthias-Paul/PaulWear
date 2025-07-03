@@ -59,19 +59,9 @@ export const validateProduct = [
     .notEmpty().withMessage("Price is required")
     .isFloat({ min: 0 }).withMessage("Price must be a positive number"),
 
-  body("discountPrice")
-    .optional()
-    .isFloat({ min: 0 }).withMessage("Discount price must be a positive number"),
-
-  body("countInStock")
-    .notEmpty().withMessage("Count in stock is required")
-    .isInt({ min: 0 }).withMessage("Count in stock must be a non-negative integer"),
-
-  body("sku")
-    .notEmpty().withMessage("SKU is required"),
 
   body("category")
-    .isIn(["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions", "Health and Personal Care Products","Others"])
+    .isIn(["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Electronics And Gadgets", "Foodstuff And Provisions", "Health and Personal Care Products", "Others"])
     .withMessage("Invalid  category")
     .notEmpty().withMessage("Category is required"),
 

@@ -98,9 +98,11 @@ const VendorProductManagement = () => {
           <div className=" text-xl text-gray-900 sm:text-2xl font-bold mb-6 " > Product Management  </div>
           <div className="   " > <VendorSearchBar /> </div>
         </div> 
-        <button  className="py-1 px-2 mb-2 rounded bg-gray-900 hover:bg-gray-700 text-white cursor-pointer  "   >  Add Product </button> 
+        <Link to="/vendor/products/add">
+        <button  className="py-1 px-2 mb-2 rounded bg-gray-900 hover:bg-gray-700 text-white cursor-pointer  "   >  Add Product </button>
+        </Link> 
                
-        <div className="text-sm text-gray-500 mb-3 italic">
+        <div className="text-xs sm:text-sm text-gray-500 px-3 mb-3 italic">
           <strong className="font-semibold">Notice:</strong> Please delete products that are no longer in stock or unavailable. 
           This helps maintain an accurate store and a better shopping experience for buyers.
         </div>
@@ -115,7 +117,6 @@ const VendorProductManagement = () => {
                   <th className="py-3 px-4  " > Image </th>
                   <th className="py-3 px-4  " > Name </th>
                   <th className="py-3 px-4  " > Price </th>
-                  <th className="py-3 px-4  " > Count In Stock </th>
                   <th className="py-3 px-4  " > category </th>
                   <th className="py-3 px-4  " > Actions </th>
 
@@ -126,18 +127,15 @@ const VendorProductManagement = () => {
                    { products?.map((product, index)=>(
                         <tr key={product?._id} className={`border-b cursor-pointer hover:border-gray-400 ${index === products?.length -1  ? "border-b-0": ""} `} >
                          <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
-                            <img src={product?.images[0]?.url} className=" h-18 w-18  sm:h-20 sm:w-20 flex-shrink-0  object-cover rounded-lg shadow-md   " />
+                            <img src={product?.images[0]?.url} className=" h-15 w-18  sm:h-18 sm:w-21 flex-shrink-0  object-cover rounded-lg shadow-md   " />
                          </td >
                          <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             {product?.name}
                          </td >
                          <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
-                            ₦{product?.price.toFixed(2)}
+                            ₦{product?.price.toLocaleString()}
                          </td >
 
-                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
-                            {product?.countInStock}
-                         </td >
                          <td className="py-3 px-4 sm:py-4 sm:px-4" > 
                             {product?.category}
                          </td >

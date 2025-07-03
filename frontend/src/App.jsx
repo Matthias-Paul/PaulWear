@@ -26,6 +26,7 @@ import VendorHomePage from "./pages/VendorHomePage.jsx";
 import VendorProductManagement from "./components/vendor/VendorProductManagement";
 import VendorEditProductPage from "./components/vendor/VendorEditProductPage";
 import VendorOrderManagement from "./components/vendor/VendorOrderManagement";
+import AddProductPage from "./components/vendor/AddProductPage";
 import VendorOrderDetails from "./components/vendor/VendorOrderDetails";
 import Payout from "./components/vendor/Payout";
 import ProtectedRoute from "./components/common/ProtectedRoute";
@@ -70,6 +71,7 @@ function App() {
             <Route path="/vendor" element={<VendorLayout />}>
               <Route index element={<VendorHomePage />} />
               <Route path="products" element={<VendorProductManagement />} />
+              <Route path="products/add" element={<AddProductPage />} />
               <Route path="products/:id/edit" element={<VendorEditProductPage />} />
               <Route path="orders" element={<VendorOrderManagement />} />
               <Route path="orders/:id" element={<VendorOrderDetails />} />           

@@ -1,16 +1,12 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react"
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react"
 import toast from "react-hot-toast";
-import {  useNavigate, useParams, Link } from "react-router-dom"
+import {  useNavigate, Link } from "react-router-dom"
 import { FaArrowLeft } from "react-icons/fa";
 
 
-const VendorEditProductPage = () => {
+const AddProductPage = () => {
       const navigate = useNavigate();
-      const {id} = useParams()
-      const [selectedProduct, setSelectedProduct] = useState(null);
-
-      console.log(id)
     const [ isUploading, setIsUploading] = useState(null)
     const [formData, setFormData] = useState({
         name:"",
@@ -26,58 +22,6 @@ const VendorEditProductPage = () => {
         colors:[], 
         gender:""       
     })
-
-
-
-
-
-
-    const fetchProductDetails = async () => {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/${id}`, {
-          method: "GET",
-          credentials: "include",
-        });
-        if (!res.ok) {
-          throw new Error("Failed to fetch product details");
-        }
-        return res.json();
-      };
-    
-      const { data, isLoading } = useQuery({
-        queryKey: ["selectedProduct", id],
-        queryFn: fetchProductDetails,
-      });
-    
-      useEffect(() => {
-        if (data) {
-          setSelectedProduct(data.product);
-
-          console.log("productDetails:", data.product);
-
-          setFormData({
-            name: data.product.name || "",
-            description: data.product.description || "",
-            images: data.product.images || [{ url: "" }],
-            price: data.product.price || "",
-            category: data.product.category || "",
-            sizes: data.product.sizes || [],
-            colors: data.product.colors || [],
-            gender: data.product.gender || ""
-          });
-        }
-
-        }, [data]);
-    
-    
-
-
-
-
-
-
-
-
-
 
     const handleChange =(e) =>{
         const { name, value } = e.target
@@ -133,18 +77,18 @@ const VendorEditProductPage = () => {
               ];
               
     const addProductMutation = useMutation({
-    mutationFn: async (preparedData)=>{
+    mutationFn: async ()=>{
   
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/${id}`, {
-        method: "PUT",
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product`, {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(preparedData),
+        body: JSON.stringify(formData),
       });
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to edit product ");
+        throw new Error(errorData.message || "Failed to add product ");
       }
 
       const data = await res.json();
@@ -176,22 +120,21 @@ const VendorEditProductPage = () => {
 
   })
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!formData.images[0]?.url) {
-        toast.error("Please upload a product image.");
-        return;
-      }
-    const preparedData = { ...formData };
-  
-    if (categoriesWithoutSizesOrColors.includes(formData.category)) {
-      preparedData.sizes = ["General"];
-      preparedData.colors = ["General"];
+    const handleSubmit = async(e)=>{
+        e.preventDefault()
+
+        if (categoriesWithoutSizesOrColors.includes(formData.category)) {
+            setFormData(prev => ({
+              ...prev,
+              sizes: ["General"],
+              colors: ["General"]
+            }));
+          }
+          
+        addProductMutation.mutate(formData);
+
+        console.log(formData)
     }
-  
-    addProductMutation.mutate(preparedData);
-  };
-  
 
 
   return (
@@ -203,8 +146,10 @@ const VendorEditProductPage = () => {
                           Back 
                         </Link>
                     </div>
-        <div className=" max-w-5xl mx-auto shadow-md rounded-md mb-30 pr-[12px]  pb-7 mx-auto " >
-        <h1 className="text-2xl lg:text-3xl font-bold mb-6 " > Edit Product </h1>
+        <div className=" max-w-5xl mx-auto  shadow-md rounded-md mb-30 pr-[12px]  pb-7 mx-auto " >
+
+                    
+        <h1 className="text-2xl lg:text-3xl font-bold mb-6 " > Add Product To Store  </h1>
         <form onSubmit={handleSubmit} >
             <div className="mb-6  " >
                 <label  className=" block font-semibold " > Product Name </label>
@@ -225,7 +170,7 @@ const VendorEditProductPage = () => {
 
             <div className="mb-6  " >
                 <label  className=" block font-semibold " > Product category </label>
-                <select value={formData.category} onChange={(e)=> setFormData((prev)=>({ ...prev, category:e.target.value }) )} className="w-full p-2 rounded border border-gray-400 mt-1 lg:mt-2 " >
+                <select onChange={(e)=> setFormData((prev)=>({ ...prev, category:e.target.value }) )} className="w-full p-2 rounded border border-gray-400 mt-1 lg:mt-2 " >
                     <option value="" > Select a category </option>
                     <option value="Fashion And Apparel" >Fashion And Apparel </option>
                     <option value="Hair And Beauty Products" > Hair And Beauty Products </option>
@@ -291,7 +236,7 @@ const VendorEditProductPage = () => {
 
             <div className="mb-6 ">
                 <label  className=" block font-semibold " > Gender </label>
-                <select value={formData.gender} onChange={(e)=> setFormData((prev)=>({ ...prev, gender:e.target.value }) )} className="w-full p-2 rounded border border-gray-400 mt-1 lg:mt-2 " >
+                <select onChange={(e)=> setFormData((prev)=>({ ...prev, gender:e.target.value }) )} className="w-full p-2 rounded border border-gray-400 mt-1 lg:mt-2 " >
                     <option value="" > Select gender </option>
                     <option value="Men" >Men </option>
                     <option value="Women" > Women </option>
@@ -329,6 +274,7 @@ const VendorEditProductPage = () => {
                     accept="image/*"
                     onChange={(e) => handleImageUpload(e, "images")}
                     className="hidden"
+                    required
                 />
 
                 {isUploading && (
@@ -339,7 +285,7 @@ const VendorEditProductPage = () => {
 
 
             <button type="submit"  disabled={addProductMutation.isPending || isUploading } className={`rounded w-full font-semibold text-lg ${addProductMutation.isPending  ? "bg-green-500 cursor-not-allowed text-white " : "bg-green-600 hover:bg-green-500 cursor-pointer text-white"} py-2 mt-5 text-center `} >
-              {addProductMutation.isPending ? "Editing..." : "Edit Product"}
+              {addProductMutation.isPending ? "Adding..." : "Add Product"}
             </button>
         </form>
       </div>
@@ -350,8 +296,6 @@ const VendorEditProductPage = () => {
   )
 }
 
-export default VendorEditProductPage
+export default AddProductPage
 
  
-
-

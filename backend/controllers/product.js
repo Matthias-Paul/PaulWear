@@ -60,8 +60,6 @@ export const createProduct = async (req, res, next) => {
       name,
       description,
       price,
-      discountPrice,
-      countInStock,
       category,
       sizes,
       colors,
@@ -105,15 +103,12 @@ export const createProduct = async (req, res, next) => {
       name,
       description,
       price,
-      discountPrice,
-      countInStock,
       category,
       sizes,
       colors,
       gender,
       images,
-      isFeatured,
-      isPublished,
+      isPublished: true,
       sku:generateSku(vendorInfo.vendorStoreName, name),
       user: req.user._id,
       ...vendorInfo, 
@@ -125,7 +120,7 @@ export const createProduct = async (req, res, next) => {
     return res.status(201).json({
       success: true,
       createdProduct,
-      message: "Product created successfully",
+      message: "Product added successfully",
     });
   } catch (error) {
     console.error(error);
@@ -172,16 +167,11 @@ export const editProduct = async(req, res, next)=>{
             name,
             description, 
             price, 
-            discountPrice, 
-            countInStock,   
             category,
             sizes,
             colors,
             gender,
             images,
-            isFeatured,
-            isPublished,
-            sku
             
         }
          = matchedData(req)
@@ -223,15 +213,11 @@ export const editProduct = async(req, res, next)=>{
                 name,
                 description,
                 price,
-                discountPrice,
-                countInStock,
                 category,
                 sizes,
                 colors,
                 gender,
                 images,
-                isFeatured,
-                isPublished,
                 sku: req.user.role === "admin" ? sku : product.sku,
                 
             },
@@ -253,7 +239,7 @@ export const editProduct = async(req, res, next)=>{
                 message: "SKU must be unique" 
             });
             }
-
+    
         return res.status(500).json({
             success: false,  
             message: "Internal Server Error",     

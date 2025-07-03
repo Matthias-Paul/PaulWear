@@ -14,11 +14,7 @@ const productSchema = new mongoose.Schema({
         type:Number,
         required: true
     },
-    countInStock: {    
-        type:Number,  
-        required: true,    
-        default:0
-    },
+    
     sku: {    
         type:String,       
         unique:true,  
@@ -29,7 +25,7 @@ const productSchema = new mongoose.Schema({
     },            
     category: {
         type:String,
-        enum: ["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Beverages", " Foodstuff And Provisions", "Health and Personal Care Products","Others"],
+        enum: ["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Electronics And Gadgets", "Foodstuff And Provisions", "Health and Personal Care Products", "Others"],
         required: true
     },
     

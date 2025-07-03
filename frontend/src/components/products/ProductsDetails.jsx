@@ -76,8 +76,25 @@ const ProductsDetails = () => {
       setSelectedProduct(data.product);
       console.log("productDetails:", data.product);
       setMainImage(data.product.images?.[0]?.url || pic);
+
+      if (
+        data.product?.colors?.length === 1 &&
+        data.product.colors[0].toLowerCase() === "general"
+      ) {
+        setSelectedColor("General");
+      }
+  
+      if (
+        data.product?.sizes?.length === 1 &&
+        data.product.sizes[0].toLowerCase() === "general"
+      ) {
+        setSelectedSize("General");
+      }
     }
   }, [data]);
+
+
+  
 
   console.log(selectedColor);
 
@@ -202,7 +219,7 @@ const ProductsDetails = () => {
             </h2>
             <p className={`text-lg text-gray-600 mb-1  `}>
               {" "}
-              {selectedProduct?.price && `₦${selectedProduct.price.toFixed(2)}`}{" "}
+              {selectedProduct?.price && `₦${selectedProduct.price.toLocaleString()}`}{" "}
             </p>
             <p className=" text-gray-600 mb-4  ">
               {" "}
@@ -217,44 +234,60 @@ const ProductsDetails = () => {
               </p>
 
             </div>  
+                          {selectedProduct?.colors?.length === 1 && selectedProduct.colors[0] === "General" ? (
+                              <div className="mb-4">
+                                <p className="text-gray-700">Color:</p>
+                                <p className="text-gray-600 mt-2">General (No specific color)</p>
+                              </div>
+                            ) : (
+                              <div className="mb-4">
+                                <p className="text-gray-700">Color:</p>
+                                <div className="mt-2 flex gap-2">
+                                  {selectedProduct?.colors?.map((color) => (
+                                    <button
+                                      key={color}
+                                      onClick={() => setSelectedColor(color)}
+                                      style={{
+                                        backgroundColor: color.toLowerCase(),
+                                        filter: "brightness(0.5)",
+                                      }}
+                                      className={`w-8 h-8 cursor-pointer ${
+                                        selectedColor === color ? "border-4 border-black" : ""
+                                      } rounded-full border border-gray-500`}
+                                    ></button>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
 
-            <div className="mb-4">
-              <p className="text-gray-700  ">Color: </p>
-              <div className="mt-2 flex gap-2  ">
-                {selectedProduct?.colors?.map((color) => (
-                 <button
-                    key={color}
-                    onClick={() => setSelectedColor(color)}
-                    style={{
-                      backgroundColor: color.toLowerCase(),
-                      filter: "brightness(0.5)",
-                    }}
-                    className={`w-8 h-8 cursor-pointer ${
-                      selectedColor === color ? "border-4 border-black" : ""
-                    } rounded-full border border-gray-500`}
-                  ></button>
-                ))}
-              </div>
-            </div>
+                          
 
-            <div className="mb-4">
-              <p className="text-gray-700  ">Size: </p>
-              <div className="mt-2 flex gap-2  ">
-                {selectedProduct?.sizes?.map((size) => (
-                  <button
-                  key={size}
- 
-                    onClick={() => setSelectedSize(size)}
-                    className={` border cursor-pointer ${
-                      selectedSize === size ? " bg-black text-white" : ""
-                    } rounded px-4 py-2  `}
-             
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
+              {selectedProduct?.sizes?.length === 1 && selectedProduct.sizes[0] === "General" ? (
+                <div className="mb-4">
+                  <p className="text-gray-700">Size:</p>
+                  <p className="text-gray-600 mt-2">General (No specific size)</p>
+                </div>
+              ) : (
+                <div className="mb-4">
+                  <p className="text-gray-700">Size:</p>
+                  <div className="mt-2 flex gap-2">
+                    {selectedProduct?.sizes?.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`border cursor-pointer ${
+                          selectedSize === size ? "bg-black text-white" : ""
+                        } rounded px-4 py-2`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+
+            
 
             <div className="mb-4">
               <p className="text-gray-700  ">Quantity: </p>

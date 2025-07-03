@@ -7,7 +7,7 @@ const CategoryGrid = () => {
       { name: "Hair And Beauty Products", image: pic },
       { name: "Bags And Accessories", image: pic },
       { name: "Baked Goods And Snacks", image: pic },
-      { name: "Beverages", image: pic },
+      { name: "Electronics And Gadgets", image: pic },
       { name: "Foodstuff And Provisions", image: pic },
       {name: "Health and Personal Care Products", image: pic},
       { name: "Others", image: pic },
