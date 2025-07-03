@@ -77,7 +77,7 @@ const VendorSearchBar = () => {
           <button
             onClick={handleSearchToggle}
           
-            className="bg-black  text-white rounded-lg px-2 sm:px-3 py-1   cursor-pointer "
+            className="bg-gray-900   text-white rounded-lg px-2 sm:px-3 py-1   cursor-pointer "
           >
             <HiMagnifyingGlass className="w-5 h-5     " />
           </button>

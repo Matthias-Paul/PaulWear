@@ -8,6 +8,19 @@ import VendorAccount from '../models/vendorAccount.model.js';
 import { validationResult, matchedData } from "express-validator"
 
 
+  
+const generateSku = (vendorName, productName) => {
+    const vendorCode = vendorName?.substring(0, 3).toUpperCase() || "SYS";
+    const nameSlug = productName
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "")  
+      .substring(0, 8);          
+  
+    const uniquePart = Date.now().toString(36).toUpperCase().slice(-6); 
+  
+    return `${vendorCode}-${nameSlug}-${uniquePart}`;
+  };
+  
 export const createProduct = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -38,7 +51,7 @@ export const createProduct = async (req, res, next) => {
         if(!vendorAcc || !vendorAcc.bankAccountNumber || !vendorAcc.bankCode || !vendorAcc.recipientCode || !vendorAcc.accountName  ){
             return res.status(400).json({
                 success: false,  
-                message: "Submit your bank details at payout page before creating a product.",
+                message: "Submit your bank details at payout page before adding a product.",
             });        
         }
     }     
@@ -59,7 +72,6 @@ export const createProduct = async (req, res, next) => {
       tags,
       dimensions,
       weight,
-      sku,
     } = matchedData(req);
 
     let vendorInfo = {
@@ -102,7 +114,7 @@ export const createProduct = async (req, res, next) => {
       images,
       isFeatured,
       isPublished,
-      sku,
+      sku:generateSku(vendorInfo.vendorStoreName, name),
       user: req.user._id,
       ...vendorInfo, 
     });
@@ -190,6 +202,13 @@ export const editProduct = async(req, res, next)=>{
                 message: "Product not found.",
             });
         }
+        const vendor = await Vendor.findOne({ user: product.user });
+        if(!vendor){
+            return res.status(404).json({
+                success: false,
+                message: "Vendor not found.",
+            });
+        }
 
         if(req.user.role === "vendor"  && product.user.toString() !== req.user._id.toString()){
             return res.status(403).json({
@@ -213,7 +232,8 @@ export const editProduct = async(req, res, next)=>{
                 images,
                 isFeatured,
                 isPublished,
-                sku
+                sku: req.user.role === "admin" ? sku : product.sku,
+                
             },
             { new: true, runValidators: true }
             );

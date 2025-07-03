@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
 import { useState, useRef, useEffect } from "react";
 import toast from "react-hot-toast";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "react-router-dom";
 import FilterSidebar from "../products/FilterSidebar";
 import VendorSearchBar from "./VendorSearchBar";
@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 const VendorProductManagement = () => {
 
   const { loginUser } = useSelector((state) => state.user);
-
+  const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
 
 
@@ -51,11 +51,43 @@ const VendorProductManagement = () => {
 
 
 
+    const deleteMutation = useMutation({
+      mutationFn: async ({productId}) => {
+          const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/${productId}`, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+          });
+
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.message || "Failed to delete product");
+          }
+
+          return res.json();
+        },
+        onSuccess: (data) => {
+       
+
+        queryClient.invalidateQueries("vendorProducts");
+        toast.success(data.message);
+
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+
+  })
+
+
+
         const handleDeleteProduct =(productId)=>{
             if(window.confirm("Are you sure you want to delete this product?")){
                 console.log("Deleting product with ID", productId)
-            }
+               deleteMutation.mutate({productId})
 
+
+            }
         }
 
 
@@ -63,9 +95,15 @@ const VendorProductManagement = () => {
     <>
       <div className="pt-[82px] md:pt-5 pb-20 "  >
         <div className="flex justify-between items-start mr-3 md:mr-0 gap-x-2 "  >
-          <div className=" text-xl sm:text-2xl font-bold mb-6 " > Product Management  </div>
+          <div className=" text-xl text-gray-900 sm:text-2xl font-bold mb-6 " > Product Management  </div>
           <div className="   " > <VendorSearchBar /> </div>
-        </div>  
+        </div> 
+        <button  className="py-1 px-2 mb-2 rounded bg-gray-900 hover:bg-gray-700 text-white cursor-pointer  "   >  Add Product </button> 
+               
+        <div className="text-sm text-gray-500 mb-3 italic">
+          <strong className="font-semibold">Notice:</strong> Please delete products that are no longer in stock or unavailable. 
+          This helps maintain an accurate store and a better shopping experience for buyers.
+        </div>
                 {
 
             products.length > 0 || isLoading ? (
