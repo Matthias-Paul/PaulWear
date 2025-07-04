@@ -91,7 +91,6 @@ console.log(filters)
 
 const updateURLParams = (filters) => {
   const params = new URLSearchParams();
-
   Object.keys(filters).forEach((key) => {
     if (Array.isArray(filters[key]) && filters[key].length > 0) {
       params.append(key, filters[key].join(","));

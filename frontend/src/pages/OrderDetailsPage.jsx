@@ -117,14 +117,24 @@ const OrderDetailsPage = () => {
                                             </h3>
                                             <p> Payment Method: { orderDetails?.paymentMethod} </p>
                                             <p> Status: { orderDetails?.isPaid ? "Paid" : "Unpaid"} </p>
-
+                                            <p> Paid At: {" "}
+                                                {new Date(orderDetails?.paidAt).toLocaleDateString()}{" "}
+                                                {new Date(orderDetails?.paidAt).toLocaleTimeString()}
+                                            </p>
                                          </div>   
                                           <div>
                                             <h3 className="text:lg  mb-2 font-semibold    " > 
                                                     Delivery Info
                                             </h3>
                                             <p> Delivery Address:  { ` ${orderDetails?.shippingAddress} ` } </p>
-
+                                            {
+                                            orderDetails?.deliveredAt && (
+                                                <p> Delivered At: {" "}
+                                                {new Date(orderDetails?.deliveredAt).toLocaleDateString()}{" "}
+                                                {new Date(orderDetails?.deliveredAt).toLocaleTimeString()}
+                                                </p>
+                                              )
+                                            }
                                          </div>  
 
                                          <div>

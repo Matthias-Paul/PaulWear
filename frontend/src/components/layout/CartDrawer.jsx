@@ -41,13 +41,14 @@ const handleClickOutside = (event) => {
         >
         
             <div className=" p-4  h-screen pb-20 bg-white overflow-y-auto  " >
-              <div className="flex justify-end ">
+              <div className="flex justify-between  ">
+              <h2 className="text-xl font-medium  " > Your Cart </h2>
+
               <button onClick={toggleCartDrawer}>
-                {" "}
-                <IoMdClose className="w-6 cursor-pointer text-red-600 h-6 mt-3 mr-3  " />{" "}
+                <IoMdClose className="w-6 cursor-pointer text-red-600 h-6 " />
               </button>
+
             </div>
-                <h2 className="text-xl font-medium mb-4 " > Your Cart </h2>
                {/* cart contents */}
                < CartContents toggleCartDrawer={toggleCartDrawer} />
 

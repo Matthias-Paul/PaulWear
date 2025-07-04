@@ -141,7 +141,7 @@ const AddProductPage = () => {
     <>
     <div className=" pt-[50px] md:pt-0  " >
                     <div className="mb-2 max-w-[5rem]  " >    
-                        <Link to={`/vendor/products`}  className=" flex items-center  gap-x-1 md:text-lg  text-blue-500 pt-4 hover:underline" >
+                        <Link to={`/vendor/products`}  className=" flex items-center  gap-x-1 md:text-lg  text-gray-900 pt-4 hover:underline" >
                          <FaArrowLeft />
                           Back 
                         </Link>
@@ -149,7 +149,7 @@ const AddProductPage = () => {
         <div className=" max-w-5xl mx-auto  shadow-md rounded-md mb-30 pr-[12px]  pb-7 mx-auto " >
 
                     
-        <h1 className="text-2xl lg:text-3xl font-bold mb-6 " > Add Product To Store  </h1>
+        <h1 className="text-2xl lg:text-3xl font-bold mb-6 text-gray-900 " > Add Product To Store  </h1>
         <form onSubmit={handleSubmit} >
             <div className="mb-6  " >
                 <label  className=" block font-semibold " > Product Name </label>

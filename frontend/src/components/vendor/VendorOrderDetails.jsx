@@ -116,7 +116,8 @@ const VendorOrderDetails = () => {
                                             </h3>
                                             <p> Payment Method: { orderDetails?.paymentMethod} </p>
                                             <p> Status: { orderDetails?.isPaid ? "Paid" : "Unpaid"} </p>
-                                           
+                                            <p> Payout Status: { orderDetails?.isPayoutSuccess ? "Paid" : "Pending"} </p>
+
                                             
 
 

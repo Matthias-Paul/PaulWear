@@ -15,7 +15,6 @@ const CollectionPage = () => {
   const sidebarRef = useRef(null);
   const toggleButtonRef = useRef(null);
   const [searchParams] = useSearchParams();
-
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };

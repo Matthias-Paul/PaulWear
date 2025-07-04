@@ -248,7 +248,7 @@ const CartContents = ({toggleCartDrawer}) => {
           myCart?.products?.length >=1 &&(
           <div className=" px-4 xl:w-[460px] text-center mx-auto  bottom-8 py-7 bg-white "> 
                     <button onClick={handleCheckout} className="w-full transition hover:bg-gray-800 text-white py-2 bg-black cursor-pointer rounded-md font-semibold  "> Checkout </button>
-                    <div className="text-sm tracking-tighter text-center mt-2 text-gray-500  " > Delivery, taxes, with discount codes calculated at checkout. </div>
+                    <div className="text-sm tracking-tighter text-center mt-2 text-gray-500  " > Total price is calculated at checkout. </div>
         </div>
           )
         }

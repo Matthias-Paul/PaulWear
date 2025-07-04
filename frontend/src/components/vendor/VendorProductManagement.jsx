@@ -99,7 +99,7 @@ const VendorProductManagement = () => {
           <div className="   " > <VendorSearchBar /> </div>
         </div> 
         <Link to="/vendor/products/add">
-        <button  className="py-1 px-2 mb-2 rounded bg-gray-900 hover:bg-gray-700 text-white cursor-pointer  "   >  Add Product </button>
+        <button  className="py-1 px-2  lg:px-4 lg:text-xl mb-2 rounded bg-gray-900 hover:bg-gray-700 text-white cursor-pointer  "   >  Add Product </button>
         </Link> 
                
         <div className="text-xs sm:text-sm text-gray-500 px-3 mb-3 italic">
