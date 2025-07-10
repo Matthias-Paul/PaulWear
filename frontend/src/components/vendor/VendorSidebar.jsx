@@ -76,6 +76,10 @@ const VendorSidebar = () => {
                     <span className="font-semibold text-md " > Products </span>
                 </NavLink>
 
+                <NavLink onClick={handleCloseSideBar} to="/vendor/profile" className={ ({isActive }) => isActive? " border border-gray-400 bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2 ":  " text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2  border border-gray-400 " } >
+                    <FaUser />
+                    <span className="font-semibold text-md " > Profile </span>
+                </NavLink>
             
                 <NavLink  to="/collections/all" className={ ({isActive }) => isActive? "bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2 border border-gray-400 ":  " text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2  border border-gray-400 " } >
                     <FaStore />
