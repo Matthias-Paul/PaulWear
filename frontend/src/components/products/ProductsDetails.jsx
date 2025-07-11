@@ -215,10 +215,10 @@ const handleTouchEnd = (e) => {
 
           {/* Main image */}
           <div className="md:w-1/2  ">
-          <div className="relative w-full h-[450px] sm:h-[700px] overflow-hidden">
+          <div className="relative bg-gray-50 mb-4 w-full h-[450px] sm:h-[700px] overflow-hidden">
             <img
               key={mainImageIndex} 
-              className="absolute top-0 left-0 w-full h-full object-cover rounded-md transition-opacity duration-[3000ms] opacity-100"
+              className="absolute top-0 left-0 w-full h-full object-cover rounded-md animate-slide-fade"
               src={mainImage}
               alt="main product image"
               onTouchStart={handleTouchStart}

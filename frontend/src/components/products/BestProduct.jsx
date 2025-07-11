@@ -1,7 +1,7 @@
 
 import toast from "react-hot-toast";
 import { useParams, Link } from "react-router-dom"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
@@ -15,6 +15,8 @@ const BestProduct = () => {
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [mainImageIndex, setMainImageIndex] = useState(0);
+
 
   const { loginUser, guestId } = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -46,7 +48,6 @@ const BestProduct = () => {
   useEffect(() => {
     if (bestProductData) {
       setSelectedProduct(bestProductData.bestSeller);
-      setMainImage(bestProductData.bestSeller.images?.[0]?.url || pic);
       console.log("bestProducts:", bestProductData.bestSeller);
 
       
@@ -66,6 +67,44 @@ const BestProduct = () => {
 
     }
   }, [bestProductData]);
+
+
+
+  useEffect(() => {
+    if (selectedProduct?.images?.length > 0) {
+      setMainImage(selectedProduct.images[mainImageIndex]?.url);
+    }
+  }, [mainImageIndex, selectedProduct]);
+  
+const touchStartRef = useRef(null);
+
+const handleSlide = (direction) => {
+  if (!selectedProduct?.images?.length) return;
+  const total = selectedProduct.images.length;
+
+  setMainImageIndex((prev) => {
+    if (direction === "next") return (prev + 1) % total;
+    if (direction === "prev") return (prev - 1 + total) % total;
+    return prev;
+  });
+};
+
+const handleTouchStart = (e) => {
+  touchStartRef.current = e.touches[0].clientX;
+};
+
+const handleTouchEnd = (e) => {
+  const endX = e.changedTouches[0].clientX;
+  const startX = touchStartRef.current;
+
+  if (startX - endX > 50) handleSlide("next");
+  else if (endX - startX > 50) handleSlide("prev");
+};
+
+  
+
+
+
     const addToCartMutation = useMutation({
     mutationFn: async ()=>{
   
@@ -139,8 +178,11 @@ const BestProduct = () => {
               <img
               key={image?.url}
 
-                onClick={() => setMainImage(image?.url)}
-                className={` ${
+              onClick={() => {
+                const index = selectedProduct?.images?.findIndex((img) => img.url === image.url);
+                if (index !== -1) setMainImageIndex(index);
+              }}
+                 className={` ${
                   mainImage === image?.url
                     ? "border-black border-3"
                     : "border-none"
@@ -154,13 +196,16 @@ const BestProduct = () => {
 
           {/* Main image */}
           <div className="md:w-1/2  ">
-            <div className=" mb-4  ">
-              <img
-                className="rounded-md w-full h-[450px] sm:h-[700px] object-cover flex-shrink-0  "
-                src={mainImage}
-                alt="main product image"
-              />
-            </div>
+          <div className="relative bg-gray-50 mb-4 w-full h-[450px] sm:h-[700px] overflow-hidden">
+            <img
+              key={mainImageIndex} 
+              className="absolute top-0 left-0 w-full h-full object-cover rounded-md animate-slide-fade"
+              src={mainImage}
+              alt="main product image"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            />
+          </div>
           </div>
 
           {/* mobile thumbnail         */}
@@ -170,8 +215,12 @@ const BestProduct = () => {
               <img
               key={image?.url}
 
-                onClick={() => setMainImage(image?.url)}
-                className={` ${
+              onClick={() => {
+                const index = selectedProduct?.images?.findIndex((img) => img.url === image.url);
+                if (index !== -1) setMainImageIndex(index);
+              }}
+                
+              className={` ${
                   mainImage === image?.url
                     ? "border-black border-3"
                     : "border-none"

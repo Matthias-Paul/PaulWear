@@ -6,4 +6,18 @@
   font-optical-sizing: auto;
   font-style: normal;
 }
+@keyframes slide-fade {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-fade {
+  animation: slide-fade 0.7s ease-in-out;
+}
 
