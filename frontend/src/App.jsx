@@ -29,6 +29,7 @@ import VendorOrderManagement from "./components/vendor/VendorOrderManagement";
 import AddProductPage from "./components/vendor/AddProductPage";
 import VendorOrderDetails from "./components/vendor/VendorOrderDetails";
 import VendorProfile from "./components/vendor/VendorProfile";
+import EditStoreDetails from "./components/vendor/EditStoreDetails";
 import Payout from "./components/vendor/Payout";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import VendorApplicationForm from "./pages/VendorApplicationForm.jsx";
@@ -78,6 +79,7 @@ function App() {
               <Route path="orders/:id" element={<VendorOrderDetails />} />           
               <Route path="payout" element={<Payout />} />
               <Route path="profile" element={<VendorProfile />} />
+              <Route path="profile/edit/:slug" element={<EditStoreDetails />} />
 
               
             </Route>

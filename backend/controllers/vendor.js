@@ -166,3 +166,40 @@ export const getSingleStore = async (req, res) => {
     });
   }
 };
+
+
+export const getVendorStoreDetails = async (req, res)=>{
+
+  if (!req.user || !req.user._id || req.user.role === "customer") {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized access",
+    });
+  }
+  
+  const userId = req.user._id;
+  
+  try {
+  
+    const vendorStoreProfile = await Vendor.findOne({user:userId  }) 
+    if (!vendorStoreProfile) {
+      return res.status(404).json({
+        success: false,
+        message: "No store profile found!",
+      });
+    }   
+    return res.status(200).json({
+      success: true,
+      vendor:vendorStoreProfile,
+    });
+
+
+    
+  } catch (error) {
+    console.error(error.message); 
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error.",
+    });
+  }
+}

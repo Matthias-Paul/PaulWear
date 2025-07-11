@@ -2,7 +2,7 @@ import pic from "../../assets/pic.jpg";
 import toast from "react-hot-toast";
 import ProductDetailGrid from "./ProductDetailGrid";
 import { useParams, Link } from "react-router-dom"
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"
 import { useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
 import { useSelector } from "react-redux";
@@ -19,6 +19,7 @@ const ProductsDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const queryClient = useQueryClient();
+  const [mainImageIndex, setMainImageIndex] = useState(0);
 
   const navigate = useNavigate();
 
@@ -75,7 +76,6 @@ const ProductsDetails = () => {
     if (data) {
       setSelectedProduct(data.product);
       console.log("productDetails:", data.product);
-      setMainImage(data.product.images?.[0]?.url );
 
       if (
         data.product?.colors?.length === 1 &&
@@ -93,6 +93,37 @@ const ProductsDetails = () => {
     }
   }, [data]);
 
+
+  useEffect(() => {
+    if (selectedProduct?.images?.length > 0) {
+      setMainImage(selectedProduct.images[mainImageIndex]?.url);
+    }
+  }, [mainImageIndex, selectedProduct]);
+  
+const touchStartRef = useRef(null);
+
+const handleSlide = (direction) => {
+  if (!selectedProduct?.images?.length) return;
+  const total = selectedProduct.images.length;
+
+  setMainImageIndex((prev) => {
+    if (direction === "next") return (prev + 1) % total;
+    if (direction === "prev") return (prev - 1 + total) % total;
+    return prev;
+  });
+};
+
+const handleTouchStart = (e) => {
+  touchStartRef.current = e.touches[0].clientX;
+};
+
+const handleTouchEnd = (e) => {
+  const endX = e.changedTouches[0].clientX;
+  const startX = touchStartRef.current;
+
+  if (startX - endX > 50) handleSlide("next");
+  else if (endX - startX > 50) handleSlide("prev");
+};
 
   
 
@@ -166,7 +197,10 @@ const ProductsDetails = () => {
               <img
               key={image?.url}
 
-                onClick={() => setMainImage(image?.url)}
+              onClick={() => {
+                const index = selectedProduct?.images?.findIndex((img) => img.url === image.url);
+                if (index !== -1) setMainImageIndex(index);
+              }}
                 className={` ${
                   mainImage === image?.url
                     ? "border-black border-3"
@@ -182,11 +216,13 @@ const ProductsDetails = () => {
           {/* Main image */}
           <div className="md:w-1/2  ">
             <div className=" mb-4  ">
-              <img
-                className="rounded-md w-full h-[450px] sm:h-[700px] object-cover flex-shrink-0  "
-                src={mainImage}
-                alt="main product image"
-              />
+            <img
+              className="rounded-md w-full h-[450px] sm:h-[700px] object-cover"
+              src={mainImage}
+              alt="main product image"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            />
             </div>
           </div>
 
@@ -197,7 +233,10 @@ const ProductsDetails = () => {
               <img
               key={image?.url}
 
-                onClick={() => setMainImage(image?.url)}
+              onClick={() => {
+                const index = selectedProduct?.images?.findIndex((img) => img.url === image.url);
+                if (index !== -1) setMainImageIndex(index);
+              }}
                 className={` ${
                   mainImage === image?.url
                     ? "border-black border-3"
