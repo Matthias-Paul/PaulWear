@@ -713,7 +713,7 @@ export const getProductsPerVendor = async (req, res) => {
 export const countProducts = async(req, res)=>{
 
     try {
-        
+                
          const { vendorId } = req.params;
         const count = await Product.countDocuments({ user: vendorId });
         return res.status(200).json({

@@ -44,8 +44,8 @@ const VendorProfile = () => {
         return `${day} ${month}, ${year}`;
       }
 
-    if (isLoading) return <p className="text-start text-md mt-10">Loading your profile details...</p>;
-    if (error) return <p className="text-red-500 text-start mt-10">{error.message}</p>;
+    if (isLoading) return <p className="text-start text-md pt-[70px] md:pt-10">Loading your profile details...</p>;
+    if (error) return <p className="text-red-500 text-start pt-[70px] md:pt-10">{error.message}</p>;
 
   return (
     <>
