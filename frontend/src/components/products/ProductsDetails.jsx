@@ -20,9 +20,7 @@ const ProductsDetails = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const queryClient = useQueryClient();
   const [mainImageIndex, setMainImageIndex] = useState(0);
-  const [slideDirection, setSlideDirection] = useState("next");
-  const [imageTransitionKey, setImageTransitionKey] = useState(0);
-  
+
   const navigate = useNavigate();
 
     const { loginUser, guestId } = useSelector((state) => state.user);
@@ -108,22 +106,12 @@ const handleSlide = (direction) => {
   if (!selectedProduct?.images?.length) return;
   const total = selectedProduct.images.length;
 
-  setSlideDirection(direction);
   setMainImageIndex((prev) => {
-    let newIndex;
-    if (direction === "next") {
-      newIndex = (prev + 1) % total;
-    } else if (direction === "prev") {
-      newIndex = (prev - 1 + total) % total;
-    } else {
-      newIndex = prev;
-    }
-
-    setImageTransitionKey((prevKey) => prevKey + 1); 
-    return newIndex;
+    if (direction === "next") return (prev + 1) % total;
+    if (direction === "prev") return (prev - 1 + total) % total;
+    return prev;
   });
 };
-
 
 const handleTouchStart = (e) => {
   touchStartRef.current = e.touches[0].clientX;
@@ -227,23 +215,16 @@ const handleTouchEnd = (e) => {
 
           {/* Main image */}
           <div className="md:w-1/2  ">
-     
-
-            <div
-              key={imageTransitionKey}
-              className={`relative mb-4 w-full h-[450px] sm:h-[700px] overflow-hidden 
-                ${slideDirection === "next" ? "animate-slide-left" : "animate-slide-right"}
-              `}
-            >
-              <img
-                className="w-full h-full object-cover rounded-md transition-transform duration-500 ease-in-out"
-                src={mainImage}
-                alt="main product image"
-                onTouchStart={handleTouchStart}
-                onTouchEnd={handleTouchEnd}
-              />
-            </div>
-
+          <div className="relative w-full h-[450px] sm:h-[700px] overflow-hidden">
+            <img
+              key={mainImageIndex} 
+              className="absolute top-0 left-0 w-full h-full object-cover rounded-md transition-opacity duration-[3000ms] opacity-100"
+              src={mainImage}
+              alt="main product image"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            />
+          </div>
           </div>
 
           {/* mobile thumbnail         */}
