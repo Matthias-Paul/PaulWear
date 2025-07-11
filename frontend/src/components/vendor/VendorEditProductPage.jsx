@@ -209,13 +209,13 @@ const VendorEditProductPage = () => {
     }
   
     const uploadedImages = preparedData.images.filter((img) => img.url !== "");
-    if (uploadedImages.length < 2) {
-      toast.error("Please upload at least two images");
+    if (uploadedImages.length < 3) {
+      toast.error("Please upload three images");
       return;
     }
 
-    if (!preparedData.images[0]?.url || !preparedData.images[1]?.url) {
-      toast.error("Please upload at product image 1 and product image 2 ");
+    if (!preparedData.images[0]?.url || !preparedData.images[1]?.url || !formData.images[2]?.url) {
+      toast.error("Please upload three images ");
       return;
     }
   
@@ -410,7 +410,7 @@ const VendorEditProductPage = () => {
 
 
                 <div className="mb-6">
-                <label className="block font-semibold mb-1">Product Image 3 ( Optional )</label>
+                <label className="block font-semibold mb-1">Product Image 3</label>
                 <p className="text-sm text-gray-500 mb-2">
                     Upload a clear, high-quality image (max 20MB). This is what buyers will see first!
                 </p>

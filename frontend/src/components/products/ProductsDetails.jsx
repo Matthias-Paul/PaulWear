@@ -227,19 +227,23 @@ const handleTouchEnd = (e) => {
 
           {/* Main image */}
           <div className="md:w-1/2  ">
-          <div
-            key={imageTransitionKey}
-            className={`relative w-full h-[450px] sm:h-[700px] overflow-hidden transition-all duration-500 ease-in-out transform 
-              ${slideDirection === "next" ? "animate-slide-left" : "animate-slide-right"}`}
-          >
-            <img
-              className="absolute top-0 left-0 w-full h-full object-cover rounded-md"
-              src={mainImage}
-              alt="main product image"
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-            />
-          </div>
+     
+
+            <div
+              key={imageTransitionKey}
+              className={`relative mb-4 w-full h-[450px] sm:h-[700px] overflow-hidden 
+                ${slideDirection === "next" ? "animate-slide-left" : "animate-slide-right"}
+              `}
+            >
+              <img
+                className="w-full h-full object-cover rounded-md transition-transform duration-500 ease-in-out"
+                src={mainImage}
+                alt="main product image"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+              />
+            </div>
+
           </div>
 
           {/* mobile thumbnail         */}

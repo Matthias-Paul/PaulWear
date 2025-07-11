@@ -77,7 +77,7 @@ export const validateProduct = [
     .isIn(["Men", "Women", "Unisex"]).withMessage("Gender must be one of: Men, Women, Unisex"),
        
   body("images")
-    .isArray({ min: 1 }).withMessage("At least one image is required"),
+    .isArray({ min: 3 }).withMessage("At least three images is required"),
 
   body("images.*.url")  
     .notEmpty().withMessage("Image URL is required"),
