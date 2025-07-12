@@ -114,6 +114,7 @@ const VendorProductManagement = () => {
             <table className="  text-left min-w-[900px] md:min-w-[1000px]  text-gray-500 " >
               <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
                 <tr>
+                  <th className="py-3 px-4  " > S/N </th>
                   <th className="py-3 px-4  " > Image </th>
                   <th className="py-3 px-4  " > Name </th>
                   <th className="py-3 px-4  " > Price </th>
@@ -126,10 +127,15 @@ const VendorProductManagement = () => {
               <tbody>
                    { products?.map((product, index)=>(
                         <tr key={product?._id} className={`border-b cursor-pointer hover:border-gray-400 ${index === products?.length -1  ? "border-b-0": ""} `} >
+                         
+                         <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                            {index + 1}
+                        </td >
+
                          <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             <img src={product?.images[0]?.url} className=" h-15 w-18  sm:h-18 sm:w-21 flex-shrink-0  object-cover rounded-lg shadow-md   " />
                          </td >
-                         <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                         <td className="py-3 px-4 capitalize sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             {product?.name}
                          </td >
                          <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 

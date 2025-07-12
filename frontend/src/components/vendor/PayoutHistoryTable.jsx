@@ -17,6 +17,7 @@ const PayoutHistoryTable = ({vendorPayoutHistory, isFetchingNextPage, isLoading,
           <table className="w-full text-left min-w-[1100px] md:min-w-full text-gray-500">
           <thead className="uppercase bg-gray-100 text-xs text-gray-600">
             <tr>
+                <th className="px-4 py-3">S/N</th>
                 <th className="px-4 py-3">Gross Amount (Before Fee)</th>
                 <th className="px-4 py-3">Net Amount (After 3% Fee)</th>
                 <th className="px-4 py-3">Platform Fee (3%)</th>
@@ -33,14 +34,18 @@ const PayoutHistoryTable = ({vendorPayoutHistory, isFetchingNextPage, isLoading,
                     index === vendorPayoutHistory?.length - 1 ? "bpayout-b-0 mb-3" : ""
                   }`}
                 >
+                  <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                             {index + 1}
+                  </td >
+
                  <td className=" py-4 px-4 font-medium text-gray-800">
-                  ₦{(payout?.payoutAmount + payout?.feeDeducted).toFixed(2) }
+                  ₦{(payout?.payoutAmount + payout?.feeDeducted).toLocaleString() }
                   </td>
                   <td className=" py-4 px-4 font-medium text-gray-800">
-                  ₦{payout?.payoutAmount.toFixed(2)}
+                  ₦{payout?.payoutAmount.toLocaleString()}
                   </td>
                   <td className="py-4 px-4">
-                  ₦{payout?.feeDeducted.toFixed(2)}
+                  ₦{payout?.feeDeducted.toLocaleString()}
                     
                   </td>
                   <td className=" py-4 px-4">

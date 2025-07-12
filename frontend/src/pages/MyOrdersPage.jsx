@@ -73,6 +73,7 @@ return (
           <table className="w-full text-left min-w-[1100px] md:min-w-full text-gray-500">
             <thead className="uppercase bg-gray-100 text-xs text-gray-600">
               <tr>
+              <th className=" px-4 py-3">S/N</th>
                 <th className=" px-4 py-3">order</th>
                 <th className=" px-4 py-3">Vendor</th>
                 <th className=" px-4 py-3">Items</th>
@@ -91,6 +92,10 @@ return (
                     index === orders?.length - 1 ? "border-b-0 mb-3" : ""
                   }`}
                 >
+
+                      <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                             {index + 1}
+                      </td >
                   <td className="font-medium text-gray-800 px-4">
                   #{order._id.slice(-6).toUpperCase()}
                   </td>

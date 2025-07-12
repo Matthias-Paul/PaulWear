@@ -49,7 +49,7 @@ const VendorProfile = () => {
 
   return (
     <>
-      <div className="mx-auto pt-[70px] md:pt-[10px] pr-3 md:pr-0 pb-10 w-full" >
+      <div className="mx-auto pt-[70px] md:pt-[10px] pr-3 md:pr-0 pb-15 w-full" >
 
 
         <div>
@@ -62,7 +62,7 @@ const VendorProfile = () => {
         <img
           src={data?.vendor?.storeLogo}
           alt="Store Logo"
-          className="w-32 h-32 object-cover rounded-md "
+          className="w-35 h-35 rounded-full object-cover "
         />
         <div className="flex-1">
           <h2 className="text-2xl font-semibold">{data?.vendor?.storeName}</h2>
@@ -94,8 +94,11 @@ const VendorProfile = () => {
         <div>
           <h3 className="font-semibold"> Business Certificate:</h3>
           <p>{data?.vendor?.businessCertificate ? (
-            <a href={data?.vendor?.businessCertificate} className="text-blue-600 underline" target="_blank" rel="noreferrer">View Document</a>
-          ) : (
+            <img
+            src={data?.vendor?.businessCertificate}
+            alt="Business Certificate Image"
+            className="w-32 h-32 object-cover rounded-md "
+          />  ) : (
             "Not Uploaded"
           )}</p>
         </div>

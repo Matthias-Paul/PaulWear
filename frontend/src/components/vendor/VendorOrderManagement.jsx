@@ -76,6 +76,7 @@ console.log(vendorOrders)
             <table className="  text-left min-w-[1200px] md:min-w-[1400px] text-gray-500 " >
               <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
                 <tr>
+                  <th className="py-3 px-4  " > S/N </th>
                   <th className="py-3 px-4  " > Customer </th>
                   <th className="py-3 px-4  " > Customer Phone </th>
                   <th className="py-3 px-4  " > Total Price </th>
@@ -93,7 +94,11 @@ console.log(vendorOrders)
                         <tr onClick={() => handleRowClick(order?._id)}
                         key={order?._id} className={`border-b cursor-pointer hover:border-gray-400 ${index === vendorOrders?.length -1  ? "border-b-0": ""} `} >
                         
-                         <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                        <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                            {index + 1}
+                        </td >
+
+                         <td className="py-3 capitalize  px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                             {order?.buyerName}
                          </td >
 
@@ -102,11 +107,11 @@ console.log(vendorOrders)
                          </td >
 
                          <td className="py-3 px-4 sm:py-4 sm:px-4" > 
-                            ₦{order?.totalPrice.toFixed(2)}                      
+                            ₦{order?.totalPrice.toLocaleString()}                      
                          </td >
                         <td className="py-3 px-4 sm:py-4 sm:px-4" > 
                         <span
-                          className={`px-4 py-1 rounded text-md font-medium ${
+                          className={`px-4 capitalize  py-1 rounded text-md font-medium ${
                             order.status === "delivered"
                               ? "bg-green-100 text-green-700"
                               : order.status === "processing"
@@ -118,7 +123,7 @@ console.log(vendorOrders)
                          </td >
 
 
-                         <td className=" py-4 px-4">
+                         <td className="capitalize  py-4 px-4">
                           {order?.shippingAddress
                             ? `${order?.shippingAddress}`
                             : "N/A"}                  

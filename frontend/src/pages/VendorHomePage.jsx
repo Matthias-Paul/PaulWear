@@ -106,6 +106,7 @@ const fetchProductsCount = async () => {
              <table className="  text-left min-w-[1200px] md:min-w-[1400px] text-gray-500 " >
                           <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
                             <tr>
+                              <th className="py-3 px-4  " > S/N </th>
                               <th className="py-3 px-4  " > Customer </th>
                               <th className="py-3 px-4  " > Customer Phone </th>
                               <th className="py-3 px-4  " > Total Price </th>
@@ -123,6 +124,10 @@ const fetchProductsCount = async () => {
                                     <tr onClick={() => handleRowClick(order?._id)}
                                     key={order?._id} className={`border-b cursor-pointer hover:border-gray-400 ${index === vendorOrders?.length -1  ? "border-b-0": ""} `} >
                                     
+                                    <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                                        {index + 1}
+                                     </td >
+
                                      <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                                         {order?.buyerName}
                                      </td >

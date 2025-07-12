@@ -16,8 +16,8 @@ const BestProduct = () => {
   const [quantity, setQuantity] = useState(1);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [mainImageIndex, setMainImageIndex] = useState(0);
-
-
+  const [slideDirection, setSlideDirection] = useState("right");
+  
   const { loginUser, guestId } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -97,9 +97,15 @@ const handleTouchEnd = (e) => {
   const endX = e.changedTouches[0].clientX;
   const startX = touchStartRef.current;
 
-  if (startX - endX > 50) handleSlide("next");
-  else if (endX - startX > 50) handleSlide("prev");
+  if (startX - endX > 50) {
+    setSlideDirection("right");
+    handleSlide("next");
+  } else if (endX - startX > 50) {
+    setSlideDirection("left");
+    handleSlide("prev");
+  }
 };
+
 
   
 
@@ -180,8 +186,16 @@ const handleTouchEnd = (e) => {
 
               onClick={() => {
                 const index = selectedProduct?.images?.findIndex((img) => img.url === image.url);
-                if (index !== -1) setMainImageIndex(index);
+                if (index !== -1) {
+                  if (index > mainImageIndex) {
+                    setSlideDirection("right");
+                  } else if (index < mainImageIndex) {
+                    setSlideDirection("left");
+                  }
+                  setMainImageIndex(index);
+                }
               }}
+              
                  className={` ${
                   mainImage === image?.url
                     ? "border-black border-3"
@@ -197,9 +211,11 @@ const handleTouchEnd = (e) => {
           {/* Main image */}
           <div className="md:w-1/2  ">
           <div className="relative bg-gray-50 mb-4 w-full h-[450px] sm:h-[700px] overflow-hidden">
-            <img
-              key={mainImageIndex} 
-              className="absolute top-0 left-0 w-full h-full object-cover rounded-md animate-slide-fade"
+          <img
+              key={mainImageIndex}
+              className={`absolute top-0 left-0 w-full h-full object-cover rounded-md ${
+                slideDirection === "right" ? "animate-slide-in-right" : "animate-slide-in-left"
+              }`}
               src={mainImage}
               alt="main product image"
               onTouchStart={handleTouchStart}
@@ -217,8 +233,16 @@ const handleTouchEnd = (e) => {
 
               onClick={() => {
                 const index = selectedProduct?.images?.findIndex((img) => img.url === image.url);
-                if (index !== -1) setMainImageIndex(index);
+                if (index !== -1) {
+                  if (index > mainImageIndex) {
+                    setSlideDirection("right");
+                  } else if (index < mainImageIndex) {
+                    setSlideDirection("left");
+                  }
+                  setMainImageIndex(index);
+                }
               }}
+              
                 
               className={` ${
                   mainImage === image?.url
