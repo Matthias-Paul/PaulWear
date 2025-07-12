@@ -111,8 +111,8 @@ const EditStoreDetails = () => {
     mutationFn: async ()=>{
   
       // Send user details to the backend
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/be`, {
-        method: "POST",
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor-profile`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(formData),
@@ -150,7 +150,12 @@ const EditStoreDetails = () => {
   })
 
     const handleSubmit = async(e)=>{
-        e.preventDefault()
+      e.preventDefault()
+
+      if(!formData?.storeLogo){
+        toast.error("Please upload store logo")
+        return;
+      }
         editMutation.mutate(formData);
 
         console.log(formData)
@@ -218,7 +223,7 @@ const EditStoreDetails = () => {
 
             <div className="mb-6  " >
                 <label  className=" block font-semibold " >Store Logo/Bannar  </label>
-                <input required type="file" accept="image/>*"   onChange={(e) => handleImageUpload(e, "storeLogo")} className=" cursor-pointer mt-2 bg-gray p-1  "    />
+                <input  type="file" accept="image/>*"   onChange={(e) => handleImageUpload(e, "storeLogo")} className=" cursor-pointer mt-2 bg-gray p-1  "    />
                 <div className="flex gap-4 mt-4   "> 
                     {isUploading ==="storeLogo" && (<div className="ml-3 text-sm text-gray-500" >  Uploading...  </div> )}  
                    {

@@ -250,7 +250,7 @@ export const validateVendor = async (req, res) => {
         <div style="padding: 30px 24px;">
           <p style="font-size: 16px; color: #333333; margin-bottom: 16px;">Hello ${vendor?.storeName || "there"},</p>
           <p style="font-size: 15px; color: #555555; line-height: 1.6; margin-bottom: 16px;">
-            Great news! Your application to become a vendor on <strong>StyleNest</strong> has been approved.
+            Great news! Your application to become a vendor on <strong>StyleNest</strong> has been approved. Kindly log out from your browser and login again to activate your profile.
           </p>
           <p style="font-size: 15px; color: #555555; line-height: 1.6; margin-bottom: 16px;">
             You can now set up your store, list your products, and start selling to a wide audience across campuses and beyond.

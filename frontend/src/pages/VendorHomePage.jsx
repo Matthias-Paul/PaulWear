@@ -76,7 +76,7 @@ const fetchProductsCount = async () => {
             <h1 className="text-2xl lg:text-3xl font-bold mb-6 mt-3  " > Vendor Dashboard  </h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4  " >
                 <div className="p-4 rounded-lg shadow-lg  " >
-                    <h2 className="text-xl font-semibold  " >  Net Amount </h2>
+                    <h2 className="text-xl font-semibold  " > Total Net Amount </h2>
                     <p className="text-2xl" >  ₦{data?.account?.totalBalance?.toLocaleString() || "--"}</p>
                 </div>   
 
@@ -89,7 +89,7 @@ const fetchProductsCount = async () => {
                 </div> 
 
                 <div className="p-4 rounded-lg shadow-lg  " >
-                    <h2 className="text-xl font-semibold  " >  Products </h2>
+                    <h2 className="text-xl font-semibold  " > Total Products </h2>
                     <p className="text-2xl" > {productVendorCount?.totalProducts || "--"} </p>
                     <Link to="/vendor/products" className="text-blue-500 hover:underline  "  >  
                         Manage Products
@@ -128,7 +128,7 @@ const fetchProductsCount = async () => {
                                         {index + 1}
                                      </td >
 
-                                     <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
+                                     <td className="py-3 px-4 capitalize sm:py-4 sm:px-4 font-medium text-gray-800 " > 
                                         {order?.buyerName}
                                      </td >
             
@@ -137,11 +137,11 @@ const fetchProductsCount = async () => {
                                      </td >
             
                                      <td className="py-3 px-4 sm:py-4 sm:px-4" > 
-                                        ₦{order?.totalPrice.toFixed(2)}                      
+                                        ₦{order?.totalPrice.toLocaleString()}                      
                                      </td >
                                     <td className="py-3 px-4 sm:py-4 sm:px-4" > 
                                     <span
-                                      className={`px-4 py-1 rounded text-md font-medium ${
+                                      className={`px-4 capitalize py-1 rounded text-md font-medium ${
                                         order.status === "delivered"
                                           ? "bg-green-100 text-green-700"
                                           : order.status === "processing"
@@ -153,7 +153,7 @@ const fetchProductsCount = async () => {
                                      </td >
             
             
-                                     <td className=" py-4 px-4">
+                                     <td className="capitalize py-4 px-4">
                                       {order?.shippingAddress
                                         ? `${order?.shippingAddress}`
                                         : "N/A"}                  

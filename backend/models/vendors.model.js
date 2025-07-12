@@ -27,10 +27,10 @@ const vendorSchema = new mongoose.Schema({
   businessCertificate: {
     type: String, 
   },
- 
   bio: {
     type: String,
     default: '',
+    required: true,
     maxlength: 300,
   },
   contactNumber: {

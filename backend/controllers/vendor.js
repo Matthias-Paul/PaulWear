@@ -31,13 +31,13 @@ export const becomeVendor = async (req, res) => {
       });
     }
 
-    if (user.role==="vendor" || user.role==="admin") {
-      return res.status(404).json({
+    if (user.role === "vendor" || user.role === "admin") {
+      return res.status(400).json({
         success: false,
         message: "You are already a vendor",
       });
     }
-                   
+
     const existingVendor = await Vendor.findOne({ user: userId });
     if (existingVendor) {
       return res.status(400).json({
@@ -46,21 +46,8 @@ export const becomeVendor = async (req, res) => {
       });
     }
 
-    const { storeName, storeLogo, businessCertificate, bio, contactNumber, email, address, state, campus, kycDocs } = matchedData(req);
-
-    const existingStore = await Vendor.findOne({ storeName: storeName.trim() });
-
-    if (existingStore) {
-      return res.status(400).json({
-        success: false,
-        message: "Store name is already in use. Please choose a different name.",
-      });
-    }
-
-    const newVendor = new Vendor({
-      user: userId,
+    const {
       storeName,
-      storeSlug: storeName.toLowerCase().replace(/\s+/g, "-"),
       storeLogo,
       businessCertificate,
       bio,
@@ -70,18 +57,51 @@ export const becomeVendor = async (req, res) => {
       state,
       campus,
       kycDocs,
+    } = matchedData(req);
+
+    const existingStore = await Vendor.findOne({ storeName: storeName.trim() });
+    if (existingStore) {
+      return res.status(400).json({
+        success: false,
+        message: "Store name is already in use. Please choose a different name.",
+      });
+    }
+
+    let businessCert = "";
+    if (businessCertificate) {
+      businessCert = businessCertificate;
+    }
+
+    let kyc = [];
+    if (Array.isArray(kycDocs) && kycDocs.length > 0) {
+      kyc = kycDocs;
+    }
+
+    const newVendor = new Vendor({
+      user: userId,
+      storeName: storeName.trim(),
+      storeSlug: storeName.trim().toLowerCase().replace(/\s+/g, "-"),
+      storeLogo,
+      businessCertificate: businessCert,
+      bio,
+      contactNumber,
+      email,
+      address,
+      state,
+      campus,
+      kycDocs: kyc,
     });
 
     await newVendor.save();
 
-    
     return res.status(201).json({
       success: true,
-      message: "Your vendor application has been submitted for review. We will notify you by email once approved.",
+      message:
+        "Your vendor application has been submitted for review. We will notify you by email once approved.",
       vendor: {
         storeName: newVendor.storeName,
         storeSlug: newVendor.storeSlug,
-        status: newVendor.status, 
+        status: newVendor.status,
       },
     });
   } catch (error) {
@@ -121,6 +141,7 @@ export const getStore = async (req, res) => {
         message: "No store found!",
       });
     }
+      
 
         const totalStore = await Vendor.countDocuments(filter);
         console.log(totalStore)
@@ -188,6 +209,7 @@ export const getVendorStoreDetails = async (req, res)=>{
         message: "No store profile found!",
       });
     }   
+    console.log(vendorStoreProfile)
     return res.status(200).json({
       success: true,
       vendor:vendorStoreProfile,
@@ -203,3 +225,87 @@ export const getVendorStoreDetails = async (req, res)=>{
     });
   }
 }
+
+
+export const editVendorStoreDetails = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      success: false,
+      message: errors.array()[0].msg,
+    });
+  }
+
+  if (!req.user || !req.user._id || req.user.role === "customer") {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized access",
+    });
+  }
+
+  const userId = req.user._id;
+  const {
+    storeName,
+    storeLogo,
+    businessCertificate,
+    bio,
+    contactNumber,
+    email,
+    address,
+    state,
+    campus,
+    kycDocs,
+  } = matchedData(req);
+
+  try {
+    const vendorStoreProfile = await Vendor.findOne({ user: userId });
+
+    if (!vendorStoreProfile) {
+      return res.status(404).json({
+        success: false,
+        message: "No store profile found!",
+      });
+    }
+
+    if (userId.toString() !== vendorStoreProfile.user.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to edit this vendor profile.",
+      });
+    }
+
+    vendorStoreProfile.storeName = storeName;
+    vendorStoreProfile.storeLogo = storeLogo;
+    vendorStoreProfile.bio = bio;
+    vendorStoreProfile.contactNumber = contactNumber;
+    vendorStoreProfile.email = email;
+    vendorStoreProfile.address = address;
+    vendorStoreProfile.state = state;
+    vendorStoreProfile.campus = campus;
+    vendorStoreProfile.storeSlug = storeName.toLowerCase().replace(/\s+/g, "-");
+
+    if (businessCertificate !== "") {
+      vendorStoreProfile.businessCertificate = businessCertificate;
+    }
+    if(Array.isArray(kycDocs) && kycDocs.length > 0) {
+      vendorStoreProfile.kycDocs = kycDocs;
+    }
+
+    await vendorStoreProfile.save();
+
+    return res.status(200).json({
+      success: true,
+      vendor: vendorStoreProfile,
+      message: "Profile Updated",
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error.",
+    });
+  }
+};
+
+
+

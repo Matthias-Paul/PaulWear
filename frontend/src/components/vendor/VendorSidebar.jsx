@@ -5,7 +5,7 @@ import { logOutSuccess } from "../../redux/slice/userSlice.js";
 import { useSelector, useDispatch } from "react-redux";
 import { closeSidebar } from "../../redux/slice/vendorSlice";
 import { MdDashboard } from "react-icons/md";
-
+import toast from "react-hot-toast"
 
 
 

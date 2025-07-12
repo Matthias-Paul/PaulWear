@@ -70,7 +70,7 @@ return (
       <>
         {/* Orders Table */}
         <div className="shadow-md overflow-x-auto relative rounded-sm lg:rounded-md">
-          <table className="w-full text-left min-w-[1100px] md:min-w-full text-gray-500">
+          <table className="w-full text-left min-w-[1200px] md:min-w-full text-gray-500">
             <thead className="uppercase bg-gray-100 text-xs text-gray-600">
               <tr>
               <th className=" px-4 py-3">S/N</th>
@@ -99,7 +99,7 @@ return (
                   <td className="font-medium text-gray-800 px-4">
                   #{order._id.slice(-6).toUpperCase()}
                   </td>
-                  <td className=" py-4 px-4 font-medium text-gray-800">
+                  <td className=" py-4 capitalize px-4 font-medium text-gray-800">
                   {order.vendor?.storeName || "Vendor"}
                   </td>
                   <td className="py-4 px-4">
@@ -112,7 +112,7 @@ return (
                   </td>
                   <td className=" py-4 px-4">
                   <span
-                    className={`px-4 py-1 rounded text-md font-medium ${
+                    className={`px-4 py-1 capitalize rounded text-md font-medium ${
                       order.status === "delivered"
                         ? "bg-green-100 text-green-700"
                         : order.status === "processing"
@@ -122,7 +122,7 @@ return (
                     {order.status}
                     </span>
                     </td>
-                  <td className=" py-4 px-4">
+                  <td className=" capitalize py-4 px-4">
                     {order?.shippingAddress
                       ? `${order?.shippingAddress}`
                       : "N/A"}                  

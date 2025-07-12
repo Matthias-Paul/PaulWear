@@ -30,9 +30,9 @@
 }
 
 .animate-slide-in-left {
-  animation: slide-in-left 0.8s ease-in-out;
+  animation: slide-in-left 0.7s ease-in-out;
 }
 
 .animate-slide-in-right {
-  animation: slide-in-right 0.8s ease-in-out;
+  animation: slide-in-right 0.7s ease-in-out;
 }

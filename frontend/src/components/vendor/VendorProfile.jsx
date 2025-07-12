@@ -11,12 +11,6 @@ const VendorProfile = () => {
     const navigate = useNavigate()
     
 
-
-
-
-   
-    
-
     const fetchStoreDetails = async()=>{
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor-profile`,{
             method:"GET",
@@ -97,7 +91,7 @@ const VendorProfile = () => {
             <img
             src={data?.vendor?.businessCertificate}
             alt="Business Certificate Image"
-            className="w-32 h-32 object-cover rounded-md "
+            className="w-42 h-32 object-cover rounded-md "
           />  ) : (
             "Not Uploaded"
           )}</p>

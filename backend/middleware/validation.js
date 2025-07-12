@@ -302,9 +302,13 @@ export const validateVendor = [
     .notEmpty().withMessage('Store logo is required')
     .isURL().withMessage('Store logo must be a valid URL'),
 
-  body('bio')
+  body('businessCertificate')
     .optional()
-    .isLength({ max: 300 }).withMessage('Bio cannot exceed 300 characters'),
+    .isURL().withMessage('Business certificate must be a valid URL'),
+
+  body('bio')
+  .notEmpty().withMessage('bio is required')
+  .isLength({ max: 300 }).withMessage('Bio cannot exceed 300 characters'),
 
   body('contactNumber')
     .notEmpty().withMessage('Contact number is required')
