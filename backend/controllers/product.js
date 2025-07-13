@@ -8,6 +8,8 @@ import VendorAccount from '../models/vendorAccount.model.js';
 import { validationResult, matchedData } from "express-validator"
 
 
+
+
   
 const generateSku = (vendorName, productName) => {
     const vendorCode = vendorName?.substring(0, 3).toUpperCase() || "SYS";
@@ -303,65 +305,117 @@ export const deleteProduct = async(req, res, next)=>{
     }
 
 } 
-      
-                    
-export const getProducts = async (req, res) => {
-    const {
-      category,
-      collection,
-      size,
-      color,
-      gender,
-      minPrice,
-      maxPrice,
-      sortBy,
-      search,
-    } = req.query;
+          
+function hashSeed(seed) {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash << 5) - hash + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
 
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
-  
-    try {
-      const query = {};
-  
-      if (search) {
-        query.$or = [
-          { name: { $regex: search, $options: "i" } },
-          { description: { $regex: search, $options: "i" } },
-          { category: { $regex: search, $options: "i" } },
-        ];
+export const getProducts = async (req, res) => {
+  const {
+    category,
+    collection,
+    size,
+    color,  
+    gender,
+    minPrice,
+    maxPrice,
+    sortBy,
+    search,
+  } = req.query;
+
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  try {
+    const filterQuery = {};
+
+    if (search) {
+      filterQuery.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    if (category && category.toLowerCase() !== "all") {
+      filterQuery.category = decodeURIComponent(category).replace(/\+/g, " ");
+    }
+
+    if (collection && collection.toLowerCase() !== "all") {
+      filterQuery.collections = collection;
+    }
+
+    if (color && color.toLowerCase() !== "all") {
+      filterQuery.colors = { $in: [color] };
+    }
+
+    if (gender && gender.toLowerCase() !== "all") {
+      filterQuery.gender = gender;
+    }
+
+    if (size) {
+      const sizesArray = size.split(",").map((s) => s.trim());
+      if (sizesArray.length > 0) {
+        filterQuery.sizes = { $in: sizesArray };
       }
-  
-      if (category && category.toLowerCase() !== "all") {
-        query.category = decodeURIComponent(category).replace(/\+/g, " ");
-      }
-  
-      if (collection && collection.toLowerCase() !== "all") {
-        query.collections = collection;
-      }
-  
-      if (color && color.toLowerCase() !== "all") {
-        query.colors = { $in: [color] };
-      }
-  
-      if (gender && gender.toLowerCase() !== "all") {
-        query.gender = gender;
-      }
-  
-      if (size) {
-        const sizesArray = size.split(",").map((s) => s.trim());
-        if (sizesArray.length > 0) {
-          query.sizes = { $in: sizesArray };
-        }
-      }
-  
-      if (minPrice || maxPrice) {
-        query.price = {};
-        if (minPrice) query.price.$gte = Number(minPrice);
-        if (maxPrice) query.price.$lte = Number(maxPrice);
-      }
-  
+    }
+
+    if (minPrice || maxPrice) {
+      filterQuery.price = {};
+      if (minPrice) filterQuery.price.$gte = Number(minPrice);
+      if (maxPrice) filterQuery.price.$lte = Number(maxPrice);
+    }
+
+    const isInitialFeed =
+    !search &&
+    !sortBy &&
+    !category &&
+    !collection &&
+    !color &&
+    !gender &&
+    !size &&
+    !minPrice &&
+    !maxPrice;
+        
+    const isUserSorted = Boolean(sortBy);
+    const seed = hashSeed((req.user?.id || req.ip || "guest") + "_" + Math.floor(Date.now() / (30 * 60 * 1000)));
+    
+    let products = [];
+    
+    if (!isUserSorted) {
+      // Step 1: Get filtered products (only _id and randomSortKey for performance)
+      const filteredIds = await Product.find(
+        filterQuery,
+        { _id: 1, randomSortKey: 1 }
+      );
+    
+      const sortedIds = filteredIds
+        .map((p) => ({
+          _id: p._id,
+          key: (p.randomSortKey + seed) % 1000000000,
+        }))
+        .sort((a, b) => a.key - b.key)
+        .map((p) => p._id);
+    
+      const paginatedIds = sortedIds.slice(skip, skip + limit);
+      const idOrder = paginatedIds.map((id) => id.toString());
+    
+      // Step 2: Fetch full product details for paginated IDs
+      products = await Product.find({ _id: { $in: paginatedIds } });
+    
+      // Step 3: Sort products in the same random order
+      products.sort(
+        (a, b) =>
+          idOrder.indexOf(a._id.toString()) - idOrder.indexOf(b._id.toString())
+      );
+    } else {
+      // User explicitly sorted the feed (e.g., priceAsc, priceDesc)
       let sort = {};
       switch (sortBy) {
         case "priceAsc":
@@ -374,25 +428,30 @@ export const getProducts = async (req, res) => {
           sort = { rating: -1 };
           break;
         default:
-          sort = {};
+          sort = { createdAt: -1 };
       }
-  
-      const products = await Product.find(query).sort(sort).skip(skip).limit(limit);
-
-      return res.status(200).json({
-        success: true,
-        products,
-      });
-    } catch (error) {
-      console.error("Error in getProducts:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Internal Server Error",
-      });
+    
+      products = await Product.find(filterQuery)
+        .sort(sort)
+        .skip(skip)
+        .limit(limit);
     }
-  };
+
+    return res.status(200).json({
+      success: true,
+      products,
+    });
+
+
+  } catch (error) {
+    console.error("Error in getProducts:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
   
-              
          
 export const getSingleProduct =async(req, res, next)=>{
 

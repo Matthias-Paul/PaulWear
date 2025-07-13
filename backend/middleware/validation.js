@@ -66,12 +66,13 @@ export const validateProduct = [
     .notEmpty().withMessage("Category is required"),
 
   body("sizes")
+    .optional()
     .isArray({ min: 1 }).withMessage("At least one size is required"),
   
   body("colors")
+    .optional()
     .isArray({ min: 1 }).withMessage("At least one color is required"),
-
-
+ 
   body("gender")
     .optional()
     .isIn(["Men", "Women", "Unisex"]).withMessage("Gender must be one of: Men, Women, Unisex"),
@@ -84,6 +85,9 @@ export const validateProduct = [
   
   body("isFeatured")  
     .optional().isBoolean(),
+
+    body("randomSortKey")  
+    .optional(),
    
   body("isPublished")
     .optional().isBoolean(),

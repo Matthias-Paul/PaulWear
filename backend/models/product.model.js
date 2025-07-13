@@ -56,7 +56,14 @@ const productSchema = new mongoose.Schema({
         type: String,
         required:true
     },
-
+    randomSortKey: {
+        type: Number,
+        default: function () {
+          return Math.floor(Math.random() * 1000000000);
+        },
+        index: true,
+      },
+           
     images: [{
         url: {
             type: String,
@@ -93,6 +100,8 @@ const productSchema = new mongoose.Schema({
 
 },{ timestamps: true })   
 
+  
+ 
 const Product = mongoose.model("Product", productSchema)
-
+  
 export default Product;
