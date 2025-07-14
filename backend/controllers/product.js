@@ -1,6 +1,8 @@
 import express from "express"
 import Product from "../models/product.model.js"
+import Cart from "../models/cart.model.js"
 import Vendor from "../models/vendors.model.js"
+import Order from "../models/order.model.js"
 import VendorAccount from '../models/vendorAccount.model.js';
 import seedrandom from 'seedrandom';
 
@@ -227,7 +229,28 @@ export const editProduct = async(req, res, next)=>{
             { new: true, runValidators: true }
             );
 
+            const carts = await Cart.find({ "products.productId": id });
 
+          for (const cart of carts) {
+            for (const item of cart.products) {
+              if (item.productId.toString() === id) {
+                item.name = name;
+                item.price = price * Number(item.quantity);
+                item.image = images?.[0]?.url || item.image;
+                item.color = colors[0] || "General";
+                item.size = sizes[0] || "General";   
+              }  
+            }   
+
+            cart.totalPrice = cart.products.reduce(
+              (acc, item) => acc + Number(item.price),
+              0
+            );  
+
+            await cart.save();
+          }
+            
+  
         return res.status(200).json({
             success: true,
             updatedProduct,
@@ -250,7 +273,7 @@ export const editProduct = async(req, res, next)=>{
     }
 
 } 
-
+   
 export const deleteProduct = async(req, res, next)=>{
 
 
@@ -291,6 +314,24 @@ export const deleteProduct = async(req, res, next)=>{
      
          await Product.findByIdAndDelete(id)
            
+
+         const cartsWithProduct = await Cart.find({ "products.productId": id });
+
+        for (const cart of cartsWithProduct) {
+          cart.products = cart.products.filter(
+            (item) => item.productId.toString() !== id
+          );     
+
+          cart.totalPrice = cart.products.reduce(
+            (acc, item) => acc + Number(item.price),
+            0
+          );
+   
+          await cart.save();
+        }
+   
+          
+
         return res.status(200).json({
             success: true,
             message: "Product deleted successfully"
@@ -545,7 +586,7 @@ export const bestSeller = async(req, res, next)=>{
                     message: "No best product found",
                 }); 
             }
-
+  
             return res.status(200).json({
                 success: true,  
                 bestSeller
@@ -561,22 +602,71 @@ export const bestSeller = async(req, res, next)=>{
     } 
 } 
 
+export const mostOrdered = async (req, res, next) => {
+  try {
+    const result = await Order.aggregate([
+      { $unwind: "$orderItems" },
+      {
+        $group: {
+          _id: "$orderItems.productId",
+          totalSold: { $sum: "$orderItems.quantity" },
+        },
+      },
+      { $sort: { totalSold: -1 } }, 
+      { $limit: 12 },
+    ]);
+  
+    if (!result.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No best-selling products found",
+      });
+    }
+
+    const productIds = result.map((item) => item._id);
+
+    // Fetch only products that still exist
+    const products = await Product.find({
+      _id: { $in: productIds },
+      isPublished: true
+    });
+    
+    // Maintain order and remove missing products
+    const sortedProducts = productIds
+      .map((id) => products.find((product) => product && product._id.toString() === id.toString()))
+      .filter(Boolean); // filter out null/undefined
+
+    return res.status(200).json({
+      success: true,
+      mostOrdered: sortedProducts,
+    });
+
+  } catch (error) {
+    console.error("Best Seller Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+
 export const newArrivals = async (req, res, next) => {
   try {
     const { productOwnerId } = req.query;
 
     const vendorId = await Vendor.findOne({_id: productOwnerId})
-    if(!vendorId){  
+    if(!vendorId && productOwnerId ){  
       return res.status(404).json({
           success: false,  
           message: "Vendor profile not found",
       }); 
   }
-    const filter = {};
-    if (productOwnerId) {
+    const filter = {}; 
+    if (productOwnerId) {  
       filter.user = vendorId.user;
-    }
-
+    }      
+   
     const newArrivals = await Product.find(filter)
       .sort({ createdAt: -1 })
       .limit(20);

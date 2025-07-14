@@ -58,7 +58,7 @@ export const addCart = async(req, res, next)=>{
                         image: product.images?.[0]?.url ?? null,
                         price: product.price * quantity,   
                         size,    
-                        color,          
+                        color,           
                         quantity
                     });   
                 }          

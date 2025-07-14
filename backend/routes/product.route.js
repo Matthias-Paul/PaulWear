@@ -1,14 +1,15 @@
 import express from "express"
 import { verifyUser } from "../middleware/verifyUser.js"
 import { validateProduct } from "../middleware/validation.js"
-import { createProduct, editProduct, deleteProduct, getProducts, getSingleProduct, getSimilarProduct, bestSeller, newArrivals, getVendorProducts, getProductsPerVendor, countProducts, categoryProducts } from "../controllers/product.js"
+import { createProduct, editProduct, mostOrdered, deleteProduct, getProducts, getSingleProduct, getSimilarProduct, bestSeller, newArrivals, getVendorProducts, getProductsPerVendor, countProducts, categoryProducts } from "../controllers/product.js"
 const router = express.Router()
-
+          
         
     
 router.get("/product/category", categoryProducts)
 router.get("/product", getProducts)           
 router.get("/product/best-seller", bestSeller)
+router.get("/product/most-ordered", mostOrdered)
 router.get("/product/new-arrivals", newArrivals)
 router.get("/product/vendor", verifyUser, getVendorProducts)
 router.post("/product", verifyUser, validateProduct, createProduct)

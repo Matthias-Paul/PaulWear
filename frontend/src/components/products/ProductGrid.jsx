@@ -17,7 +17,7 @@ const ProductGrid = ({ products, isLoading }) => {
                 key={product?._id}
                 className="group relative bg-white border border-gray-400 rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
               >
-                <Link to={`/product/${product._id}`} className="block">
+                <Link to={`/product/${product?._id}`} className="block">
                   <div className="relative w-full aspect-[4/5] overflow-hidden">
                     <img
                       src={mainImage}

@@ -106,7 +106,7 @@ const NewArrival = ({newArrivals, isLoading, text}) => {
                     isLoading? skeletonArray.map((_, i) => <SkeletonLoading key={i} />):newArrivals?.map((product)=>(
                         <div className="flex  w-full min-w-[100%] sm:min-w-[50%] lg:min-w-[33%]  relative   " key={product?._id} >
                                 <img draggable={false} className="w-full rounded-md h-[500px]  flex-shrink-0 object-cover   " alt={product?.name} src={product?.images[0].url} />
-                                <div className="rounded-b-lg absolute font-medium text-start p-2 bg-opacity-50 text-white backdrop-blur-md bottom-0 right-0 left-0 ">
+                                <div className="rounded-b-lg absolute font-medium text-start p-2 opacity-80 bg-black text-white backdrop-blur-md bottom-0 right-0 left-0 ">
                                     <Link to={`/product/${product?._id}`}>
                                     <h1 className=" text-lg truncate "> {product?.name} </h1>
                                     <div className="" >₦{product?.price.toLocaleString()} </div>

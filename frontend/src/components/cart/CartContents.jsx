@@ -193,10 +193,10 @@ const CartContents = ({toggleCartDrawer}) => {
                 <div className=" flex items-start " >
                         <img className="w-20 h-24 object-cover flex-shrink-0 mr-4 rounded " src={product?.image} alt={product?.image} />
                         <div>
-                            <h3>
+                            <h3 className="capitalize" >
                                    {product?.name}
                              </h3>   
-                             <div className=" text-sm text-gray-500  ">
+                             <div className=" capitalize text-sm text-gray-500  ">
                                 Size: {product?.size} | {product?.color}
                              </div> 
                             <div className="mt-2 flex items-center gap-x-2 " >
@@ -248,7 +248,7 @@ const CartContents = ({toggleCartDrawer}) => {
           myCart?.products?.length >=1 &&(
           <div className=" px-4 xl:w-[460px] text-center mx-auto  bottom-8 py-7 bg-white "> 
                     <button onClick={handleCheckout} className="w-full transition hover:bg-gray-800 text-white py-2 bg-black cursor-pointer rounded-md font-semibold  "> Checkout </button>
-                    <div className="text-sm tracking-tighter text-center mt-2 text-gray-500  " > Total price is calculated at checkout. </div>
+                    <div className="text-sm tracking-tighter text-center mt-2 text-gray-500  " > Notice: Some items in your cart may be removed or updated if they become unavailable or are changed by the vendor. </div>
         </div>
           )
         }

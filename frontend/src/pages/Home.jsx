@@ -43,6 +43,24 @@ useEffect(() => {
 }, [data]);
 
 
+
+const fetchMostOrdered = async () => {
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/most-ordered`, {
+  method: "GET",
+  credentials: "include",
+  });
+  if (!res.ok) {
+  throw new Error("Failed to fetch most ordered products");
+  }
+  return res.json();
+};
+
+const { data:mostOrderedData, isLoading:mostOrderedIsLoading } = useQuery({
+  queryKey: ["mostOrdered"],
+  queryFn: fetchMostOrdered,
+});
+
+
   return (
     <>
       <div className="  h-full   text-black  ">
@@ -57,6 +75,14 @@ useEffect(() => {
             <CategoryGrid  />
           </div>
           <NewArrival newArrivals={newArrivals} isLoading={isLoading} text={"sellers"} />
+        <div className="px-3" >
+          <h3 className="  text-2xl sm:text-3xl font-bold text-center my-2" > Most Ordered Products </h3>
+          <p className="text-sm px-3 sm:text-xl text-center  ">
+            Our most ordered products- trusted and loved by many individuals. Explore what everyone is buying.
+          </p>
+
+            <ProductGrid products={mostOrderedData?.mostOrdered} isLoading={mostOrderedIsLoading}  />
+         </div> 
           <div className="mx-auto max-w-6xl ">
             <BestProduct />
         
