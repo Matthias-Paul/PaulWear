@@ -1,7 +1,5 @@
 import pic from "../assets/pic.jpg";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
-import { useQuery } from "@tanstack/react-query";
 import Hero from "../components/layout/Hero";
 import FeaturedCollection from "../components/products/FeaturedCollection";
 import FeaturesSection from "../components/products/FeaturesSection";
@@ -9,11 +7,41 @@ import NewArrival from "../components/products/NewArrival";
 import ProductGrid from "../components/products/ProductGrid";
 import CategoryGrid from "../components/products/CategoryGrid";
 import BestProduct from "../components/products/BestProduct";
-
+import { useRef, useState, useEffect } from "react"
+import { useQuery } from "@tanstack/react-query";
 
 
 const Home = () => {
   const [bestProduct, setBestProduct] = useState(null);
+  const [newArrivals, setNewArrivals] = useState(null)
+
+
+
+
+
+  const fetchNewArrivals = async () => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/new-arrivals`, {
+    method: "GET",
+    credentials: "include",
+    });
+    if (!res.ok) {
+    throw new Error("Failed to fetch new arrivals");
+    }
+    return res.json();
+};
+
+const { data, isLoading } = useQuery({
+    queryKey: ["newArrivals"],
+    queryFn: fetchNewArrivals,
+});
+
+useEffect(() => {
+    if (data) {
+    setNewArrivals(data.newArrivals);
+    console.log("newArrivals:", data.newArrivals);
+    }
+}, [data]);
+
 
   return (
     <>
@@ -28,7 +56,7 @@ const Home = () => {
             <h3 className="  text-lg sm:text-xl text-center my-2 " > Explore a wide range of categories  from fashion to food, beauty, and more. </h3>
             <CategoryGrid  />
           </div>
-          <NewArrival />
+          <NewArrival newArrivals={newArrivals} isLoading={isLoading} text={"sellers"} />
           <div className="mx-auto max-w-6xl ">
             <BestProduct />
         

@@ -66,12 +66,10 @@ export const validateProduct = [
     .notEmpty().withMessage("Category is required"),
 
   body("sizes")
-    .optional()
-    .isArray({ min: 1 }).withMessage("At least one size is required"),
+    .optional(),
   
   body("colors")
-    .optional()
-    .isArray({ min: 1 }).withMessage("At least one color is required"),
+    .optional(),
  
   body("gender")
     .optional()

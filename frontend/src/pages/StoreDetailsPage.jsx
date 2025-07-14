@@ -6,10 +6,14 @@ import FilterSidebar from "../components/products/FilterSidebar";
 import { FaFilter } from "react-icons/fa";
 import ProductGrid from "../components/products/ProductGrid";
 import AboutVendor from "../components/vendor/AboutVendor";
+import NewArrival from "../components/products/NewArrival";
+
+
 
 const StoreDetailsPage = () => {
   const [storeDetails, setStoreDetails] = useState(null);
   const [productCount, setProductCount] = useState([]);
+  const [newArrivals, setNewArrivals] = useState(null)
 
   const { id } = useParams(); // store id from URL
 
@@ -118,6 +122,40 @@ const StoreDetailsPage = () => {
   // Flatten paginated product data
   const products = vendorProductData?.pages.flatMap((page) => page.vendorProducts) || [];
 
+  const fetchNewArrivals = async () => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/new-arrivals?productOwnerId=${id}`, {
+    method: "GET",
+    credentials: "include",
+    });
+    if (!res.ok) {
+    throw new Error("Failed to fetch new arrivals");
+    }
+    return res.json();
+};
+
+const { data, isLoading } = useQuery({
+    queryKey: ["newArrivals", id],
+    queryFn: fetchNewArrivals,
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    staleTime: 0,
+
+
+  });
+
+useEffect(() => {
+    if (data) {
+    setNewArrivals(data.newArrivals);
+    console.log("newArrivals:", data.newArrivals);
+    }
+}, [data]);
+
+
+
+
+
+
+
   return (
     <div className="mx-auto pt-[92px] mb-10 md:pt-[101px] max-w-[1400px] px-[12px] container relative flex flex-col lg:flex-row">
       {/* Mobile filter button */}
@@ -143,7 +181,7 @@ const StoreDetailsPage = () => {
       <div ref={productContainerRef} className="flex-grow relative lg:ml-50 w-full lg:w-2/3">
         {isDetailsLoading ? (
           <p className="text-center my-4">Loading store details...</p>
-        ) : storeDetails ? (
+        ) : storeDetails  && storeDetails?._id === id? (
           <>
             <div className="relative">
               <img  
@@ -164,18 +202,26 @@ const StoreDetailsPage = () => {
                 )}
               </div>
             </div>
-             
+
+{
+  newArrivals && (
+    <NewArrival newArrivals={newArrivals} isLoading={isLoading} text={"store"} />
+
+  )
+}
+
             {
             !isProductLoading && vendorProductData && productVendorCount?.totalProducts === 0?(
                     <div className="text-lg xl:text-xl my-10 font-semibold text-center text-center " > This vendor has no products yet! </div>
                 ):(
                 <div>
                          <h2 className="text-lg xl:text-2xl font-bold text-center mt-10 text-center uppercase">Shop Our Collection</h2>
-                         <p  className="text-center sm:px-[20px] text-gray-600 mt-2  text-md sm:text-lg" >Discover the latest products from {storeDetails.storeName}. Fast delivery, secure payments, and great deals.</p>
+                         <p  className="text-center sm:px-[20px] text-gray-600 mt-2  text-md sm:text-lg" >Discover your favourite products from {storeDetails.storeName}. Fast delivery, secure payments, and great deals.</p>
                    {!isProductLoading && vendorProductData && vendorProductData.pages[0]?.vendorProducts.length === 0 && productVendorCount?.totalProducts > 0 && (
                     <p className="text-center text-gray-600 mt-9 text-md sm:text-lg">No products found for your search.</p>
                   )}
                     <ProductGrid products={products} isLoading={isProductLoading} />
+
                  </div>
                 )
             }

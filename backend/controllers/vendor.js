@@ -1,5 +1,6 @@
 import { validationResult, matchedData } from "express-validator";
 import Vendor from "../models/vendors.model.js";
+import Product from "../models/product.model.js";
 import User from "../models/user.model.js";
 
 
@@ -292,6 +293,20 @@ export const editVendorStoreDetails = async (req, res) => {
     }
 
     await vendorStoreProfile.save();
+
+
+      // Update related Products
+      await Product.updateMany(
+        { user: vendorStoreProfile?.user },
+        {
+          $set: {
+            vendorStoreName: storeName,
+            vendorStoreLogo: storeLogo,
+            vendorStoreEmail: email,
+            vendorContactNumber: contactNumber,
+          },
+        }
+      );
 
     return res.status(200).json({
       success: true,

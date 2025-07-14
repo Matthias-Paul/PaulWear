@@ -6,42 +6,19 @@ import { useQuery } from "@tanstack/react-query";
 import SkeletonLoading from "./SkeletonLoading";
 import useResponsiveSkeletonCount from './useResponsiveSkeletonCount';
 
-const NewArrival = () => {
+const NewArrival = ({newArrivals, isLoading, text}) => {
         const scrollRef = useRef(null)
         const [isDragging, setIsDragging] = useState(false)
         const [startX, setStartX] = useState(0)
         const [scrollLeft, setScrollLeft] = useState(false)
         const [canScrollRight, setCanScrollRight] = useState(false)
         const [canScrollLeft, setCanScrollLeft] = useState(false)
-        const [newArrivals, setNewArrivals] = useState(null)
 
          const skeletonCount = useResponsiveSkeletonCount();
          const skeletonArray = Array.from({ length: skeletonCount });
 
         
-        const fetchNewArrivals = async () => {
-            const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/new-arrivals`, {
-            method: "GET",
-            credentials: "include",
-            });
-            if (!res.ok) {
-            throw new Error("Failed to fetch new arrivals");
-            }
-            return res.json();
-        };
-
-        const { data, isLoading } = useQuery({
-            queryKey: ["newArrivals"],
-            queryFn: fetchNewArrivals,
-        });
-
-        useEffect(() => {
-            if (data) {
-            setNewArrivals(data.newArrivals);
-            console.log("newArrivals:", data.newArrivals);
-            }
-        }, [data]);
-
+     
 
 
          const scroll = (direction)=>{
@@ -98,13 +75,13 @@ const NewArrival = () => {
 
   return (
     <>
-      <div className=" container px-3 mx-auto text-center relative mb-4   "  >
-        <h1  className=" text-2xl sm:text-3xl font-bold my-4 ">Latest Products </h1> 
-        <p className="text-gray-600 text-sm md:text-lg mb-5 "> Don’t miss the freshest additions from our sellers, updated regularly! </p>
+      <div className=" container  px-3 mx-auto text-center relative mb-4   "  >
+        <h1  className=" text-2xl sm:text-3xl font-bold mb-3 mt-8 ">Latest Products </h1> 
+        <p className="text-gray-600 text-sm md:text-lg "> Don’t miss the freshest additions from our {text}, updated regularly! </p>
        
         {/* scroll button */}
 
-        <div className="absolute top-28 right-0 mr-3  flex gap-x-2 " >
+        <div className="absolute top-23 right-0 mr-3  flex gap-x-2 " >
         <button onClick={()=> scroll("left")} disabled={!canScrollLeft} 
         className={`p-2 cursor-pointer rounded border ${canScrollLeft? "bg-white text-black ": "bg-gray-200 text-gray-400  cursor-not-allowed "}  `}>
             < FiChevronLeft   />
@@ -124,7 +101,7 @@ const NewArrival = () => {
             onMouseUp={handleMouseUpOrLeave}
              onMouseLeave={handleMouseUpOrLeave}
 
-            className={`container w-full mt-23  mb-10 overflow-x-scroll flex gap-x-5  mx-auto ${isDragging ? "cursor-dragging":  "cursor-default" }   `} >
+            className={`container w-full mt-18  mb-10 overflow-x-scroll flex gap-x-5  mx-auto ${isDragging ? "cursor-dragging":  "cursor-default" }   `} >
                 {
                     isLoading? skeletonArray.map((_, i) => <SkeletonLoading key={i} />):newArrivals?.map((product)=>(
                         <div className="flex  w-full min-w-[100%] sm:min-w-[50%] lg:min-w-[33%]  relative   " key={product?._id} >

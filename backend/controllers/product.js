@@ -561,35 +561,47 @@ export const bestSeller = async(req, res, next)=>{
     } 
 } 
 
-export const newArrivals = async(req, res, next)=>{
+export const newArrivals = async (req, res, next) => {
+  try {
+    const { productOwnerId } = req.query;
 
-    try {  
-
-        const newArrivals = await Product.find().sort({createdAt: -1 }).limit(8)
-
-        if(!newArrivals || newArrivals.length === 0){
-                return res.status(404).json({
-                    success: false,  
-                    message: "No new arrival products found",
-                }); 
-            }
-
-            return res.status(200).json({
-                success: true,  
-                newArrivals
-            });
-
-
-    } catch (error) {
-        console.log(error.message)
-        
-        return res.status(500).json({
-            success: false,  
-            message: "Internal Server Error",
-        });
+    const vendorId = await Vendor.findOne({_id: productOwnerId})
+    if(!vendorId){  
+      return res.status(404).json({
+          success: false,  
+          message: "Vendor profile not found",
+      }); 
+  }
+    const filter = {};
+    if (productOwnerId) {
+      filter.user = vendorId.user;
     }
-}
-     
+
+    const newArrivals = await Product.find(filter)
+      .sort({ createdAt: -1 })
+      .limit(20);
+
+    if (!newArrivals || newArrivals.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No new arrival products found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      newArrivals,
+    });
+  } catch (error) {
+    console.log(error.message);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+  
 
 export const getVendorProducts = async (req, res) => {
   try {
@@ -685,91 +697,104 @@ export const getVendorProducts = async (req, res) => {
 
 export const getProductsPerVendor = async (req, res) => {
   try {
-   
-    const {id} =req.params
-          
-     const {
-            size,
-            color,
-            gender,
-            minPrice,
-            maxPrice,
-            search,
-            category,
+    const { id } = req.params;
 
-        } =req.query
+    const {
+      size,
+      color,
+      gender,
+      minPrice,
+      maxPrice,
+      search,
+      category
+    } = req.query;
 
-    let filter = { user: id };
-       
-        if(category && category.toLocaleLowerCase() !== "all" ){
-            filter.category = category
-        }     
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
+    // Base filter: vendor's user ID
+    const filter = { user: id };
 
-        if(size){
-            filter.sizes = { $in: size.split(",") }
-        }
+    if (category && category.toLowerCase() !== "all") {
+      filter.category = category;
+    }
 
-        if(color){
-            filter.colors = { $in: [color] }
-        }
+    if (size) {
+      filter.sizes = { $in: size.split(",") };
+    }
 
-         if(gender){
-            filter.gender = gender
-        }
+    if (color) {
+      filter.colors = { $in: [color] };
+    }
 
-        if(minPrice || maxPrice){
-            filter.price = {}
-            if(minPrice) filter.price.$gte = Number(minPrice)
-            if(maxPrice) filter.price.$lte = Number(maxPrice)
+    if (gender) {
+      filter.gender = gender;
+    }
 
-        }     
-     
-        if(search){
-            filter.$or = [
-                {name : {$regex: search, $options: "i"  }},
-                {description : {$regex: search, $options: "i"  }},
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = Number(minPrice);
+      if (maxPrice) filter.price.$lte = Number(maxPrice);
+    }
 
- 
-            ]
-        }   
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
+    }
 
-        const page = Number(req.query.page) || 1;
-        const limit = Number(req.query.limit) || 10;
-        const skip = (page - 1) * limit;
-        
-        
+    const timeSegment = Math.floor(Date.now() / (30 * 60 * 1000));
+    const seed = hashSeed((id || "vendor") + "_" + timeSegment);
+    const rng = seedrandom(String(seed));
 
-    const vendorProducts = await Product.find(filter).sort({ createdAt: -1}).skip(skip).limit(limit)
-           
+    // STEP 1: Get filtered IDs and randomSortKeys
+    const filtered = await Product.find(filter, { _id: 1, randomSortKey: 1 });
+
+    // STEP 2: Shuffle using deterministic randomness
+    const shuffledIds = filtered
+      .map((p) => ({ _id: p._id, rand: rng() }))
+      .sort((a, b) => a.rand - b.rand)
+      .map((p) => p._id);
+
+    const paginatedIds = shuffledIds.slice(skip, skip + limit);
+    const idOrder = paginatedIds.map((id) => id.toString());
+
+    // STEP 3: Fetch actual products
+    const vendorProducts = await Product.find({ _id: { $in: paginatedIds } });
+
+    // STEP 4: Maintain the shuffled order
+    vendorProducts.sort(
+      (a, b) =>
+        idOrder.indexOf(a._id.toString()) - idOrder.indexOf(b._id.toString())
+    );
+
     if (!vendorProducts || vendorProducts.length === 0) {
       return res.status(200).json({
         success: true,
-        vendorProducts:[],
+        vendorProducts: [],
         message: "You have no products",
       });
-    } 
+    }
 
-        const totalProducts = await Product.countDocuments(filter);
-        console.log(totalProducts)
-        const hasNextPage = page * limit < totalProducts
-            
+    const totalProducts = await Product.countDocuments(filter);
+    const hasNextPage = page * limit < totalProducts;
+
     return res.status(200).json({
       success: true,
       vendorProducts,
-      hasNextPage     
+      hasNextPage
     });
 
   } catch (error) {
     console.log(error.message);
-
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
     });
   }
 };
-
 
 export const countProducts = async(req, res)=>{
 
@@ -794,49 +819,69 @@ export const categoryProducts = async (req, res) => {
   try {
     const { search, sortBy, category } = req.query;
 
-    let filter = {
-      $and: [{ category }],
-    };
-
-    if (search) {
-      filter.$and.push({
-        $or: [
-          { name: { $regex: search, $options: "i" } },
-          { description: { $regex: search, $options: "i" } },
-        ],
-      });
-    }
-
-    let sort = {};
-    switch (sortBy) {
-      case "priceAsc":
-        sort = { price: 1 };
-        break;
-      case "priceDesc":
-        sort = { price: -1 };
-        break;
-      case "popularity":
-        sort = { rating: -1 };
-        break;
-      default:  
-        sort = { createdAt: -1 }; 
-    }
-
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const categoryProducts = await Product.find(filter)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit);
+    const filter = { category };
 
-    if (!categoryProducts || categoryProducts.length === 0) {
-      return res.status(200).json({
-        success: true,
-        categoryProducts: [],
-        message: "No products found",
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const isUserSorted = Boolean(sortBy);
+    const timeSegment = Math.floor(Date.now() / (30 * 60 * 1000)); // 30 minutes
+    const seed = hashSeed((req.user?.id || req.ip || "guest") + "_" + timeSegment);
+    const rng = seedrandom(String(seed));
+    console.log("seed",seed)
+    console.log("rng", rng)
+
+    let products = [];
+
+    if (!isUserSorted) {
+      // STEP 1: Find only _id and randomSortKey for performance
+      const filteredIds = await Product.find(filter, {
+        _id: 1,
+        randomSortKey: 1,
       });
+
+      // STEP 2: Shuffle using deterministic RNG
+      const shuffledIds = filteredIds
+        .map((p) => ({ _id: p._id, rand: rng() }))
+        .sort((a, b) => a.rand - b.rand)
+        .map((p) => p._id);
+
+      const paginatedIds = shuffledIds.slice(skip, skip + limit);
+      const idOrder = paginatedIds.map((id) => id.toString());
+
+      // STEP 3: Fetch full product data
+      products = await Product.find({ _id: { $in: paginatedIds } });
+
+      // STEP 4: Maintain the shuffled order
+      products.sort(
+        (a, b) => idOrder.indexOf(a._id.toString()) - idOrder.indexOf(b._id.toString())
+      );
+    } else {
+      // User-specified sorting
+      let sort = {};
+      switch (sortBy) {
+        case "priceAsc":
+          sort = { price: 1 };
+          break;
+        case "priceDesc":
+          sort = { price: -1 };
+          break;
+        case "popularity":
+          sort = { rating: -1 };
+          break;
+        default:
+          sort = { createdAt: -1 };
+      }
+
+      products = await Product.find(filter).sort(sort).skip(skip).limit(limit);
     }
 
     const totalProducts = await Product.countDocuments(filter);
@@ -844,7 +889,7 @@ export const categoryProducts = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      categoryProducts,
+      categoryProducts: products,
       hasNextPage,
     });
   } catch (error) {

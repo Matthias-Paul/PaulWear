@@ -236,7 +236,7 @@ export const validateVendor = async (req, res) => {
         if (user) {
             user.role = "vendor";
             await user.save();
-        }
+        }   
       const acceptVendorMailOptions = {
         from: process.env.EMAIL_USER,
         to: vendor.email,
