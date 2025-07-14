@@ -2,6 +2,7 @@ import express from "express"
 import Product from "../models/product.model.js"
 import Vendor from "../models/vendors.model.js"
 import VendorAccount from '../models/vendorAccount.model.js';
+import seedrandom from 'seedrandom';
 
 
 
@@ -384,8 +385,11 @@ export const getProducts = async (req, res) => {
     !maxPrice;
         
     const isUserSorted = Boolean(sortBy);
-    const seed = hashSeed((req.user?.id || req.ip || "guest") + "_" + Math.floor(Date.now() / (30 * 60 * 1000)));
-    
+    const timeSegment = Math.floor(Date.now() / (30 * 60 * 1000));
+    console.log('User:', req.user?.id || req.ip, 'Time Segment:', timeSegment);
+    const seed = hashSeed((req.user?.id || req.ip || "guest") + "_" + timeSegment);
+    console.log("Seed", seed)
+
     let products = [];
     
     if (!isUserSorted) {
@@ -394,22 +398,20 @@ export const getProducts = async (req, res) => {
         filterQuery,
         { _id: 1, randomSortKey: 1 }
       );
-    
-      const sortedIds = filteredIds
-        .map((p) => ({
-          _id: p._id,
-          key: (p.randomSortKey + seed) % 1000000000,
-        }))
-        .sort((a, b) => a.key - b.key)
-        .map((p) => p._id);
-    
-      const paginatedIds = sortedIds.slice(skip, skip + limit);
-      const idOrder = paginatedIds.map((id) => id.toString());
-    
-      // Step 2: Fetch full product details for paginated IDs
+          
+      const rng = seedrandom(String(seed));
+
+      const shuffledIds = [...filteredIds]
+        .map(p => ({ _id: p._id, rand: rng() }))
+        .sort((a, b) => a.rand - b.rand)
+        .map(p => p._id);
+
+      const paginatedIds = shuffledIds.slice(skip, skip + limit);
+      const idOrder = paginatedIds.map(id => id.toString());
+
       products = await Product.find({ _id: { $in: paginatedIds } });
-    
-      // Step 3: Sort products in the same random order
+
+      // Reorder according to original shuffled order
       products.sort(
         (a, b) =>
           idOrder.indexOf(a._id.toString()) - idOrder.indexOf(b._id.toString())
