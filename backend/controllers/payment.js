@@ -323,7 +323,7 @@ export const webHook = async (req, res) => {
           continue;   
         }
 
-        vendorAccount.pendingBalance += payoutAmount;
+        vendorAccount.pendingBalance = Math.max(0, vendorAccount.pendingBalance + payoutAmount);
 
         await vendorAccount.save();
       }
@@ -713,7 +713,7 @@ export const markAsReceived = async (req, res) => {
 
     const userId = req.user._id;
     const { orderId } = req.params;
-
+  
     const order = await Order.findOne({ _id: orderId, user: userId });
     if (!order) {
       return res.status(404).json({ success: false, message: "Order not found, Please log in to your account" });
@@ -722,9 +722,15 @@ export const markAsReceived = async (req, res) => {
     if (order.isReceived || order.receivedAt ) {
       return res.status(404).json({ success: false, message: "Order has already been mark as received" });
     }
+
+    if (order.isCanceled ) {
+      return res.status(404).json({ success: false, message: "This order was cancelled and cannot be marked as received." });
+    }
                   
     order.isReceived = true;
     order.receivedAt = new Date();
+    order.cancelRequested = false;
+    order.cancelReason = "";
 
     await order.save();
 
@@ -732,6 +738,7 @@ export const markAsReceived = async (req, res) => {
     if (order.isDelivered && order.deliveredAt && order.status === "delivered") {
       await triggerPayout(order);
     }
+    
 
     return res.status(200).json({ success: true, message: "Order marked as received" });
 

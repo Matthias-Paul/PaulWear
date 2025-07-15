@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose from "mongoose"
+
 
 const orderItemSchema = new mongoose.Schema({
     productId: {
@@ -26,7 +27,10 @@ const orderItemSchema = new mongoose.Schema({
     }
 }, { _id: false });
 
-const orderSchema = new mongoose.Schema({
+
+const  deletedOrderSchema = new mongoose.Schema({
+
+
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -37,10 +41,13 @@ const orderSchema = new mongoose.Schema({
         ref: "Vendor", 
         required: true
     }, 
-            
+
     orderGroupId: {  
         type: mongoose.Schema.Types.ObjectId,
         ref: "Checkout"
+    },
+    orderId: {  
+        type: mongoose.Schema.Types.ObjectId,
     },
     orderItems: [orderItemSchema],
     shippingAddress: {
@@ -114,11 +121,20 @@ const orderSchema = new mongoose.Schema({
       },
       cancelReason: {
         type: String,
-      },    
-     
-      
-}, { timestamps: true });
+      },        
+    
+    deletedBy: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "User", 
+        required: true 
+    },           
+    deletedAt: { 
+        type: Date,    
+        default: Date.now 
+    },
+},{ timestamps: true })
 
-const Order = mongoose.model("Order", orderSchema);
+const DeletedOrder = mongoose.model("DeletedOrder", deletedOrderSchema);
 
-export default Order;
+export default DeletedOrder;
+

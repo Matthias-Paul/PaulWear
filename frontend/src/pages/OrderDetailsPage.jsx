@@ -10,8 +10,10 @@ const OrderDetailsPage = () => {
     const { id } = useParams()
     const [orderDetails, setOrderDetails] = useState(null)
     const queryClient = useQueryClient();
+    const [showCancelModal, setShowCancelModal] = useState(false);
+    const [cancelReason, setCancelReason] = useState("");
+    const [isSubmiting, setIsSubmiting] = useState(false)
 
-  
   const fetchOrderDetails = async () => {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/orders/${id}`, {
       method: "GET",
@@ -23,7 +25,7 @@ const OrderDetailsPage = () => {
     return res.json();
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["orderDetails", id],
     queryFn: fetchOrderDetails,
   });
@@ -72,19 +74,120 @@ const OrderDetailsPage = () => {
 
   }
 
+
+  const handleCancelOrder = async () => {
+    if (!cancelReason.trim()) {
+      toast.error("Please enter a reason for cancellation.");
+      return;
+    }
+  
+  
+    try {
+      setIsSubmiting(true)
+      const res = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/cancel-request/${orderDetails?._id}`,
+        {
+          method: "PUT",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            cancelReason,
+          }),
+        }
+      );
+  
+      const data = await res.json();
+  
+      if (!res.ok) throw new Error(data.message);
+      setIsSubmiting(false)
+      toast.success(data.message,{
+        duration:8000
+      });
+      setShowCancelModal(false);
+      setCancelReason("");
+    } catch (error) {
+      toast.error(error.message,{
+        duration:8000
+      });
+      setIsSubmiting(false)
+    }
+  };
+  
+
+
+
+
+
+  if (error) {
+    return <div className="mx-auto text-lg md:text-2xl md:font-semibold pt-[120px] md:pt-[140px] px-[12px] pb-10 w-full"> Order details not found; order is no longer available</div>;
+  }
+
   return (
     <>
-      <div className=" pt-[90px] px-[12px] mx-auto max-w-[1000px] mb-20 " >
+      <div className="pt-[82px] sm:pt-[90px] px-[12px] mx-auto max-w-[1000px] mb-20 " >
+              <div className="flex items-center justify-between" >
                 <h2 className="font-bold mb-5 text-xl md:text-2xl mt-6 " > Order Details </h2>
+                                  {/* Trigger button */}
+                  {!orderDetails?.isReceived && !orderDetails?.isCanceled && !isLoading && (
+                    <button
+                      className="bg-red-600 px-2 py-1 text-sm md:text-md cursor-pointer rounded-md text-white "
+                      onClick={() => setShowCancelModal(true)}
+                    >
+                      Cancel Order
+                    </button>
+                  )}
+
+                  {/* Modal */}
+                  {showCancelModal && (
+                    <>
+                      {/* Backdrop */}
+                      <div className="fixed inset-0 bg-black opacity-80 z-40"></div>
+
+                      {/* Modal content */}
+                      <div className="fixed top-1/2 left-1/2 z-50 transform -translate-x-1/2 -translate-y-1/2 bg-white w-[90%] max-w-md rounded-lg shadow-lg p-6">
+                        <h2 className="text-xl font-semibold mb-4 text-gray-800">Cancel Order</h2>
+                        <label htmlFor="cancelReason" className="block text-sm mb-1 font-medium text-gray-700">
+                          Reason for cancellation
+                        </label>
+                        <textarea
+                          id="cancelReason"
+                          rows="4"
+                          value={cancelReason}
+                          onChange={(e) => setCancelReason(e.target.value)}
+                          className="w-full resize-none border border-gray-300 rounded p-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                          placeholder="Please explain why you're cancelling this order"
+                        ></textarea>
+
+                        <div className="mt-4 flex justify-end gap-3">
+                          <button
+                            onClick={() => setShowCancelModal(false)}
+                            className="px-4 cursor-pointer py-2 text-sm text-gray-700 hover:underline"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={handleCancelOrder}
+                            className="px-4 py-2 cursor-pointer bg-red-600 hover:bg-red-500 text-white text-sm rounded-md"
+                          >
+                            {isSubmiting ? "Submiting": " Submit" }
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                </div>
                 {
                   !orderDetails  ? (<p className="  " > Loading order details... </p>) : (
                         <div className="p-4 sm:p-6 rounded border border-gray-400  " > 
                             <div className="flex flex-col sm:flex-row justify-between  " >
-                                <div className="  " >
+                                <div className="   " >
                                     <h3 className="text:lg  md:text-xl font-semibold    " > 
                                         Order ID: #{orderDetails?._id}
                                     </h3>
-                                    <p className="text-gray-600  " > { new Date(orderDetails?.createdAt).toLocaleDateString()  } </p>
+                                    
+                                       <p className="text-gray-600  " > { new Date(orderDetails?.createdAt).toLocaleDateString()  } </p>
+
                                 </div>  
 
                                 <div className="flex flex-col items-start sm:items-end mt-4 sm:mt-0  " >
@@ -205,16 +308,12 @@ const OrderDetailsPage = () => {
           </div>
         
 
-          ):(
-            isLoading ? (
+          ):
+            isLoading && (
             <div className=" text-gray-500 text-xl px-4 text-center" > Loading your order details... </div>
-          ):(
-          <div className=" text-gray-500 text-xl px-4 text-center" >
-            No order details found!
-          </div>
           )
 
-          )
+          
 
         }
 

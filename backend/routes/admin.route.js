@@ -1,5 +1,5 @@
 import express from "express"
-import { addUser, getUsers, deleteUser, validateVendor, getAllStore } from "../controllers/admin.js"
+import { addUser, getUsers, deleteUser, validateVendor, getAllStore, deleteOrderByAdmin } from "../controllers/admin.js"
 import { registerValidation  } from "../middleware/validation.js"
 import { verifyUser } from "../middleware/verifyUser.js"
 
@@ -10,6 +10,7 @@ router.post("/admin/user" , verifyUser, registerValidation,  addUser)
 router.get("/admin/store" , verifyUser,  getAllStore)
 router.put("/admin/vendor/:id" , verifyUser,  validateVendor)
 router.delete("/admin/user/:id" , verifyUser,  deleteUser)
+router.delete("/admin/delete-order/:orderId", verifyUser, deleteOrderByAdmin);
 
 
 

@@ -611,11 +611,11 @@ export const mostOrdered = async (req, res, next) => {
           _id: "$orderItems.productId",
           totalSold: { $sum: "$orderItems.quantity" },
         },
-      },
+      },  
       { $sort: { totalSold: -1 } }, 
       { $limit: 12 },
-    ]);
-  
+    ]);   
+                                      
     if (!result.length) {
       return res.status(404).json({
         success: false,

@@ -7,7 +7,7 @@ export const triggerPayout = async (order) => {
     !order.isDelivered || !order.deliveredAt ||
     !order.isReceived || !order.receivedAt ||
     order.status !== "delivered" ||
-    order.isPayoutSuccess === true
+    order.isPayoutSuccess === true || order?.isCanceled
   ) {         
     return;   
   }
