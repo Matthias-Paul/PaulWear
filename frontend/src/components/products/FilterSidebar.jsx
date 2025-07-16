@@ -9,12 +9,11 @@ const FilterSidebar = () => {
     category:"",
     gender:"",
     color:"",
-    size:[],
     minPrice:0,
-    maxPrice:100
+    maxPrice:100000
   })
 
-  const [priceRange, setPriceRange] = useState([0, 100])
+  const [priceRange, setPriceRange] = useState([0, 100000])
   const categories = ["Fashion And Apparel", "Hair And Beauty Products", "Bags And Accessories", "Baked Goods And Snacks", "Electronics And Gadgets", "Foodstuff And Provisions","Others"]
   const colors = [
     "Red",
@@ -29,7 +28,6 @@ const FilterSidebar = () => {
     "Navy"
   ]
 
-  const sizes =["XS", "S", "M", "L", "XL", "XXL"];
   
 
 
@@ -45,7 +43,6 @@ const FilterSidebar = () => {
         category: params.category || "",
         gender: params.gender || "",
         color: params.color || "",
-        size: params.size ? params.size.split(",") : [],
         minPrice: min,
         maxPrice: max,
       });
@@ -102,7 +99,7 @@ const updateURLParams = (filters) => {
     if (Array.isArray(filters[key]) && filters[key].length > 0) {
       params.set(key, filters[key].join(","));
     } else if (filters[key] !== "" && filters[key] !== null && filters[key] !== undefined) {
-      if (key === "maxPrice" && Number(filters[key]) === 100) return;
+      if (key === "maxPrice" && Number(filters[key]) === 100000) return;
       if (key === "minPrice" && Number(filters[key]) === 0) return;
       params.set(key, filters[key]);
     }
@@ -167,17 +164,6 @@ const updateURLParams = (filters) => {
         
         </div>  
 
-         {/* size filter */}
-        <div className="mb-6" >
-          <label className="block mb-2 font-medium text-gray-600 " > Size </label>
-          
-           { sizes.map((size)=>(
-              <div key={size} className="flex items-center mb-1 "  >
-                <input value={size} checked={filters.size.includes(size)} onChange={handleFilterChange} type="checkbox" name="size" className="text-blue-500 cursor-pointer mr-2 w-4 h-4 border-gray-300 focus:ring-blue-400 " />
-                <span className="text-gray-700"> { size } </span>
-              </div>  
-            ))  }
-        </div>  
 
           {/* price range filter */}
         <div className="mb-16" >
@@ -188,12 +174,12 @@ const updateURLParams = (filters) => {
                   type="range"
                   name="maxPrice"
                   min={0}
-                  max={100}
+                  max={100000}
                   className="cursor-pointer w-full h-2 bg-gray-300"
                 />
                 <div className="flex justify-between text-gray-700  " >
-                <span > $0 </span>
-                <span > ${priceRange[1]}</span>
+                <span >  ₦0 </span>
+                <span >  ₦{priceRange[1].toLocaleString()}</span>
 
                 </div>
         </div>  

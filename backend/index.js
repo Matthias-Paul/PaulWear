@@ -16,6 +16,7 @@ import subscribeRoute from "./routes/subscriber.route.js"
 import adminRoute from "./routes/admin.route.js"
 import vendorRoute from "./routes/vendor.route.js"
 import paymentRoute from "./routes/payment.route.js"
+import productReviewRoute from "./routes/productReview.route.js"
 
                                                                                                                                                               
 dotenv.config();
@@ -60,6 +61,8 @@ app.use("/api", uploadRoute)
 app.use("/api", subscribeRoute)
 app.use("/api", adminRoute)  
 app.use("/api", vendorRoute)
+app.use("/api", productReviewRoute)
+
 
 
 

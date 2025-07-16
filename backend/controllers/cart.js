@@ -40,8 +40,8 @@ export const addCart = async(req, res, next)=>{
             }
 
             let cart = await getCart(userId, guestId);
-
-
+                  
+    
             if (cart) {
                 const productIndex = cart.products.findIndex(
                     (p) => p.productId.toString() === productId && p.size === size && p.color === color

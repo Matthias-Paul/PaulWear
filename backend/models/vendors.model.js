@@ -78,6 +78,14 @@ const vendorSchema = new mongoose.Schema({
   kycDocs: {
     type: [String],
   },
+  rating: {
+    type: Number,
+    default: 0
+  },
+  numReviews: {
+      type: Number,
+      default: 0
+  },
 
 }, { timestamps: true});
 

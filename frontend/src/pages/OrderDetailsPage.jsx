@@ -130,7 +130,7 @@ const OrderDetailsPage = () => {
                                   {/* Trigger button */}
                   {!orderDetails?.isReceived && !orderDetails?.isCanceled && !isLoading && (
                     <button
-                      className="bg-red-600 px-2 py-1 text-sm md:text-md cursor-pointer rounded-md text-white "
+                      className="bg-red-600 px-2 py-1 text-sm md:text-md cursor-pointer rounded-sm sm:rounded-md text-white "
                       onClick={() => setShowCancelModal(true)}
                     >
                       Cancel Order
