@@ -32,7 +32,7 @@ function formatDateWithSuffix(dateString) {
                 </div>
             </div>
 
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
+            <div className="mt-4 grid grid-cols-1  md:grid-cols-2 gap-4 text-gray-700">
                 <div>
                 <h3 className="font-semibold">Store Info</h3>
                 <p><strong>Campus:</strong> {storeDetails?.campus}</p>
@@ -44,6 +44,13 @@ function formatDateWithSuffix(dateString) {
                 <p><strong>Phone:</strong> {storeDetails?.contactNumber}</p>
                 <p><strong>Email:</strong>{storeDetails?.email}</p>
                 </div>
+                <div className="mt-4 text-gray-600 text-sm">
+                <p><strong>Total Products:</strong> {productVendorCount?.totalProducts} </p>
+                <p><strong>Joined:</strong> {formatDateWithSuffix(storeDetails?.createdAt)}</p>
+                </div>
+                <div className="mt-4 text-gray-600 text-sm">
+                    <p><strong>Rating:</strong> {storeDetails?.rating} </p>
+                </div>
             </div>
 
             {/* <div className="mt-4">
@@ -54,10 +61,8 @@ function formatDateWithSuffix(dateString) {
                 </ul>
             </div> */}
 
-            <div className="mt-4 text-gray-600 text-sm">
-                <p><strong>Total Products:</strong> {productVendorCount?.totalProducts} </p>
-                <p><strong>Joined:</strong> {formatDateWithSuffix(storeDetails?.createdAt)}</p>
-            </div>
+            
+
             </div>
 
 

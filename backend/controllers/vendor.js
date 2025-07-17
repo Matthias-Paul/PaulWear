@@ -131,7 +131,7 @@ export const getStore = async (req, res) => {
     }
 
     const stores = await Vendor.find(filter)
-      .sort({ createdAt: -1 })
+      .sort({ rating : -1})
       .skip(skip)
       .limit(limit);
 

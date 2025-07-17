@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import ProductComment from "./ProductComment";
 
 
 
@@ -387,7 +388,8 @@ const handleTouchEnd = (e) => {
             </div>
           </div>
         </div>
-     
+        <ProductComment id={selectedProduct?._id} />
+
         </div>
 
       </div>

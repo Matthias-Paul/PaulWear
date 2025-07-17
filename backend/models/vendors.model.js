@@ -55,11 +55,6 @@ const vendorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-             
-  totalProducts: {
-    type: Number,
-    default: 0,
-  },
   isFeatured: {
     type: Boolean,
     default: false,
@@ -85,7 +80,7 @@ const vendorSchema = new mongoose.Schema({
   numReviews: {
       type: Number,
       default: 0
-  },
+  },   
 
 }, { timestamps: true});
 

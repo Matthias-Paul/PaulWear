@@ -2,7 +2,6 @@ import pic from "../../assets/pic.jpg";
 import toast from "react-hot-toast";
 import ProductDetailGrid from "./ProductDetailGrid";
 import ProductComment from "./ProductComment";
-
 import { useParams, Link } from "react-router-dom"
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom"

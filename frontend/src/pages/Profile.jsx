@@ -35,7 +35,7 @@ const Profile = () => {
 
   return (
     <>
-      <div className="mx-auto max-w-[1400px]   min-h-full pb-40  flex flex-col " >
+      <div className="mx-auto max-w-[1400px]   min-h-full pb-4  flex flex-col " >
             <div className=" flex-grow   " >
                 <div className="flex  flex-col md:gap-x-6 md:flex-row  md:gap-y-6  ">
                     {/* Left section */}

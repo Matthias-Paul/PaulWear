@@ -2,10 +2,67 @@ import express from "express"
 import Product from "../models/product.model.js"
 import User from "../models/user.model.js"
 import Order from "../models/order.model.js"
+import Vendor from "../models/vendors.model.js"
 import ProductReview from "../models/review.model.js"
 import mongoose from "mongoose";
 
 import { validationResult, matchedData } from "express-validator"
+
+
+
+
+
+
+
+
+export const updateVendorRating = async (vendorId) => {
+  try {
+    // Get all product IDs that belong to this vendor
+    const vendorProducts = await Product.find({ user: vendorId }).select("_id");
+
+    const productIds = vendorProducts.map((p) => p._id);
+    
+    const vendorMainId = await Vendor.findOne({user:vendorId })
+    if (!vendorMainId) {
+      return res.status(200).json({
+        success: true,
+        message: "Vendor Profile not found",
+      });
+    }
+    if (productIds.length === 0) {
+      await Vendor.findByIdAndUpdate(vendorMainId._id, {
+        rating: 0, 
+        numReviews: 0,  
+      });
+      return;
+    }
+
+    // Aggregate all reviews for these products
+    const result = await ProductReview.aggregate([
+      { $match: { product: { $in: productIds } } },
+      {
+        $group: {
+          _id: null,
+          avgRating: { $avg: "$rating" },
+          totalReviews: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const { avgRating = 0, totalReviews = 0 } = result[0] || {};
+
+    await Vendor.findByIdAndUpdate(vendorMainId._id, {
+      rating: avgRating.toFixed(1),
+      numReviews: totalReviews,
+    });
+  } catch (err) {
+    console.error("Error updating vendor rating:", err);
+  }
+};
+
+
+
+
 
 
 export const  postReview = async(req, res)=>{
@@ -77,6 +134,9 @@ export const  postReview = async(req, res)=>{
             product.numReviews = totalReviews;
 
           await product.save()
+
+          // After saving the review
+          await updateVendorRating(product.user);
 
           return res.status(201).json({
             success: true,  
@@ -184,6 +244,8 @@ export const editReview = async (req, res) => {
       product.numReviews = totalReviews;
       await product.save();
   
+      await updateVendorRating(product.user);
+
       return res.status(200).json({
         success: true,
         message: 'Review updated successfully',
@@ -272,6 +334,8 @@ export const deleteReview = async (req, res) => {
     product.rating = averageRating;
     product.numReviews = totalReviews;
     await product.save();
+       
+    await updateVendorRating(product.user);
 
     return res.status(200).json({
       success: true,

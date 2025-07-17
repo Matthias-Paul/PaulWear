@@ -18,7 +18,7 @@ const CategoryGrid = () => {
 
   return (
     <div>
-      <div className="grid px-1 grid-cols-1 gap-x-[10px] pt-7 gap-y-[10px] sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid px-1 grid-cols-1 pt-7 md:gap-2 sm:grid-cols-2 lg:grid-cols-4">
         {categories?.map((category) => (
           <div key={category?.name} className="p-2 block">
             <Link to={`/category?category=${encodeURIComponent(category?.name)}`}>

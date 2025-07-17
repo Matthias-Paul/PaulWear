@@ -189,18 +189,17 @@ const ProductComment = ({id}) => {
     <>
       <div className="mt-6  max-w-3xl mx-auto flex items-center justify-center flex-col   ">
         {
-            reviews && (
+            reviews && !isLoading && (
                 <h2 className="text-xl font-semibold ">Customer Reviews</h2>
             )
         }
 
-      {isLoading && <p className="mt-3 text-gray-500">Loading reviews...</p>}
       {error && <p className="mt-3 text-red-500">Error loading reviews.</p>}
 
       {reviews?.length === 0 && !isLoading && <p className="mt-3" >No reviews yet.</p>}
 
         {
-            canUserReviewData?.canReview&& (
+            canUserReviewData?.canReview &&  (
                     <div className="mt-5   w-full flex items-center justify-center flex-col">
                       <h3 className="text-lg font-semibold mb-2">Write a Review</h3>
                       <form

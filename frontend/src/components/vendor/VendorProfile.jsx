@@ -123,7 +123,12 @@ const VendorProfile = () => {
         <div>
           <h3 className="font-semibold"> Joined:</h3>
           <p> {formatDateWithSuffix(data?.vendor?.createdAt)}</p>
-          </div>
+        </div>
+
+        <div>
+          <h3 className="font-semibold"> Rating:</h3>
+          <p className="">{data?.vendor?.rating}</p>
+        </div>
 
       </div>
 

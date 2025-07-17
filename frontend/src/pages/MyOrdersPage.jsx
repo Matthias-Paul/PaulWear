@@ -59,7 +59,7 @@ const MyOrdersPage = () => {
   }
 
 return (
-  <div className="mx-auto pt-[90px] px-[12px] pb-10 w-full">
+  <div className="mx-auto pt-[90px] px-[12px] pb-4 w-full">
     <h1 className="text-xl md:text-2xl font-bold my-6">My Orders</h1>
 
     { orders?.length === 0 ? (
