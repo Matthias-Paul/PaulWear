@@ -2,6 +2,9 @@ import { validationResult, matchedData } from "express-validator";
 import Vendor from "../models/vendors.model.js";
 import Product from "../models/product.model.js";
 import User from "../models/user.model.js";
+import Order from "../models/order.model.js";
+import moment from "moment"; 
+import mongoose from "mongoose";
 
 
 
@@ -321,6 +324,116 @@ export const editVendorStoreDetails = async (req, res) => {
     });
   }
 };
+
+
+export const getBestStore = async (req, res) => {
+  try {
+    const stores = await Vendor.find({ rating: { $gte: 4 } })
+      .sort({ rating: -1 })
+      .limit(4);
+
+    if (!stores || stores.length === 0) {
+      return res.status(200).json({
+        success: false,
+        stores: [],
+        message: "No best rating store found!",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      stores,
+    });
+
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error.",
+    });
+  }
+};
+
+
+
+export const getWeeklyOrderStats = async (req, res) => {
+  try {
+    if (!req.user || !req.user._id || req.user.role === "customer") {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized access",
+      });
+    }
+
+    const vendorUserId = req.user._id;
+    const vendorStoreProfile = await Vendor.findOne({ user: vendorUserId });
+
+    if (!vendorStoreProfile) {
+      return res.status(404).json({
+        success: false,
+        message: "No store profile found!",
+      });
+    }
+
+    const vendorId = vendorStoreProfile._id;
+  
+    // Get all products that belong to this vendor
+    const vendorProductIds = await Product.find({ user: vendorStoreProfile.user }).distinct("_id");
+
+    if (vendorProductIds.length === 0) {
+      return res.status(200).json({
+        success: true,
+        stats: [
+          { week: "This W", orders: 0 },
+          { week: "Last W", orders: 0 },
+          { week: "2 W ago", orders: 0 },
+          { week: "3 W ago", orders: 0 },
+        ],
+      });
+    }
+
+    const today = moment().startOf("day");
+    const weekBuckets = [];
+
+    // Build time buckets for last 4 weeks
+    for (let i = 0; i < 4; i++) {
+      const start = moment(today).subtract(i + 1, "weeks").startOf("isoWeek").toDate();
+      const end = moment(today).subtract(i, "weeks").startOf("isoWeek").toDate();
+      const label =
+      i === 0
+        ? "This W"
+        : i === 1
+        ? "Last W"      
+        : `${i} W ago`;
+      weekBuckets.push({ label, start, end });
+    }
+
+    const stats = [];
+
+    for (const week of weekBuckets) {
+      // Count orders that contain vendor's products in that week
+      const count = await Order.countDocuments({
+        createdAt: { $gte: week.start, $lt: week.end },
+        "orderItems.productId": { $in: vendorProductIds },
+      });
+
+      stats.push({ week: week.label, orders: count });
+    }
+
+    return res.status(200).json({
+      success: true,
+      stats,
+    });
+
+  } catch (error) {
+    console.error("Weekly order stats error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error.",
+    });
+  }
+};
+
 
 
 

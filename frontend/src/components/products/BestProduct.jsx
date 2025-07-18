@@ -175,7 +175,7 @@ const handleTouchEnd = (e) => {
       <div className="mx-auto  px-[12px] max-w-[1400px]  bg-white ">
         <div className="mx-auto max-w-6xl" >
           <h2 className="  text-2xl sm:text-3xl font-bold text-center my-10 ">
-              Best Product
+              Top-Rated Product
             </h2>
         <div className="flex flex-col md:flex-row ">
           {/* Left thumb nails */}

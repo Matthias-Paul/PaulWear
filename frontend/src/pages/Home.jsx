@@ -9,6 +9,7 @@ import CategoryGrid from "../components/products/CategoryGrid";
 import BestProduct from "../components/products/BestProduct";
 import { useRef, useState, useEffect } from "react"
 import { useQuery } from "@tanstack/react-query";
+import StoreGrid from "../components/vendor/StoreGrid"
 
 
 const Home = () => {
@@ -61,6 +62,25 @@ const { data:mostOrderedData, isLoading:mostOrderedIsLoading } = useQuery({
 });
 
 
+
+const fetchBestRatingStore = async () => {
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/best-store`, {
+  method: "GET",
+  credentials: "include",
+  });
+  if (!res.ok) {
+  throw new Error("Failed to fetch best rating store");
+  }
+  return res.json();
+};
+
+const { data:bestRatingStore, isLoading:bestRatingStoreIsLoading } = useQuery({
+  queryKey: ["bestRatingStore"],
+  queryFn: fetchBestRatingStore,
+});
+
+
+
   return (
     <>
       <div className="  h-full   text-black  ">
@@ -83,10 +103,27 @@ const { data:mostOrderedData, isLoading:mostOrderedIsLoading } = useQuery({
 
             <ProductGrid products={mostOrderedData?.mostOrdered} isLoading={mostOrderedIsLoading}  />
          </div> 
+         <div className="px-3 mt-6 mx-auto   " >
+            {
+              bestRatingStore && !bestRatingStoreIsLoading && (
+                <>
+                <h2 className=" text-2xl sm:text-3xl font-bold text-center my-2">Top-Rated Stores</h2>
+                <p className="text-sm px-3 sm:text-xl text-center mb-6 ">
+                  Discover our highest-rated vendors trusted by thousands of satisfied customers.
+                </p>
+                <StoreGrid stores={bestRatingStore?.stores}  isLoading={bestRatingStoreIsLoading} />
+
+                </>
+              )
+            }
+
+          </div>
           <div className="mx-auto max-w-6xl ">
             <BestProduct />
         
           </div>
+
+            
           <div className="  bg-gray-50" >
           <FeaturesSection/>
           

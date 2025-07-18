@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
-
+import VendorOrderChart from "../components/common/VendorOrderChart"
 
 const VendorHomePage = () => {
 
@@ -64,10 +64,30 @@ const fetchProductsCount = async () => {
     queryFn: fetchProductsCount,
   });
 
+
+
   const handleRowClick = (orderId) => {
     console.log("orderId", orderId)
     navigate(`/vendor/orders/${orderId}`);
   };
+
+
+  const fetchVendorChart = async () => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/vendor-weekly-stats`, {
+      method: "GET",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to fetch vendor  chart");
+    }
+    return res.json();
+  };
+
+  const { data: vendorChartData, isLoading: vendorChartIsLoading } = useQuery({
+    queryKey: ["vendorChart"],
+    queryFn: fetchVendorChart,
+  });
+
 
 
   return (
@@ -97,6 +117,9 @@ const fetchProductsCount = async () => {
                 </div>  
             </div>    
             <div className="mt-8 mb-20 " >
+
+
+            <VendorOrderChart data={vendorChartData?.stats} isLoading={vendorChartIsLoading} />
                 <h2 className="mb-6 font-bold text-2xl " > Recent Orders  </h2>
 
          {
