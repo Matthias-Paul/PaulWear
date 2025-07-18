@@ -96,19 +96,19 @@ const { data:bestRatingStore, isLoading:bestRatingStoreIsLoading } = useQuery({
           </div>
           <NewArrival newArrivals={newArrivals} isLoading={isLoading} text={"sellers"} />
         <div className="px-3" >
-          <h3 className="  text-2xl sm:text-3xl font-bold text-center my-2" > Most Ordered Products </h3>
+          <h3 className="  text-2xl sm:text-3xl font-bold text-center my-3" > Most Ordered Products </h3>
           <p className="text-sm px-3 sm:text-xl text-center  ">
             Our most ordered products- trusted and loved by many individuals. Explore what everyone is buying.
           </p>
 
             <ProductGrid products={mostOrderedData?.mostOrdered} isLoading={mostOrderedIsLoading}  />
          </div> 
-         <div className="px-3 mt-6 mx-auto   " >
+         <div className="px-3 mt-11 mx-auto   " >
             {
               bestRatingStore && !bestRatingStoreIsLoading && (
                 <>
                 <h2 className=" text-2xl sm:text-3xl font-bold text-center my-2">Top-Rated Stores</h2>
-                <p className="text-sm px-3 sm:text-xl text-center mb-6 ">
+                <p className="text-sm px-3 sm:text-xl text-center mb-10 ">
                   Discover our highest-rated vendors trusted by thousands of satisfied customers.
                 </p>
                 <StoreGrid stores={bestRatingStore?.stores}  isLoading={bestRatingStoreIsLoading} />
@@ -118,7 +118,7 @@ const { data:bestRatingStore, isLoading:bestRatingStoreIsLoading } = useQuery({
             }
 
           </div>
-          <div className="mx-auto max-w-6xl ">
+          <div className="mx-auto max-w-6xl mt-[-30px] ">
             <BestProduct />
         
           </div>

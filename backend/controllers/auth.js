@@ -209,7 +209,7 @@ export const googleAuth  =async(req, res, next)=>{
       const password = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
 
       const newUser = new User({
-        name: name.toLowerCase().split(" ").join("-") + "-" + Math.floor(Math.random() * 10000),
+        name: name,
         email,  
         password,
         googleUID     

@@ -355,7 +355,6 @@ export const getBestStore = async (req, res) => {
 };
 
 
-
 export const getWeeklyOrderStats = async (req, res) => {
   try {
     if (!req.user || !req.user._id || req.user.role === "customer") {
@@ -376,45 +375,29 @@ export const getWeeklyOrderStats = async (req, res) => {
     }
 
     const vendorId = vendorStoreProfile._id;
-  
-    // Get all products that belong to this vendor
-    const vendorProductIds = await Product.find({ user: vendorStoreProfile.user }).distinct("_id");
-
-    if (vendorProductIds.length === 0) {
-      return res.status(200).json({
-        success: true,
-        stats: [
-          { week: "This W", orders: 0 },
-          { week: "Last W", orders: 0 },
-          { week: "2 W ago", orders: 0 },
-          { week: "3 W ago", orders: 0 },
-        ],
-      });
-    }
 
     const today = moment().startOf("day");
     const weekBuckets = [];
 
-    // Build time buckets for last 4 weeks
+    // Build time buckets for this week and past 3 weeks
     for (let i = 0; i < 4; i++) {
-      const start = moment(today).subtract(i + 1, "weeks").startOf("isoWeek").toDate();
-      const end = moment(today).subtract(i, "weeks").startOf("isoWeek").toDate();
+      const start = moment(today).subtract(i, "weeks").startOf("isoWeek").toDate();
+      const end = moment(today).subtract(i, "weeks").endOf("isoWeek").toDate();
       const label =
-      i === 0
-        ? "This W"
-        : i === 1
-        ? "Last W"      
-        : `${i} W ago`;
+        i === 0
+          ? "This W"
+          : i === 1
+          ? "Last W"
+          : `${i} W ago`;
       weekBuckets.push({ label, start, end });
     }
 
     const stats = [];
 
-    for (const week of weekBuckets) {
-      // Count orders that contain vendor's products in that week
+    for (const week of weekBuckets.reverse()) {  // Optional: reverse to start from oldest
       const count = await Order.countDocuments({
-        createdAt: { $gte: week.start, $lt: week.end },
-        "orderItems.productId": { $in: vendorProductIds },
+        createdAt: { $gte: week.start, $lte: week.end },
+        vendor: vendorId,
       });
 
       stats.push({ week: week.label, orders: count });
@@ -434,6 +417,9 @@ export const getWeeklyOrderStats = async (req, res) => {
   }
 };
 
+
+  
+      
 
 
 

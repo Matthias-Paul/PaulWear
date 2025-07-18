@@ -5,6 +5,7 @@ import Vendor from "../models/vendors.model.js"
 import Order from "../models/order.model.js"
 import VendorAccount from '../models/vendorAccount.model.js';
 import seedrandom from 'seedrandom';
+import mongoose from "mongoose";
 
 
 
@@ -602,7 +603,8 @@ export const bestSeller = async(req, res, next)=>{
     } 
 } 
 
-export const mostOrdered = async (req, res, next) => {
+
+export const mostOrdered = async (req, res) => {
   try {
     const result = await Order.aggregate([
       { $unwind: "$orderItems" },
@@ -612,35 +614,36 @@ export const mostOrdered = async (req, res, next) => {
           totalSold: { $sum: "$orderItems.quantity" },
         },
       },  
-      { $sort: { totalSold: -1 } }, 
-      { $limit: 12 },
-    ]);   
-                                      
-    if (!result.length) {
-      return res.status(404).json({
-        success: false,
-        message: "No best-selling products found",
-      });
-    }
+      { $sort: { totalSold: -1, "_id": 1 } },
+      { $limit: 25 }, // fetch more, in case some are invalid
+    ]);
 
-    const productIds = result.map((item) => item._id);
+    const isValidObjectId = mongoose.isValidObjectId;
 
-    // Fetch only products that still exist
+    // Filter out invalid or undefined productIds
+    const validProductIds = result
+      .map((item) => item._id)
+      .filter((id) => isValidObjectId(id));
+
+    // Get products that exist and are published
     const products = await Product.find({
-      _id: { $in: productIds },
-      isPublished: true
+      _id: { $in: validProductIds },
+      isPublished: true,
     });
-    
-    // Maintain order and remove missing products
-    const sortedProducts = productIds
-      .map((id) => products.find((product) => product && product._id.toString() === id.toString()))
-      .filter(Boolean); // filter out null/undefined
+
+    // Sort products based on their order in validProductIds
+    const sortedProducts = validProductIds
+      .map((id) =>
+        products.find((product) => product._id.toString() === id.toString())
+      )   
+      .filter(Boolean) // remove nulls (not found)
+      .slice(0, 12); // limit to 12 final valid ones
 
     return res.status(200).json({
       success: true,
       mostOrdered: sortedProducts,
     });
-
+   
   } catch (error) {
     console.error("Best Seller Error:", error);
     return res.status(500).json({

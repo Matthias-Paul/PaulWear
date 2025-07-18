@@ -180,7 +180,7 @@ const handleTouchEnd = (e) => {
         <div className="flex flex-col md:flex-row ">
           {/* Left thumb nails */}
          
-          <div className="hidden md:flex flex-col gap-y-4 mr-6">
+          <div className="hidden  md:flex flex-col gap-y-4 mr-6">
             {selectedProduct?.images?.map((image) => (
               <img
               key={image?.url}
@@ -211,7 +211,7 @@ const handleTouchEnd = (e) => {
 
           {/* Main image */}
           <div className="md:w-1/2  ">
-          <div className="relative bg-gray-50 mb-4 w-full h-[450px] sm:h-[700px] overflow-hidden">
+          <div className="relative border border-gray-300 rounded-md bg-gray-50 mb-4 w-full h-[450px] sm:h-[700px] overflow-hidden">
           <img
               key={mainImageIndex}
               className={`absolute top-0 left-0 w-full h-full object-cover rounded-md ${

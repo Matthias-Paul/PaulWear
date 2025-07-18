@@ -20,7 +20,7 @@ const VendorHomePage = () => {
       };
     
       const { data, isLoading } = useQuery({
-        queryKey: ["bankDetails"],
+        queryKey: ["bankDetails", loginUser?.id],
         queryFn: fetchBankDetails,
         enabled: !!loginUser?.id,
     });
@@ -40,7 +40,7 @@ const fetchVendorOrders = async ({ pageParam = 1 }) => {
     return res.json();
   };
   const { data:vendorOrders, isLoading:vendorOrdersIsloading } = useQuery({
-    queryKey: ["vendorOrders"],
+    queryKey: ["vendorOrders",loginUser?.id],
     queryFn: fetchVendorOrders,
     enabled: !!loginUser?.id,
 });
@@ -60,7 +60,7 @@ const fetchProductsCount = async () => {
   };
 
   const { data: productVendorCount } = useQuery({
-    queryKey: ["productCount"],
+    queryKey: ["productCount", loginUser?.id],
     queryFn: fetchProductsCount,
   });
 
@@ -84,7 +84,7 @@ const fetchProductsCount = async () => {
   };
 
   const { data: vendorChartData, isLoading: vendorChartIsLoading } = useQuery({
-    queryKey: ["vendorChart"],
+    queryKey: ["vendorChart", loginUser?.id],
     queryFn: fetchVendorChart,
   });
 
@@ -119,7 +119,7 @@ const fetchProductsCount = async () => {
             <div className="mt-8 mb-20 " >
 
 
-            <VendorOrderChart data={vendorChartData?.stats} isLoading={vendorChartIsLoading} />
+               <VendorOrderChart data={vendorChartData?.stats} isLoading={vendorChartIsLoading} />
                 <h2 className="mb-6 font-bold text-2xl " > Recent Orders  </h2>
 
          {

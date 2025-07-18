@@ -3,14 +3,14 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 const VendorOrderChart = ({data, isLoading}) => {
 
-    const safeData = Array.isArray(data) ? [...data] : [];
+    const safeData = Array.isArray(data) ? [...data]?.reverse() : [];
 
 
   return (    
-    <div className="w-full h-[300px] lg:h-[500px] mb-15 ">
+    <div className="w-full h-[350px] lg:h-[500px] mb-15 ">
         <h2 className="text-lg font-semibold mb-4">Weekly Orders</h2>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={safeData} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
+          <BarChart data={safeData} margin={{ top: 10, right: 0, left: -20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="week" tickLine={false} />
             <YAxis allowDecimals={false}  tickLine={false}  />
