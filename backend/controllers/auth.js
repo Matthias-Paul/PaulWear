@@ -31,11 +31,11 @@ const errors = validationResult(req);
 
         const existingUser = await User.findOne({ email });
             if (existingUser) {
-            return res.status(400).json({
-                success: false,
-                message: "Email is already in use.",
-            });    
-        }
+                return res.status(400).json({
+                    success: false,
+                    message: "Email is already in use.",
+                });    
+            }
 
         const user = new User({
             name,

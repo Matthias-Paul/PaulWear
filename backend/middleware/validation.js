@@ -381,6 +381,45 @@ export const validateReview = [
 ];
 
 
+export const validateEmailForRequestToken = [
+
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Enter a valid email address"),
+]
+
+
+export const validateTokenAndResetPassword = [
+  
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Enter a valid email address"),
+
+  body("token")
+    .notEmpty()
+    .withMessage("Token is required"),
+
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters long"),
+
+  body("confirmPassword")
+    .notEmpty()
+    .withMessage("Confirm password is required")
+    .custom((value, { req }) => {
+      if (value !== req.body.password) {
+        throw new Error("Passwords do not match");
+      }
+      return true;
+    }),
+];
+
 
 
 

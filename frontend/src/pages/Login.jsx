@@ -115,16 +115,13 @@ const Login = () => {
 
   return (
     <>
-      <div className="py-[100px] lg:h-[900px] max-w-[1400px] relative mx-auto  flex w-full ">
+      <div className="py-[100px] lg:h-[800px] max-w-[1400px] relative mx-auto  flex w-full ">
         <div className=" flex w-full px-[12px] justify-start items-center ">
           <form onSubmit={handleFormSubmit} className="w-full  border-gray-200 lg:w-1/2  px-5 sm:px-15 md:px-40 lg:px-20 rounded-lg pb-5 bg-white ">
-            <div className="flex  justify-center text-xl mb-4 font-medium  ">
-              StyleNest
+            <div className="flex  justify-center text-2xl mb-4  font-semibold  ">
+              Wellcome To StyleNest
             </div>
-            <h2 className=" text-2xl font-bold text-center mb-2 ">
-              {" "}
-              Hey there!{" "}
-            </h2>
+    
             <p className=" text-center mb-4 ">
               Enter your username and password to login
             </p>
@@ -158,14 +155,20 @@ const Login = () => {
               />
             </div>
 
+            <Link to="/forget-password" className="text-blue-600 "  >
+                Forget Password?
+            </Link>
+
             <button
               type="submit"
               disabled={loginMutation.isPending }
-              className={`w-full text-lg mb-[-15px] mt-6 rounded-lg font-semibold p-3 
+              className={`w-full text-lg mb-[-15px] mt-4 rounded-lg font-semibold p-3 
                 ${loginMutation.isPending  ? "bg-gray-800 cursor-not-allowed text-white " : "bg-black hover:bg-gray-800 cursor-pointer text-white"}`}
             >
               {loginMutation.isPending ? "Signing In..." : "Sign In"}
             </button>
+
+           
             {/* google auth button */}
             < OAuth />
 

@@ -36,8 +36,8 @@ import VendorApplicationForm from "./pages/VendorApplicationForm.jsx";
 import StorePage from "./pages/StorePage.jsx";
 import StoreDetailsPage from "./pages/StoreDetailsPage.jsx";
 import CategoryPage from "./components/products/CategoryPage";
-
-
+import ForgetPasswordPage from "./pages/ForgetPasswordPage"
+import VerifyTokenAndResetPassword from "./pages/VerifyTokenAndResetPassword"
 function App() {
   return (
     <>
@@ -51,6 +51,8 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="stores" element={<StorePage />} />
+            <Route path="forget-password" element={<ForgetPasswordPage />} />
+            <Route path="verifyToken/reset-password" element={<VerifyTokenAndResetPassword />} />
             <Route path="category" element={<CategoryPage />} />
             <Route path="stores/:id" element={<StoreDetailsPage />} />
             <Route path="collections/:collection" element={<CollectionPage />} />
