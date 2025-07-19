@@ -66,58 +66,58 @@ const CategoryPage = () => {
         <div className="max-w-[1400px] pt-[30px] mx-auto " >
         {category === "Fashion And Apparel" && (
             <CategoryBanner
-              image={pic}
+              image="https://res.cloudinary.com/drkxtuaeg/image/upload/v1752938132/xzbafunsvzu5rzcp17a3.jpg"
               title="Fashion And Apparel"
               description="Step into style with the latest trends for every season"
             />
           )}
           {category === "Hair And Beauty Products" && (
             <CategoryBanner
-              image={pic}
+              image="https://res.cloudinary.com/drkxtuaeg/image/upload/v1752938099/gedxx26dldgavk3dg7ri.jpg"
               title="Hair And Beauty Products"
               description="Everything you need to look and feel your best"
             />
           )}
           {category === "Bags And Accessories" && (
             <CategoryBanner
-              image={pic}
+              image="https://res.cloudinary.com/drkxtuaeg/image/upload/v1752938053/h78im7vvzfnejekpq0ea.jpg"
               title="Bags And Accessories"
               description="Complete your outfit with perfect bags and timeless accessories"
             />
           )}
           {category === "Baked Goods And Snacks" && (
             <CategoryBanner
-              image={pic}
+              image="https://res.cloudinary.com/drkxtuaeg/image/upload/v1752937997/calg8o5jcthiagtmcg0u.jpg"
               title="Baked Goods And Snacks"
               description="Freshly made treats and snacks you'll crave all day"
             />
           )}
           {category === "Electronics And Gadgets" && (
             <CategoryBanner
-              image={pic}
+              image="https://res.cloudinary.com/drkxtuaeg/image/upload/v1752937903/bpvuraqrkngywtkiqpra.jpg"
               title="Electronics And Gadgets"
               description="Shop phones, laptops, and the latest tech gadgets at unbeatable prices"
             />
           )}
           {category === "Foodstuff And Provisions" && (
             <CategoryBanner
-              image={pic}
+              image="https://res.cloudinary.com/drkxtuaeg/image/upload/v1752937842/u9ta2u0jbmzt0i3kozpj.jpg"
               title="Foodstuff And Provisions"
               description="Your everyday kitchen essentials, always within reach"
             />
           )}
           {category === "Health and Personal Care Products" && (
             <CategoryBanner
-              image={pic}
+              image="https://res.cloudinary.com/drkxtuaeg/image/upload/v1752927083/eriqxj0iwoc9q5cth9ik.jpg"
               title="Health and Personal Care Products"
               description="Care for your body, mind, and wellness — daily"
             />
           )}
           {category === "Others" && (
             <CategoryBanner
-              image={pic}
+              image="https://res.cloudinary.com/drkxtuaeg/image/upload/v1752926967/tqibon9nib934ivygibt.jpg"
               title="Others"
-              description="Unique finds and useful items that don’t fit the mold"
+              description="Practical Finds You Didn’t Know You Needed"
             />
           )}
 
@@ -170,7 +170,7 @@ const CategoryBanner = ({ image, title, description }) => (
   <div className="relative text-white object-cover flex-shrink-0 max-w-[1400px] mb-[15px]">
     <img
       src={image}
-    className="rounded-md sm:rounded-xl w-full max-w-[1400px] max-h-[250px] sm:max-h-[370px] min-h-[220px] object-cover"
+    className="rounded-md sm:rounded-xl w-full max-w-[1400px] max-h-[300px] sm:max-h-[450px] min-h-[220px] object-cover"
       alt={title}
     />
     <div className="absolute inset-0 rounded-md sm:rounded-xl bg-black opacity-50"></div>

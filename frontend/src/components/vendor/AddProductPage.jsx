@@ -80,7 +80,7 @@ const AddProductPage = () => {
                 "Foodstuff And Provisions",
                 "Health and Personal Care Products",
                 "Baked Goods And Snacks",
-                "Others"
+                "Others",
               ];
               
     const addProductMutation = useMutation({
@@ -126,30 +126,24 @@ const AddProductPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (categoriesWithoutSizesOrColors.includes(formData.category)) {
-      setFormData((prev) => ({
-        ...prev,
-        sizes: ["General"],
-        colors: ["General"],
-      }));
-    }
-  
     if (!formData.images[0]?.url || !formData.images[1]?.url || !formData.images[2]?.url) {
       toast.error("Please upload three images");
       return;
     }
   
-    const filteredFormData = {
+    let submissionData = {
       ...formData,
       images: formData.images.filter((img) => img.url !== ""),
     };
   
-    addProductMutation.mutate(filteredFormData);
+    if (categoriesWithoutSizesOrColors.includes(formData.category)) {
+      submissionData.sizes = ["General"];
+      submissionData.colors = ["General"];
+    }
   
-    console.log("filteredFormData", filteredFormData);
+    addProductMutation.mutate(submissionData);
   };
   
-
 
   return (
     <>

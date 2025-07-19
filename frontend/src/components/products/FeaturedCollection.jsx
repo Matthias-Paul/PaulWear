@@ -31,7 +31,7 @@ const FeaturedCollection = () => {
         {/* right content */}
 
         <div className="md:w-1/2" >
-            <img className="w-full   object-cover flex-shrink-0 h-full max-h-[650px] rounded-tr-2xl rounded-bl-2xl  " alt="featured-image" src="https://res.cloudinary.com/drkxtuaeg/image/upload/v1744397245/pexels-renaldicted-11254398_qiwvgq.jpg" />
+            <img className="w-full   object-cover flex-shrink-0 h-full max-h-[650px] rounded-tr-2xl rounded-bl-2xl  " alt="featured-image" src="https://res.cloudinary.com/drkxtuaeg/image/upload/v1752943503/hwdlhsbb33vei8f8g7bc.jpg" />
              
         </div>
       </div>

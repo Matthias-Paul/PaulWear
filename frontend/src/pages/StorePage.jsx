@@ -46,10 +46,10 @@ const StorePage = () => {
 
   return (
     <>
-      <div  className="max-w-[1400px] mx-auto " >
+      <div  className="max-w-[1400px] scroll-smooth mx-auto " >
             <StoreHero />
-        <div className="px-[12px] mx-auto bg-gray-50 "  >
-            <h2 className="  text-2xl sm:text-3xl font-bold text-center py-10 "  > Browse All Store </h2>
+        <div  className="px-[12px] mx-auto bg-gray-50 "  >
+            <h2 id="store-section" className=" scroll-smooth text-2xl sm:text-3xl font-bold text-center py-10 "  > Browse All Store </h2>
             
                 {!isLoading && stores.length === 0 && (
                     <p  className="text-center text-gray-600  text-md sm:text-lg" >No store found for your search.</p>

@@ -36,3 +36,8 @@
 .animate-slide-in-right {
   animation: slide-in-right 0.7s ease-in-out;
 }
+
+
+html {
+  scroll-behavior: smooth;
+}
