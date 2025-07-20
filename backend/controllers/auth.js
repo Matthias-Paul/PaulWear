@@ -11,7 +11,7 @@ import bcryptjs from "bcryptjs"
 dotenv.config();
 
      
-  
+       
 export const registerUser = async(req, res,next)=>{
 
 const errors = validationResult(req);
@@ -19,7 +19,7 @@ const errors = validationResult(req);
     if (!errors.isEmpty()) {
         // If there are validation errors, return the first error message
         return res.status(400).json({
-            statusCode: 400,
+            statusCode: 400,  
             success: false,  
             message: errors.array()[0].msg 
         }); 
@@ -28,7 +28,7 @@ const errors = validationResult(req);
     try {
         
         const { name, email, password } = matchedData(req)
-
+ 
         const existingUser = await User.findOne({ email });
             if (existingUser) {
                 return res.status(400).json({
