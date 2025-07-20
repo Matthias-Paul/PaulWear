@@ -69,7 +69,7 @@ const ProductComment = ({id}) => {
           };
         
           const { data:canUserReviewData } = useQuery({
-            queryKey: ["userReview", loginUser.id],
+            queryKey: ["userReview", loginUser?.id],
             queryFn: fetchCanUserReview,
           });
         

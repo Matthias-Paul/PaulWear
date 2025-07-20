@@ -6,16 +6,16 @@ import transporter from "../utils/emailTransporter.js";
 import dotenv from "dotenv";
 import bcryptjs from "bcryptjs"
 
-
+    
 
 dotenv.config();
 
-
-
+     
+  
 export const registerUser = async(req, res,next)=>{
 
 const errors = validationResult(req);
-
+ 
     if (!errors.isEmpty()) {
         // If there are validation errors, return the first error message
         return res.status(400).json({

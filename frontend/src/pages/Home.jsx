@@ -17,9 +17,6 @@ const Home = () => {
   const [newArrivals, setNewArrivals] = useState(null)
 
 
-
-
-
   const fetchNewArrivals = async () => {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/new-arrivals`, {
     method: "GET",

@@ -4,7 +4,7 @@ import cookieParser from "cookie-parser"
 import dotenv from "dotenv";
 import path from "path";
 
-
+  
 import connectDatabase from "./config/database.js"
 import authRoute from "./routes/auth.route.js"
 import productRoute from "./routes/product.route.js"
@@ -42,11 +42,11 @@ app.use(
 app.use("/api", paymentRoute)
 
 app.use(express.json());
-
+    
 
 const _dirname = path.resolve()
-
-
+ 
+      
 
 
 // app.get("/", (req, res)=>{
