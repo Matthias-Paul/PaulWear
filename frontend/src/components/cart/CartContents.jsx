@@ -235,7 +235,7 @@ const CartContents = ({toggleCartDrawer}) => {
          
         ):(
         <>
-        <div className="text-center font-medium text-[16px] pb-7  " > No products found in your cart, start shopping!  </div>
+        <div className="text-center font-medium text-[16px] pb-7 mt-3 " > No products found in your cart, start shopping!  </div>
         <div className=" px-4 xl:w-[460px] text-center mx-auto  bottom-8  bg-white "> 
             <Link to="/collections/all" >  <button  onClick={toggleCartDrawer} className="w-full transition hover:bg-gray-800 text-white py-2 bg-black cursor-pointer rounded-md font-semibold  "> Start Shopping </button> </Link>
         </div>

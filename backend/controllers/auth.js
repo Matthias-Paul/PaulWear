@@ -87,7 +87,6 @@ const errors = validationResult(req);
             await transporter.sendMail(mailOptions);
 
         const token = await generateToken(user._id, user.role, res); 
-        console.log(token)
         
         res.status(201).json({
             success: true,            
@@ -148,8 +147,7 @@ export const loginUser = async(req, res, next)=>{
             });    
         }
         const token = await generateToken(user._id, user.role, res); 
-        console.log(token)
-  
+   
         return res.status(200).json({
             success:true,  
             user:{
@@ -183,7 +181,6 @@ export const googleAuth  =async(req, res, next)=>{
     const user = await User.findOne({ googleUID });
     if(user){
         const token = await generateToken(user._id, user.role, res); 
-        console.log(token)
 
         return res.status(200).json({
             success:true,  
@@ -217,7 +214,6 @@ export const googleAuth  =async(req, res, next)=>{
             
       await newUser.save();
        const token = await generateToken(newUser._id, newUser.role, res); 
-       console.log(token)
 
         const mailOptions = {
             from: process.env.EMAIL_USER,
