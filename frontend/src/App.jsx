@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
-import { useSelector } from "react-redux";
 
 import UserLayout from "./components/layout/UserLayout.jsx";
 import AdminLayout from "./components/admin/AdminLayout.jsx";
 import VendorLayout from "./components/vendor/VendorLayout.jsx";
 import AdminPayout from "./components/admin/AdminPayout.jsx";
 import VendorManagement from "./components/admin/VendorManagement.jsx";
+import VendorDetails from "./components/admin/VendorDetails,.jsx";
 import Home from "./pages/Home";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
@@ -106,6 +106,7 @@ function App() {
               <Route index element={<AdminHomePage />} />
               <Route path="users" element={<UserManagement />} />
               <Route path="vendors" element={<VendorManagement />} />
+              <Route path="vendors/:id" element={<VendorDetails />} />
               <Route path="payouts" element={<AdminPayout />} />
               <Route path="products" element={<ProductManagement />} />
               <Route path="products/:id/edit" element={<EditProductPage />} />

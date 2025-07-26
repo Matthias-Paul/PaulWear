@@ -101,6 +101,19 @@ const AdminSidebar = () => {
           </NavLink>
 
           <NavLink
+            to="/admin/orders"
+            onClick={handleCloseSideBar}
+            className={({ isActive }) =>
+              isActive
+                ? "border border-gray-400  bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2 "
+                : " text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2  border border-gray-400 "
+            }
+          >
+            <FaClipboardList />
+            <span className="font-semibold text-md "> Orders </span>
+          </NavLink>
+          
+          <NavLink
             to="/admin/users"
             onClick={handleCloseSideBar}
             className={({ isActive }) =>
@@ -124,19 +137,6 @@ const AdminSidebar = () => {
           >
             <FaBoxOpen />
             <span className="font-semibold text-md "> Products </span>
-          </NavLink>
-
-          <NavLink
-            to="/admin/orders"
-            onClick={handleCloseSideBar}
-            className={({ isActive }) =>
-              isActive
-                ? "border border-gray-400  bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2 "
-                : " text-gray-300 hover:bg-gray-700 text-white py-3 px-4 rounded flex items-center gap-x-2  border border-gray-400 "
-            }
-          >
-            <FaClipboardList />
-            <span className="font-semibold text-md "> Orders </span>
           </NavLink>
 
           <NavLink

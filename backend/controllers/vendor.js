@@ -192,7 +192,7 @@ export const getSingleStore = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const storeDetails = await Vendor.findById(id);
+    const storeDetails = await Vendor.findById(id).populate("user", "name email");
 
     if (!storeDetails) {
       return res.status(404).json({
@@ -201,9 +201,18 @@ export const getSingleStore = async (req, res) => {
       });
     }
 
+    const totalVendorProducts = await Product.countDocuments({
+      user: storeDetails.user,
+    });
+    const totalVendorOrders = await Order.countDocuments({
+      vendor: storeDetails._id,
+    });   
+
     return res.status(200).json({
-      success: true,
+      success: true,  
       storeDetails,
+      totalVendorProducts,
+      totalVendorOrders,
     });
   } catch (error) {
     console.error(error.message);

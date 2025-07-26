@@ -10,6 +10,7 @@ import {
   getChart,
   getRecentActivities,
   getPayoutHistory,
+  getVendors,
 } from "../controllers/admin.js";
 
 import { registerValidation } from "../middleware/validation.js";
@@ -23,6 +24,7 @@ router.post("/admin/user", verifyUser, isAdmin, registerValidation, addUser);
 router.get("/admin/store", verifyUser, isAdmin, getAllStore);
 router.get("/admin/stats", verifyUser, isAdmin, getStats);
 router.get("/admin/chart", verifyUser, isAdmin, getChart);
+router.get("/admin/vendors", verifyUser, isAdmin, getVendors);
 router.get("/admin/recent-activity", verifyUser, isAdmin, getRecentActivities);
 router.get("/admin/payout-history", verifyUser, isAdmin, getPayoutHistory);
 router.put("/admin/vendor/:id", verifyUser, isAdmin, validateVendor);

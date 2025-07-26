@@ -174,9 +174,9 @@ export const getAllOrders = async (req, res) => {
         success: true,
         orders: [],
       });
-    }   
-           
-     
+    }      
+                 
+         
     const totalOrders = await Order.countDocuments();
     console.log(totalOrders);
     const hasNextPage = page * limit < totalOrders;

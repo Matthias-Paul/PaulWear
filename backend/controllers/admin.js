@@ -226,14 +226,14 @@ export const validateVendor = async (req, res) => {
         message: "Vendor email not found, cannot send notification.",
       });
     }
-
+     
     if (status === "approved") {
       vendor.status = "approved";
       vendor.isVerified = true;
       await vendor.save();
 
       const user = await User.findById(vendor.user);
-      if (user) {
+      if (user) { 
         user.role = "vendor";
         await user.save();
       }
@@ -636,7 +636,7 @@ export const getRecentActivities = async (req, res) => {
     // Fetch activities and count in parallel
     const [recentActivities, totalActivitiesForLast24Hrs] = await Promise.all([
       ActivityLog.find({ createdAt: { $gte: twentyFourHoursAgo } })
-        .populate('user', 'name email role ') 
+        .populate("user", "name email role ")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
@@ -669,7 +669,6 @@ export const getRecentActivities = async (req, res) => {
   }
 };
 
-
 export const getPayoutHistory = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
@@ -695,18 +694,18 @@ export const getPayoutHistory = async (req, res) => {
         },
       },
       { $unwind: "$vendor" },
-       {
+      {
         $addFields: {
-          orderIdString: { $toString: "$order" }, 
+          orderIdString: { $toString: "$order" },
         },
-      }
+      },
     ];
 
     // Search by order, reason, or vendor.storeName
     if (search) {
       pipeline.push({
         $match: {
-          $or: [    
+          $or: [
             { orderIdString: { $regex: search, $options: "i" } },
             { reason: { $regex: search, $options: "i" } },
             { "vendor.storeName": { $regex: search, $options: "i" } },
@@ -741,12 +740,60 @@ export const getPayoutHistory = async (req, res) => {
     return res.status(200).json({
       success: true,
       payoutHistory,
-      totalPayouts,
       hasNextPage,
-      currentPage: page,
     });
   } catch (error) {
     console.error("Error fetching payout history:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const getVendors = async (req, res) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const { search, filter } = req.query;
+
+    const filterQuery = {};
+
+    if (filter && filter.toLowerCase() !== "all") {
+      filterQuery.status = filter.toLowerCase();
+    }
+
+    if (search) {
+      // If search looks like ObjectId, search by _id
+      const isObjectId = /^[0-9a-fA-F]{24}$/.test(search);
+      if (isObjectId) {
+        filterQuery.$or = [{ _id: search }, { user: search }];
+      } else {   
+        filterQuery.$or = [
+          { storeName: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
+          { contactNumber: { $regex: search, $options: "i" } },
+        ];    
+      }
+    }
+
+    const vendors = await Vendor.find(filterQuery)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .populate("user", "name ");
+
+    const totalVendors = await Vendor.countDocuments(filterQuery);
+    const hasNextPage = page * limit < totalVendors;
+
+    return res.status(200).json({
+      success: true,
+      vendors,
+      hasNextPage,
+    });
+  } catch (error) {
+    console.error("Error fetching vendors:", error.message);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",

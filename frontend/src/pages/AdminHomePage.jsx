@@ -195,7 +195,7 @@ const AdminHomePage = () => {
             <div
               className={` shadow-md overflow-hidden overflow-x-auto relative rounded-sm lg:rounded-md `}
             >
-              <table className="  text-left min-w-[1300px] md:min-w-full  text-gray-500 ">
+              <table className="  text-left min-w-[1300px]  text-gray-500 ">
                 <thead className="uppercase bg-gray-100 text-xs text-gray-600 ">
                   <tr>
                     <th className="py-3 px-4  "> S/N</th>
