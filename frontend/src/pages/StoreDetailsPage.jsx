@@ -64,37 +64,15 @@ const StoreDetailsPage = () => {
   useEffect(() => {
     if (detailsData && detailsData.storeDetails) {
       setStoreDetails(detailsData.storeDetails);
-      console.log("storeDetails:", detailsData.storeDetails);
+      console.log("detailsData:", detailsData);
     }
   }, [detailsData]);
 
 
-  const fetchProductsCount = async () => {
-    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/product/${storeDetails.user}/count`, {
-      method: "GET",
-      credentials: "include",
-    });
-    if (!res.ok) {
-      throw new Error("Failed to fetch product  count");
-    }
-    return res.json();
-  };
-
-  const { data: productVendorCount } = useQuery({
-    queryKey: ["productCount"],
-    queryFn: fetchProductsCount,
-  });
-
-  useEffect(() => {
-    if (productVendorCount && productVendorCount.totalProducts) {
-      setProductCount(productVendorCount);
-      console.log("Products Count:", productVendorCount);
-    }
-  }, [productVendorCount]);
 
   const fetchVendorProducts = async ({ pageParam = 1 }) => {
     const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/product/vendor-products/${storeDetails.user}?${searchParams.toString()}&page=${pageParam}&limit=20`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/product/vendor-products/${storeDetails?.user?._id}?${searchParams.toString()}&page=${pageParam}&limit=20`,
       {
         method: "GET",
         credentials: "include",
@@ -181,7 +159,7 @@ useEffect(() => {
       <div ref={productContainerRef} className="flex-grow relative lg:ml-50 w-full lg:w-2/3">
         {isDetailsLoading ? (
           <p className="text-center my-4">Loading store details...</p>
-        ) : storeDetails  && storeDetails?._id === id? (
+        ) : storeDetails  && storeDetails?._id?.toString() === id? (
           <>
             <div className="relative">
               <img  
@@ -211,13 +189,13 @@ useEffect(() => {
 }
 
             {
-            !isProductLoading && vendorProductData && productVendorCount?.totalProducts === 0?(
-                    <div className="text-lg xl:text-xl my-10 font-semibold text-center text-center " > This vendor has no products yet! </div>
+            !isProductLoading && vendorProductData && detailsData?.totalVendorProducts === 0?(
+                    <div className="text-lg xl:text-xl mt-10  text-gray-600 text-center text-center " > This vendor has no products yet! </div>
                 ):(
                 <div>
                          <h2 className="text-lg xl:text-2xl font-bold text-center mt-10 text-center uppercase">Shop Our Collection</h2>
                          <p  className="text-center sm:px-[20px] text-gray-600 mt-2  text-md sm:text-lg" >Discover your favourite products from {storeDetails.storeName}. Fast delivery, secure payments, and great deals.</p>
-                   {!isProductLoading && vendorProductData && vendorProductData.pages[0]?.vendorProducts.length === 0 && productVendorCount?.totalProducts > 0 && (
+                   {!isProductLoading && vendorProductData && vendorProductData.pages[0]?.vendorProducts.length === 0 && detailsData?.totalProducts > 0 && (
                     <p className="text-center text-gray-600 mt-9 text-md sm:text-lg">No products found for your search.</p>
                   )}
                     <ProductGrid products={products} isLoading={isProductLoading} />
@@ -241,7 +219,7 @@ useEffect(() => {
              <h2 className="text-lg xl:text-2xl font-bold text-center mt-18 text-center uppercase">About this store</h2>
             <p  className="text-center text-gray-600 mt-2  text-md sm:text-lg" >Your trusted source for affordable and quality products—meet the seller..</p>
   
-            < AboutVendor productVendorCount={productVendorCount} storeDetails={storeDetails} />
+            < AboutVendor productsCount={detailsData?.totalVendorProducts}  storeDetails={storeDetails} />
           </>
         ) : (
           <p className="text-center my-4">No store details available.</p>

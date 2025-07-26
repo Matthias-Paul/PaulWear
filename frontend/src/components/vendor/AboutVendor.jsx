@@ -1,5 +1,5 @@
 
-const AboutVendor = ({storeDetails, productVendorCount}) => {
+const AboutVendor = ({storeDetails, productsCount}) => {
 
 
 function formatDateWithSuffix(dateString) {
@@ -45,7 +45,7 @@ function formatDateWithSuffix(dateString) {
                 <p><strong>Email:</strong>{storeDetails?.email}</p>
                 </div>
                 <div className="mt-4 text-gray-600 text-sm">
-                <p><strong>Total Products:</strong> {productVendorCount?.totalProducts} </p>
+                <p><strong>Total Products:</strong> {productsCount} </p>
                 <p><strong>Joined:</strong> {formatDateWithSuffix(storeDetails?.createdAt)}</p>
                 </div>
                 <div className="mt-4 text-gray-600 text-sm">

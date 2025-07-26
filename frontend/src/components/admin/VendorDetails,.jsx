@@ -62,7 +62,7 @@ const VendorDetails = () => {
     },
     onSuccess: (data) => {
       toast.success(data.message);
-      queryClient.invalidateQueries("profileDetails");
+      queryClient.invalidateQueries(["profileDetails", id]);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -90,7 +90,7 @@ const VendorDetails = () => {
       </p>
     );
 
-    console.log(editMutation)
+  console.log(editMutation);
   return (
     <>
       <div className="mx-auto pt-[70px] md:pt-[10px] pr-3 md:pr-0 pb-15 w-full">
@@ -113,15 +113,23 @@ const VendorDetails = () => {
               <div className="flex items-center gap-x-7 mb-6 ">
                 <button
                   onClick={handleApprove}
+                  disabled={editMutation?.isPending}
                   className="px-3 md:text-xl py-1 rounded cursor-pointer text-white bg-green-600  "
                 >
-                  {editMutation?.isPending && editMutation?.variables === "accepted" ? "Processing..." : "Accept"}
+                  {editMutation?.isPending &&
+                  editMutation?.variables === "approved"
+                    ? "Processing..."
+                    : "Accept"}
                 </button>
                 <button
                   onClick={handleReject}
+                  disabled={editMutation?.isPending}
                   className="px-3 py-1 md:text-xl rounded cursor-pointer text-white bg-red-600  "
                 >
-                  {editMutation?.isPending && editMutation?.variables === "rejected" ? "Processing..." : "Reject"}
+                  {editMutation?.isPending &&
+                  editMutation?.variables === "rejected"
+                    ? "Processing..."
+                    : "Reject"}
                 </button>
               </div>
             )}
