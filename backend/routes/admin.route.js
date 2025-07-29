@@ -16,6 +16,8 @@ import {
   getDeletedOrders,
   getOrderDetails,
   getVendorsAccount,
+  getTransactions,
+  getTransactionDetails,
 } from "../controllers/admin.js";
 
 import { registerValidation } from "../middleware/validation.js";
@@ -33,12 +35,14 @@ router.get("/admin/vendors", verifyUser, isAdmin, getVendors);
 router.get("/admin/orders", verifyUser, isAdmin, getOrders);
 router.get("/admin/deletedOrders", verifyUser, isAdmin, getDeletedOrders);
 router.get("/admin/vendorsAccount", verifyUser, isAdmin, getVendorsAccount);
+router.get("/admin/transactions", verifyUser, isAdmin, getTransactions);
 
 router.get("/admin/recent-activity", verifyUser, isAdmin, getRecentActivities);
 router.get("/admin/payout-history", verifyUser, isAdmin, getPayoutHistory);
 router.put("/admin/vendor/:id", verifyUser, isAdmin, validateVendor);
 router.put("/admin/order/:id", verifyUser, isAdmin, markOrderAsReceived);
 router.get("/admin/deletedOrders/:id", verifyUser, isAdmin, getOrderDetails)
+router.get("/admin/transactionDetails/:id", verifyUser, isAdmin, getTransactionDetails);
 
 router.delete("/admin/user/:id", verifyUser, isAdmin, deleteUser);
 router.delete(

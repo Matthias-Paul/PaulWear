@@ -1153,3 +1153,107 @@ export const getVendorsAccount = async (req, res) => {
     });
   }
 };
+
+export const getTransactions = async (req, res) => {
+  try {
+    const { search } = req.query;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const pipeline = [
+      {
+        $lookup: {
+          from: "users",
+          localField: "user",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      { $unwind: "$user" },
+      {
+        $addFields: {
+          userIdString: { $toString: "$user._id" },
+        },
+      },
+    ];
+
+    const matchStage = {};
+
+    if (search) {
+      pipeline.push({
+        $match: {
+          $or: [
+            { userIdString: { $regex: search, $options: "i" } },
+            { reference: { $regex: search, $options: "i" } },
+            { "user.email": { $regex: search, $options: "i" } },
+            { "user.name": { $regex: search, $options: "i" } },
+          ],
+          ...matchStage,
+        },
+      });
+    } else {
+      pipeline.push({ $match: matchStage });
+    }
+
+    pipeline.push(
+      { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit }
+    );
+
+    const transactions = await Transaction.aggregate(pipeline);
+
+    // Count total
+    const countPipeline = pipeline.filter(
+      (stage) => !("$skip" in stage || "$limit" in stage)
+    );
+    countPipeline.push({ $count: "total" });
+
+    const totalResult = await Transaction.aggregate(countPipeline);
+    const totalTransactions = totalResult.length > 0 ? totalResult[0].total : 0;
+    const hasNextPage = page * limit < totalTransactions;
+
+    return res.status(200).json({
+      success: true,
+      transactions,
+      hasNextPage,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const getTransactionDetails = async (req, res) => {
+  try {
+
+  const { id } = req.params;
+    const transactionDetails = await Transaction.findById(id).populate([
+      { path: "user", select: "name email" },
+    ]);
+    if (!transactionDetails) {
+      return res.status(404).json({
+        success: false,
+        message: "transaction not found!",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      transactionDetails,
+    });
+    
+
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};

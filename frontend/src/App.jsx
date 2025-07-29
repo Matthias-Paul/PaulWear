@@ -12,6 +12,7 @@ import VendorAccountPage from "./components/admin/VendorAccountPage.jsx";
 import AdminOrderDetails from "./components/admin/AdminOrderDetails.jsx";
 import Transactions from "./components/admin/Transactions.jsx";
 import DeletedOrderDetails from "./components/admin/DeletedOrderDetails.jsx";
+import TransactionDetails from "./components/admin/TransactionDetails.jsx";
 import Home from "./pages/Home";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
@@ -118,10 +119,14 @@ function App() {
               <Route path="orders" element={<OrderManagement />} />
               <Route path="orders/:id" element={<AdminOrderDetails />} />
               <Route path="cancelledOrders" element={<CancelledOrderPage />} />
-              <Route path="cancelledOrders/:id" element={<DeletedOrderDetails />} />
-  
+              <Route
+                path="cancelledOrders/:id"
+                element={<DeletedOrderDetails />}
+              />
+
               <Route path="accounts" element={<VendorAccountPage />} />
               <Route path="transactions" element={<Transactions />} />
+              <Route path="transactions/:id" element={<TransactionDetails />} />
             </Route>
           </Route>
         </Routes>
