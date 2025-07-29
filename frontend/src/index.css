@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+
+#root{
+  font-family: "Inter", sans serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.7s ease-in-out;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.7s ease-in-out;
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
