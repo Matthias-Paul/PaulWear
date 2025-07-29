@@ -27,7 +27,7 @@ const VendorLayout = () => {
         {/* Sidebar */}
         <div
           className={`
-          fixed top-0 left-0 z-900 bg-gray-900 text-white min-w-[270px] lg:min-w-[320px] h-full overflow-y-auto transform transition-transform duration-300
+          fixed top-0 left-0 z-900 bg-gray-900 text-white min-w-[270px] lg:min-w-[320px] min-h-full overflow-y-auto transform transition-transform duration-300
           ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0 md:static 
         `}

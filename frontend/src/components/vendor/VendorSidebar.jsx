@@ -46,7 +46,7 @@ const VendorSidebar = () => {
 
   return (
     <>
-      <div className="min-h-screen w-full px-[12px] pt-4 pb-9 " >
+      <div className="min-h-full w-full px-[12px] pt-4 pb-9 " >
             <div className="mb-6 " >
                 <Link onClick={handleCloseSideBar} to="/" className="font-medium text-2xl  " >
                     StyleNest
