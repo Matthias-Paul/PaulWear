@@ -12,27 +12,30 @@ import {
   getPayoutHistory,
   getVendors,
   getOrders,
-  markOrderAsReceived,
+  markOrderAsReceived,     
   getDeletedOrders,
-  getOrderDetails,
+  getOrderDetails,   
   getVendorsAccount,
   getTransactions,
   getTransactionDetails,
+  getProducts,
 } from "../controllers/admin.js";
 
 import { registerValidation } from "../middleware/validation.js";
 import { verifyUser } from "../middleware/verifyUser.js";
 import isAdmin from "../middleware/isAdmin.js";
 
-const router = express.Router();                         
+const router = express.Router();                           
 
-router.get("/admin/user", verifyUser, isAdmin, getUsers);
+router.get("/admin/users", verifyUser, isAdmin, getUsers);
 router.post("/admin/user", verifyUser, isAdmin, registerValidation, addUser);
 router.get("/admin/store", verifyUser, isAdmin, getAllStore);
 router.get("/admin/stats", verifyUser, isAdmin, getStats);
 router.get("/admin/chart", verifyUser, isAdmin, getChart);
 router.get("/admin/vendors", verifyUser, isAdmin, getVendors);
 router.get("/admin/orders", verifyUser, isAdmin, getOrders);
+router.get("/admin/products", verifyUser, isAdmin, getProducts);
+
 router.get("/admin/deletedOrders", verifyUser, isAdmin, getDeletedOrders);
 router.get("/admin/vendorsAccount", verifyUser, isAdmin, getVendorsAccount);
 router.get("/admin/transactions", verifyUser, isAdmin, getTransactions);

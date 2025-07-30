@@ -79,13 +79,14 @@ const CancelledOrderPage = () => {
             <div
               className={` shadow-md overflow-hidden overflow-x-auto relative rounded-sm lg:rounded-md `}
             >
-              <table className="  text-left min-w-[1400px]   text-gray-500 ">
+              <table className="  text-left min-w-[1500px]   text-gray-500 ">
                 <thead className="uppercase bg-gray-100 text-xs text-gray-600 ">
                   <tr>
                     <th className="py-3 px-4  "> S/N</th>
                     <th className="py-3 px-4  "> Reason </th>
                     <th className="py-3 px-4  "> Vendor ID</th>
                     <th className="py-3 px-4  "> User ID </th>
+                    <th className="py-3 px-4  "> Reference </th>
                     <th className="py-3 px-4  "> Buyer Name </th>
                     <th className="py-3 px-4  "> Store Name </th>
                     <th className="py-3 px-4  "> Total Price </th>
@@ -108,13 +109,17 @@ const CancelledOrderPage = () => {
                       <td className="py-3 capitalize px-4 sm:py-4 sm:px-4">
                         {order?.cancelReason}
                       </td>
-                      
+
                       <td className="py-3 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
                         {order?.vendor?._id}
                       </td>
 
                       <td className="py-3 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
                         {order?.user}
+                      </td>
+
+                      <td className="py-3 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
+                        {order?.reference}
                       </td>
 
                       <td className="py-3 px-4  capitalize sm:py-4 sm:px-4 font-medium text-gray-800  ">
@@ -142,7 +147,7 @@ const CancelledOrderPage = () => {
             !isLoading &&
             !isError && (
               <div className="text-gray-700 font-semibold text-lg ">
-                No canceled order  Found.
+                No canceled order Found.
               </div>
             )
           )}

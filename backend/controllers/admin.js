@@ -17,35 +17,92 @@ export const getUsers = async (req, res) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+    const { search, filter } = req.query;
 
-    if (!req.user || req.user.role !== "admin") {
-      return res.status(403).json({
-        success: false,
-        message: "Unauthorized access.",
-      });
+    const filterQuery = {};
+
+    if (filter && filter.toLowerCase() !== "all") {
+      filterQuery.role = filter.toLowerCase();
     }
 
-    const allUsers = await User.find({
-      _id: { $ne: req.user._id },
-    })
-      .select("-password -__v")
+    if (search) {
+      const isObjectId = /^[0-9a-fA-F]{24}$/.test(search);
+      if (isObjectId) {
+        filterQuery.$or = [{ _id: search }];
+      } else {
+        filterQuery.$or = [
+          { name: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
+          { role: { $regex: search, $options: "i" } },
+        ];
+      }
+    }
+
+    // Fetch paginated users
+    const users = await User.find(filterQuery)
       .sort({ createdAt: -1 })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .select("-password -__v");
 
-    const totalUsers = await User.countDocuments({
-      _id: { $ne: req.user._id },
-    });
-    console.log(totalUsers);
+    const totalUsers = await User.countDocuments(filterQuery);
     const hasNextPage = page * limit < totalUsers;
 
     return res.status(200).json({
       success: true,
-      allUsers,
+      users,
       hasNextPage,
     });
   } catch (error) {
     console.error("get users error:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const getProducts = async (req, res) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const { search } = req.query;
+
+    const filterQuery = {};
+
+    if (search) {
+      const isObjectId = /^[0-9a-fA-F]{24}$/.test(search);
+      if (isObjectId) {
+        filterQuery.$or = [{ _id: search }, { user: search }];
+      } else {
+        filterQuery.$or = [
+          { name: { $regex: search, $options: "i" } },
+          { vendorStoreName: { $regex: search, $options: "i" } },
+          { category: { $regex: search, $options: "i" } },
+          { gender: { $regex: search, $options: "i" } },
+          { rating: { $regex: search, $options: "i" } },
+        ];
+      }
+    }
+
+    // Fetch paginated users
+    const products = await Product.find(filterQuery)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
+    const totalProducts = await Product.countDocuments(filterQuery);
+    const hasNextPage = page * limit < totalProducts;
+
+    return res.status(200).json({
+      success: true,
+      products,
+      hasNextPage,
+    });
+  } catch (error) {
+    console.error(" error:", error.message);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -856,6 +913,7 @@ export const getOrders = async (req, res) => {
             { userIdString: { $regex: search, $options: "i" } },
             { vendorIdString: { $regex: search, $options: "i" } },
             { buyerName: { $regex: search, $options: "i" } },
+            { reference: { $regex: search, $options: "i" } },
             { "vendor.storeName": { $regex: search, $options: "i" } },
           ],
           ...matchStage,
@@ -1005,6 +1063,7 @@ export const getDeletedOrders = async (req, res) => {
             { userIdString: { $regex: search, $options: "i" } },
             { vendorIdString: { $regex: search, $options: "i" } },
             { buyerName: { $regex: search, $options: "i" } },
+            { reference: { $regex: search, $options: "i" } },
             { "vendor.storeName": { $regex: search, $options: "i" } },
           ],
           ...matchStage,
@@ -1230,8 +1289,7 @@ export const getTransactions = async (req, res) => {
 
 export const getTransactionDetails = async (req, res) => {
   try {
-
-  const { id } = req.params;
+    const { id } = req.params;
     const transactionDetails = await Transaction.findById(id).populate([
       { path: "user", select: "name email" },
     ]);
@@ -1246,9 +1304,6 @@ export const getTransactionDetails = async (req, res) => {
       success: true,
       transactionDetails,
     });
-    
-
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({

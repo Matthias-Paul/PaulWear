@@ -163,16 +163,14 @@ const VendorDetails = () => {
               <h3 className="font-semibold"> Store Email:</h3>
               <p>{data?.storeDetails?.email}</p>
             </div>
-
-            <div>
-              <h3 className="font-semibold"> User Email:</h3>
-              <p>{data?.storeDetails?.user?.email}</p>
-            </div>
-
             <div>
               <h3 className="font-semibold"> User Name:</h3>
 
               <p>{data?.storeDetails?.user?.name}</p>
+            </div>
+            <div>
+              <h3 className="font-semibold"> User Email:</h3>
+              <p>{data?.storeDetails?.user?.email}</p>
             </div>
 
             <div>

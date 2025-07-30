@@ -37,26 +37,25 @@ const TransactionDetails = () => {
   const user = transaction?.user;
   const response = transaction?.paymentResponse;
   const metadata = response?.metadata;
-  const customer = metadata?.customer?.customer;
   const cartItems = metadata?.cartItems || [];
   const card = response?.authorization;
 
   if (isLoading) {
-    return <div className="text-start mt-10 text-gray-500">Loading...</div>;
+    return <div className="text-start pt-[80px] md:pt-[20px] text-gray-500">Loading transaction details...</div>;
   }
 
   if (isError) {
     return (
-      <div className="text-start mt-10 text-red-500">
+      <div className="text-start pt-[80px] md:pt-[20px] text-red-500">
         Failed to load transaction details.
       </div>
     );
   }
 
   return (
-    <div className=" mx-auto pr-3 md:pr-0 pt-[80px] md:pt-[20px] bg-white shadow-md rounded-2xl space-y-8">
+    <div className=" mx-auto pr-3 md:pr-0 pt-[80px] md:pt-[20px] bg-white mb-20  rounded-2xl space-y-8">
       {/* Header */}
-      <div className="flex items-center gap-3 text-green-600 text-xl sm:text-2xl font-semibold">
+      <div className="flex items-center gap-3 mb-[20px] text-green-600 text-xl sm:text-2xl font-semibold">
         <FaCheckCircle /> Transaction Successful
       </div>
 

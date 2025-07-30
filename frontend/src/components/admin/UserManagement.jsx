@@ -1,155 +1,210 @@
-import { useState } from "react"
+import AdminSearchBar from "./AdminSearchBar";
+
+import { useEffect, useState } from "react";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const UserManagement = () => {
-    const users = [
-        {
-            _id:1222,
-            name:"Michael Newton",
-            email:"Michael@gmail.com",
-            role:"Admin"
-        },
-        {
-            _id:122233,
-            name:"Michael Joseph",
-            email:"Joseph@gmail.com",
-            role:"Customer"
-        },
-    ]
+  const [searchParams] = useSearchParams();
+  const filter = searchParams.get("filter");
+  const [filterBy, setFilterBy] = useState("");
+  const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
-        name:"",
-        email:"",
-        password:"",
-        role:"Cutomer" //default role is customer
-    })
+  useEffect(() => {
+    const currentFilter = searchParams.get("filter");
 
-    const handleChange = (e) =>{
+    if (!currentFilter) {
+      const params = new URLSearchParams(searchParams);
+      params.set("filter", "all");
+      navigate({ search: params.toString() }, { replace: true });
+    } else {
+      setFilterBy(currentFilter);
+    }
+  }, [searchParams, navigate]);
 
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        })
+  const handleFilterChange = (type) => {
+    const params = new URLSearchParams(searchParams);
+    if (type) {
+      params.set("filter", type);
+    } else {
+      params.delete("filter");
     }
 
-    const handleSubmit = (e)=>{
-        e.preventDefault()
-        console.log(formData)
+    navigate({ search: params.toString() });
+  };
 
-        setFormData({
-                name:"",
-                email:"",
-                password:"",
-                role:"Cutomer" 
-        })
-    }
+  const fetchUsers = async ({ pageParam = 1 }) => {
+    const res = await fetch(
+      `${
+        import.meta.env.VITE_BACKEND_URL
+      }/api/admin/users?${searchParams.toString()}&page=${pageParam}&limit=15`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    if (!res.ok) throw new Error("Failed to fetch users");
 
-    const handleRoleChange= (userId, newRole)=>{
-        console.log({id: userId, role: newRole})
+    return res.json();
+  };
 
-    }
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+  } = useInfiniteQuery({
+    queryKey: ["users", searchParams.toString()],
+    queryFn: fetchUsers,
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.hasNextPage ? pages.length + 1 : undefined;
+    },
+    refetchOnMount: true,
+  });
 
-    const handleDeleteUser = (userId)=>{
-        if(window.confirm("Are you sure you want to delete this user?")){
-            console.log("Deleting user with ID", userId)
-        }
+  console.log(hasNextPage);
 
-    }
+  const users = data?.pages.flatMap((page) => page.users) || [];
 
   return (
     <>
-      <div className="mt-3 pt-[60px] md:pt-0 mx-auto " >
-        <h1 className="text-2xl font-bold mb-6 " > User Management  </h1>
-        {/* Add new user form */}
-            <div className="p-6 rounded-lg mb-6  " >
-                <h2 className="text-lg font-bold mb-4 " >   Add New User  </h2>
-                <form onSubmit={handleSubmit} >
-                    <div className="mb-4 " >
-                        <label  className="text-gray-700 block  " >  Name </label>
-                        <input required type="text" name="name" value={formData.name} onChange={handleChange} className="w-full p-2 rounded border border-gray-400 mt-1 " />
-                    </div> 
+      <div className="mt-3 pt-[60px] md:pt-0 mx-auto ">
+        <h1 className="text-2xl font-bold mb-6 "> User Management </h1>
+        {/* Admin search bar */}
+        <AdminSearchBar />
 
-                    <div className="mb-4 " >
-                        <label  className="text-gray-700 block  " >  Email </label>
-                        <input required type="email" name="email" value={formData.email} onChange={handleChange} className="w-full p-2 rounded border border-gray-400 mt-1 " />
-                    </div>  
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 mb-10 gap-y-4 mt-14 md:mt-18 ">
+          <button
+            onClick={() => handleFilterChange("all")}
+            className={`font-bold border max-w-[12rem] sm:max-w-full border-gray-300 text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
+           ${
+             filter === "all"
+               ? "bg-gray-900 text-gray-100"
+               : "bg-gray-100 text-gray-900"
+           }`}
+          >
+            {" "}
+            All Users{" "}
+          </button>
+          <button
+            onClick={() => handleFilterChange("customer")}
+            className={`font-bold border border-gray-300  max-w-[12rem] sm:max-w-full text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
+           ${
+             filter === "customer"
+               ? "bg-gray-900 text-gray-100"
+               : "bg-gray-100 text-gray-900"
+           }`}
+          >
+            {" "}
+            Cutomers{" "}
+          </button>
+          <button
+            onClick={() => handleFilterChange("vendor")}
+            className={`font-bold border border-gray-300  max-w-[12rem] sm:max-w-full text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
+           ${
+             filter === "vendor"
+               ? "bg-gray-900 text-gray-100"
+               : "bg-gray-100 text-gray-900"
+           }`}
+          >
+            {" "}
+            Vendors{" "}
+          </button>
+          <button
+            onClick={() => handleFilterChange("admin")}
+            className={`font-bold border border-gray-300 max-w-[12rem] sm:max-w-full text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
+           ${
+             filter === "admin"
+               ? "bg-gray-900 text-gray-100"
+               : "bg-gray-100 text-gray-900"
+           }`}
+          >
+            {" "}
+            Admin{" "}
+          </button>
+        </div>
 
-                    <div className="mb-4 " >
-                        <label  className="text-gray-700 block  " >  Password </label>
-                        <input required type="password" name="password" value={formData.password} onChange={handleChange} className="w-full p-2 rounded border border-gray-400 mt-1 " />
-                    </div>  
+        {isLoading && (
+          <div className="text-start text-md pt-[10px] text-gray-500">
+            Loading users...
+          </div>
+        )}
 
-                    <div className="mb-4 " >
-                        <label  className="text-gray-700 block  " >  Role </label>
-                        <select name="role" value={formData.role} onChange={handleChange} className="w-full p-2 rounded border border-gray-400 mt-1 " >
-                            <option value="customer" > Customer </option>
-                            <option value="vendor" > Vendor </option>
-                            <option value="admin" > Admin </option>
+        {isError && (
+          <div className="text-start text-md pt-[10px] text-red-500">
+            Failed to load users.
+          </div>
+        )}
 
-                        </select>    
-                     </div>  
-                        <button type="submit"  className="text-center w-full bg-green-500 rounded text-white hover:bg-green-600 font-semibold cursor-pointer py-3 mt-4  " >  Add User  </button>
-                </form>
-            </div>
-            {/* Users lists management */}
-
-        {
-
-            users.length > 0 ? (
-          <div className={`mb-20 mr-[12px] md:mr-0 shadow-md overflow-hidden overflow-x-auto  relative rounded-sm lg:rounded-md `} >
-            <table className="  text-left min-w-[800px] md:min-w-full  text-gray-500 " >
-              <thead className="uppercase bg-gray-100 text-xs text-gray-600 " >
+        {!isLoading && !isError && users.length > 0 ? (
+          <div
+            className={`mb-20 mr-[12px] md:mr-0 shadow-md overflow-hidden overflow-x-auto  relative rounded-sm lg:rounded-md `}
+          >
+            <table className="  text-left min-w-[1000px] md:min-w-full  text-gray-500 ">
+              <thead className="uppercase bg-gray-100 text-xs text-gray-600 ">
                 <tr>
-                  <th className="py-2 px-4 sm:py-3 " > Name </th>
-                  <th className="py-2 px-4 sm:py-3 " > Email </th>
-                  <th className="py-2 px-4 sm:py-3 " > Role </th>
-                  <th className="py-2 px-4 sm:py-3 " > Actions </th>
-
+                  <th className="py-2 px-4 sm:py-3 "> S/N </th>
+                  <th className="py-2 px-4 sm:py-3 "> User ID </th>
+                  <th className="py-2 px-4 sm:py-3 "> Name </th>
+                  <th className="py-2 px-4 sm:py-3 "> Email </th>
+                  <th className="py-2 px-4 sm:py-3 "> Role </th>
                 </tr>
-  
               </thead>
               <tbody>
-                   { users?.map((user, index)=>(
-                        <tr key={user?._id} className={`border-b cursor-pointer hover:border-gray-400 ${index === users?.length -1  ? "border-b-0": ""} `} >
-                         <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
-                            {user?.name}
-                         </td >
-                         <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 " > 
-                            {user?.email}
-                         </td >
+                {users?.map((user, index) => (
+                  <tr
+                    key={user?._id}
+                    className={`border-b cursor-pointer hover:border-gray-400 ${
+                      index === users?.length - 1 ? "border-b-0" : ""
+                    } `}
+                  >
+                    <td className="py-2 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
+                      {index + 1}
+                    </td>
+                    <td className="py-2 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
+                      {user?._id}
+                    </td>
+                    <td className="py-2 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
+                      {user?.name}
+                    </td>
+                    <td className="py-2 px-4 capitalize sm:py-4 sm:px-4 font-medium text-gray-800 ">
+                      {user?.email}
+                    </td>
 
-                         <td className="py-2 px-4 sm:py-4 sm:px-4" > 
-                            <select name="role" value={user.role} onChange={ (e)=> handleRoleChange(user._id, e.target.value)} className="w-full p-2  rounded border border-gray-400 mt-1 " >
-                                <option value="customer" > Customer </option>
-                                <option value="vendor" > Vendor </option>
-                                <option value="admin" > Admin </option>
-
-                            </select> 
-
-                         </td >
-                        <td className="py-2 px-4 sm:py-4 sm:px-4" > 
-                            <button onClick={()=> handleDeleteUser(user._id) } className="py-2 px-4 rounded bg-red-500 hover:bg-red-600 text-white cursor-pointer  "  >
-                                Delete
-                            </button>    
-                         </td >
-
-                        </tr>
-  
-                    )
-                )}
+                    <td className="py-2 capitalize px-4 sm:py-4 text-gray-800 sm:px-4">
+                      {user?.role}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
-              
-            </table>  
-  
-        </div>
-            ): (
-                <div className="text-gray-700 font-semibold text-lg " >
-                    No User Found.
-                 </div>   
-            )
-         }  
-      </div>  
-    </>
-  )
-}
+            </table>
+          </div>
+        ) : (
+          !isLoading &&
+          !isError && (
+            <div className="text-gray-500 font-semibold text-md ">
+              No User Found.
+            </div>
+          )
+        )}
 
-export default UserManagement
+        {hasNextPage && (
+          <div className="flex justify-center items-center">
+            <button
+              className="rounded py-1 px-4 bg-green-600 hover:bg-green-500 mt-[-60px] text-white cursor-pointer"
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+            >
+              {isFetchingNextPage ? "Loading more..." : "Load more"}
+            </button>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default UserManagement;

@@ -66,7 +66,7 @@ const OrderManagement = () => {
 
   const orders = data?.pages.flatMap((page) => page.orders) || [];
 
-   const handleRowClick = (orderID) => {
+  const handleRowClick = (orderID) => {
     navigate(`/admin/orders/${orderID}`);
   };
 
@@ -171,6 +171,7 @@ const OrderManagement = () => {
                     <th className="py-3 px-4  "> Order ID</th>
                     <th className="py-3 px-4  "> Vendor ID</th>
                     <th className="py-3 px-4  "> User ID </th>
+                    <th className="py-3 px-4  "> Reference </th>
                     <th className="py-3 px-4  "> Buyer Name </th>
                     <th className="py-3 px-4  "> Store Name </th>
                     <th className="py-3 px-4  "> Total Price </th>
@@ -180,7 +181,7 @@ const OrderManagement = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {orders?.map((order, index) => (
+                  { !isLoading && !isError&& orders?.map((order, index) => (
                     <tr
                       key={order?._id}
                       onClick={() => handleRowClick(order?._id)}
@@ -201,6 +202,9 @@ const OrderManagement = () => {
 
                       <td className="py-3 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
                         {order?.user}
+                      </td>
+                      <td className="py-3 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
+                        {order?.reference}
                       </td>
 
                       <td className="py-3 px-4  capitalize sm:py-4 sm:px-4 font-medium text-gray-800  ">
