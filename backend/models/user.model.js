@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
         type:String,    
         unique:true
     },
+    profileImage:{
+        type:String,
+        default:"https://res.cloudinary.com/drkxtuaeg/image/upload/v1735897100/Image_4_jb0cpq.png",
+    },
     role:{  
         type:String,
         enum:["customer", "vendor", "admin"],

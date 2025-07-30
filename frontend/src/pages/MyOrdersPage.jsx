@@ -68,7 +68,7 @@ return (
       <>
         {/* Orders Table */}
         <div className="shadow-md overflow-x-auto relative rounded-sm lg:rounded-md">
-          <table className="w-full text-left min-w-[1200px] md:min-w-full text-gray-500">
+          <table className="w-full text-left min-w-[1300px]  text-gray-500">
             <thead className="uppercase bg-gray-100 text-xs text-gray-600">
               <tr>
               <th className=" px-4 py-3">S/N</th>

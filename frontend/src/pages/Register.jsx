@@ -48,7 +48,7 @@ const registerMutation = useMutation({
       setName("")
       setEmail("")
       setPassword("")
-      setTimeout(() => navigate("/login"), 1000);
+      setTimeout(() => navigate("/"), 1000);
     },
     onError: (error) => {
       toast.error(error.message);

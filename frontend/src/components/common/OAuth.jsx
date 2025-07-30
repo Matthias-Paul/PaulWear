@@ -84,6 +84,7 @@ const OAuth = () => {
           name: resultsFromGoogle.user.displayName,
           email: resultsFromGoogle.user.email,
           googleUID: resultsFromGoogle.user.uid,
+          profileImage:resultsFromGoogle.user.photoURL
 
         }),
       });

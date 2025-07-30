@@ -147,6 +147,7 @@ export const loginUser = async (req, res, next) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        profileImage:user.profileImage,
         role: user.role,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
@@ -163,7 +164,7 @@ export const loginUser = async (req, res, next) => {
 };
 
 export const googleAuth = async (req, res, next) => {
-  const { name, email, googleUID } = req.body;
+  const { name, email, googleUID, profileImage } = req.body;
 
   try {
     const user = await User.findOne({ googleUID });
@@ -177,6 +178,7 @@ export const googleAuth = async (req, res, next) => {
           name: user.name,
           email: user.email,
           role: user.role,
+          profileImage:user.profileImage,
           createdAt: user.createdAt,
           updatedAt: user.updatedAt,
         },
@@ -200,6 +202,7 @@ export const googleAuth = async (req, res, next) => {
         email,
         password,
         googleUID,
+        profileImage
       });
 
       await newUser.save();
@@ -256,12 +259,13 @@ export const googleAuth = async (req, res, next) => {
         success: true,
         user: {
           id: newUser._id,
-          name: newUser.name,
+          name: newUser.name,  
           email: newUser.email,
-          role: newUser.role,
-          createdAt: newUser.createdAt,
-          updatedAt: newUser.updatedAt,
-        },
+          role: newUser.role,  
+          profileImage: newUser.profileImage,
+          createdAt: newUser.createdAt,  
+          updatedAt: newUser.updatedAt,     
+        },     
         message: "Login Successful",
       });
     }
@@ -287,14 +291,19 @@ export const logoutUser = async (req, res) => {
       statusCode: 200,
       success: true,
       message: "User log out successfully",
-    });
+    });      
   } catch (error) {
     console.log(error.message);
-
+        
     return res.status(500).json({
       statusCode: 500,
       success: false,
       message: "Internal Server Error",
     });
   }
-};
+};     
+     
+         
+
+
+
