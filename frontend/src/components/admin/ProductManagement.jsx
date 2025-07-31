@@ -32,14 +32,20 @@ const ProductManagement = () => {
     return res.json();
   };
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } =
-    useInfiniteQuery({
-      queryKey: ["products", searchParams.toString()],
-      queryFn: fetchAllProducts,
-      getNextPageParam: (lastPage, pages) => {
-        return lastPage.hasNextPage ? pages.length + 1 : undefined;
-      },
-    });
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+  } = useInfiniteQuery({
+    queryKey: ["products", searchParams.toString()],
+    queryFn: fetchAllProducts,
+    getNextPageParam: (lastPage, pages) => {
+      return lastPage.hasNextPage ? pages.length + 1 : undefined;
+    },
+  });
 
   const products = data?.pages.flatMap((page) => page.products) || [];
   console.log(products);
@@ -92,7 +98,7 @@ const ProductManagement = () => {
           </div>
         </div>
 
-       {isLoading && (
+        {isLoading && (
           <div className="text-start text-md pt-[60px] text-gray-500">
             Loading products...
           </div>
@@ -108,7 +114,7 @@ const ProductManagement = () => {
             <div
               className={` mr-[12px] mt-12 md:mt-17 md:mr-0 shadow-md overflow-hidden overflow-x-auto  relative rounded-sm lg:rounded-md `}
             >
-              <table className="  text-left min-w-[1200px] text-gray-500 ">
+              <table className="  text-left min-w-[1400px] text-gray-500 ">
                 <thead className="uppercase bg-gray-100 text-xs text-gray-600 ">
                   <tr>
                     <th className="py-3 px-4  "> S/N </th>
@@ -119,6 +125,7 @@ const ProductManagement = () => {
                     <th className="py-3 px-4  "> Strore Name </th>
                     <th className="py-3 px-4  "> category </th>
                     <th className="py-3 px-4  "> Action </th>
+                    <th className="py-3 px-4  "> Created At </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -167,6 +174,12 @@ const ProductManagement = () => {
                           </button>
                         </div>
                       </td>
+                      <td className="py-2 capitalize px-4 sm:py-4 text-gray-800 sm:px-4">
+                        <div>
+                          {new Date(product?.createdAt).toLocaleDateString()}{" "}
+                          {new Date(product?.createdAt).toLocaleTimeString()}{" "}
+                        </div>{" "}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -185,10 +198,12 @@ const ProductManagement = () => {
             )}
           </>
         ) : (
-          !isLoading && !isError &&
-          <div className="text-gray-700 font-semibold text-lg ">
-            No Products Found.
-          </div>
+          !isLoading &&
+          !isError && (
+            <div className="text-gray-700 font-semibold text-lg ">
+              No Products Found.
+            </div>
+          )
         )}
       </div>
     </>

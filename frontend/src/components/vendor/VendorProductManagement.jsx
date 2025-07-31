@@ -111,7 +111,7 @@ const VendorProductManagement = () => {
             <div
               className={` mr-[12px] md:mr-0 shadow-md overflow-hidden overflow-x-auto  relative rounded-sm lg:rounded-md `}
             >
-              <table className="  text-left min-w-[900px] md:min-w-[1000px]  text-gray-500 ">
+              <table className="  text-left min-w-[1200px] text-gray-500 ">
                 <thead className="uppercase bg-gray-100 text-xs text-gray-600 ">
                   <tr>
                     <th className="py-3 px-4  "> S/N </th>
@@ -120,6 +120,7 @@ const VendorProductManagement = () => {
                     <th className="py-3 px-4  "> Price </th>
                     <th className="py-3 px-4  "> category </th>
                     <th className="py-3 px-4  "> Actions </th>
+                    <th className="py-3 px-4  "> Created At </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -168,6 +169,13 @@ const VendorProductManagement = () => {
                             Delete
                           </button>
                         </div>
+                      </td>
+
+                      <td className="py-2 capitalize px-4 sm:py-4 text-gray-800 sm:px-4">
+                        <div>
+                          {new Date(product?.createdAt).toLocaleDateString()}{" "}
+                          {new Date(product?.createdAt).toLocaleTimeString()}{" "}
+                        </div>{" "}
                       </td>
                     </tr>
                   ))}

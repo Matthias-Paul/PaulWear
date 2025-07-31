@@ -143,7 +143,7 @@ const UserManagement = () => {
           <div
             className={`mb-20 mr-[12px] md:mr-0 shadow-md overflow-hidden overflow-x-auto  relative rounded-sm lg:rounded-md `}
           >
-            <table className="  text-left min-w-[1000px] md:min-w-full  text-gray-500 ">
+            <table className="  text-left min-w-[1100px] md:min-w-full  text-gray-500 ">
               <thead className="uppercase bg-gray-100 text-xs text-gray-600 ">
                 <tr>
                   <th className="py-2 px-4 sm:py-3 "> S/N </th>
@@ -151,6 +151,7 @@ const UserManagement = () => {
                   <th className="py-2 px-4 sm:py-3 "> Name </th>
                   <th className="py-2 px-4 sm:py-3 "> Email </th>
                   <th className="py-2 px-4 sm:py-3 "> Role </th>
+                  <th className="py-2 px-4 sm:py-3 "> Joined At </th>
                 </tr>
               </thead>
               <tbody>
@@ -176,6 +177,12 @@ const UserManagement = () => {
 
                     <td className="py-2 capitalize px-4 sm:py-4 text-gray-800 sm:px-4">
                       {user?.role}
+                    </td>
+                    <td className="py-2 capitalize px-4 sm:py-4 text-gray-800 sm:px-4">
+                      <div>
+                        {new Date(user?.createdAt).toLocaleDateString()}{" "}
+                        {new Date(user?.createdAt).toLocaleTimeString()}{" "}
+                      </div>{" "}
                     </td>
                   </tr>
                 ))}
