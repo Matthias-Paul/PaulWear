@@ -28,9 +28,6 @@ const Checkout = () => {
         phone:""
     })
 
-    const totalPrice = Number(myCart?.totalPrice?.toFixed(0) * 100) 
-    console.log("total price", totalPrice)
-    const totalPriceForDatabase = Number(myCart?.totalPrice?.toFixed(0)) 
 
 
     const handleCreateCheckout = async (e) => {
@@ -42,7 +39,6 @@ const Checkout = () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 email: loginUser.email,
-                amount: totalPrice,
                 userId: myCart.user,
                 cartId: myCart._id,
                 myCart: myCart.products,
@@ -50,7 +46,6 @@ const Checkout = () => {
                 lastName: shippingAddress.lastName,
                 phone: shippingAddress.phone,
                 address: shippingAddress.address,
-                totalPrice:totalPriceForDatabase,
               }),
           });
       
@@ -64,7 +59,6 @@ const Checkout = () => {
             key,
             reference,
             email: loginUser.email,
-            amount: totalPrice,
             onSuccess: (transaction) => {
               console.log("Payment Success:", transaction);
               toast.success("Payment Successful")

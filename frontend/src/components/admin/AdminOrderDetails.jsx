@@ -264,7 +264,7 @@ const AdminOrderDetails = () => {
                     href={`tel:${orderDetails?.vendor?.contactNumber}`}
                   >
                     {" "}
-                    {orderDetails?.buyerPhoneNumber}{" "}
+                    {orderDetails?.vendor?.contactNumber}{" "}
                   </a>{" "}
                 </p>
               </div>

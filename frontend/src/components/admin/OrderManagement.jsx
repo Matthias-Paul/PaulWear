@@ -160,7 +160,7 @@ const OrderManagement = () => {
               Failed to load payout history, check your internet connection{" "}
             </div>
           )}
-          {orders?.length > 0 ? (
+          {!isLoading && !isError && orders?.length > 0 ? (
             <div
               className={` shadow-md overflow-hidden overflow-x-auto relative rounded-sm lg:rounded-md `}
             >
@@ -181,62 +181,70 @@ const OrderManagement = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  { !isLoading && !isError&& orders?.map((order, index) => (
-                    <tr
-                      key={order?._id}
-                      onClick={() => handleRowClick(order?._id)}
-                      className={`border-b cursor-pointer font-medium text-gray-800  hover:border-gray-400 ${
-                        index === orders?.length - 1 ? "border-b-0" : ""
-                      } `}
-                    >
-                      <td className="py-3 capitaalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
-                        {index + 1}
-                      </td>
+                  {!isLoading &&
+                    !isError &&
+                    orders?.map((order, index) => (
+                      <tr
+                        key={order?._id}
+                        onClick={() => handleRowClick(order?._id)}
+                        className={`border-b cursor-pointer font-medium text-gray-800  hover:border-gray-400 ${
+                          index === orders?.length - 1 ? "border-b-0" : ""
+                        } `}
+                      >
+                        <td className="py-3 capitaalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
+                          {index + 1}
+                        </td>
 
-                      <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
-                        {order?._id}
-                      </td>
-                      <td className="py-3 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
-                        {order?.vendor?._id}
-                      </td>
+                        <td className="py-3 px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
+                          {order?._id}
+                        </td>
+                        <td className="py-3 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
+                          {order?.vendor?._id}
+                        </td>
 
-                      <td className="py-3 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
-                        {order?.user}
-                      </td>
-                      <td className="py-3 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
-                        {order?.reference}
-                      </td>
+                        <td className="py-3 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
+                          {order?.user}
+                        </td>
+                        <td className="py-3 capitalize px-4 sm:py-4 sm:px-4 font-medium text-gray-800 ">
+                          {order?.reference}
+                        </td>
 
-                      <td className="py-3 px-4  capitalize sm:py-4 sm:px-4 font-medium text-gray-800  ">
-                        {order?.buyerName}
-                      </td>
+                        <td className="py-3 px-4  capitalize sm:py-4 sm:px-4 font-medium text-gray-800  ">
+                          {order?.buyerName}
+                        </td>
 
-                      <td className="py-3 px-4  capitalize sm:py-4 sm:px-4">
-                        {order?.vendor?.storeName}
-                      </td>
+                        <td className="py-3 px-4  capitalize sm:py-4 sm:px-4">
+                          {order?.vendor?.storeName}
+                        </td>
 
-                      <td className="py-3 capitalize px-4 sm:py-4 sm:px-4">
-                        ₦{order?.totalPrice.toLocaleString()}
-                      </td>
+                        <td className="py-3 capitalize px-4 sm:py-4 sm:px-4">
+                          {order?.totalPrice && (
+                            <div> ₦{order?.totalPrice?.toLocaleString()}</div>
+                          )}{" "}
+                        </td>
 
-                      <td className="py-3 capitalize px-4 sm:py-4 sm:px-4">
-                        <span
-                          className={`px-3 py-1 rounded-md text-sm font-medium ${
-                            order?.status === "delivered"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-red-200 text-red-700"
-                          }`}
-                        >
-                          {order?.status}
-                        </span>
-                      </td>
+                        <td className="py-3 capitalize px-4 sm:py-4 sm:px-4">
+                          <span
+                            className={`px-3 py-1 rounded-md text-sm font-medium ${
+                              order?.status === "delivered"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-200 text-red-700"
+                            }`}
+                          >
+                            {order?.status}
+                          </span>
+                        </td>
 
-                      <td className="py-3 px-4  capitalize sm:py-4 sm:px-4">
-                        {new Date(order?.createdAt).toLocaleDateString()}{" "}
-                        {new Date(order?.createdAt).toLocaleTimeString()}{" "}
-                      </td>
-                    </tr>
-                  ))}
+                        <td className="py-3 px-4  capitalize sm:py-4 sm:px-4">
+                          {order?.createdAt && (
+                            <div>
+                              {new Date(order?.createdAt).toLocaleDateString()}{" "}
+                              {new Date(order?.createdAt).toLocaleTimeString()}{" "}
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>

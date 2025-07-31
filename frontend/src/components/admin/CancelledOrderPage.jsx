@@ -75,7 +75,7 @@ const CancelledOrderPage = () => {
               Failed to load vendors account, check your internet connection{" "}
             </div>
           )}
-          {orders?.length > 0 ? (
+          { !isLoading && !isError && orders?.length > 0 ? (
             <div
               className={` shadow-md overflow-hidden overflow-x-auto relative rounded-sm lg:rounded-md `}
             >
@@ -131,7 +131,11 @@ const CancelledOrderPage = () => {
                       </td>
 
                       <td className="py-3 capitalize px-4 sm:py-4 sm:px-4">
-                        ₦{order?.totalPrice?.toLocaleString()}
+                       {
+                        order?.totalPrice && (
+                         <div> ₦{order?.totalPrice?.toLocaleString()}</div>
+                        )
+                       } 
                       </td>
 
                       <td className="py-3 px-4  capitalize sm:py-4 sm:px-4">

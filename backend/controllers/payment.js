@@ -21,7 +21,6 @@ export const makePayment = async (req, res) => {
   try {
     const {
       email,
-      amount,
       userId,
       cartId,
       myCart,
@@ -29,13 +28,22 @@ export const makePayment = async (req, res) => {
       lastName,
       phone,
       address,
-      totalPrice,
     } = req.body;
 
+
+       const cart = await Cart.findById(cartId)
+     if (!cart) {
+      return res.status(400).json({
+        success: false,
+        message: "Cart not found.",
+      });
+    }
+
+        const verifiedTotalPrice = cart.totalPrice;
     const metadata = {
       userId,
       cartId,
-      totalPrice,
+      totalPrice:verifiedTotalPrice * 100,
       cartItems: myCart,
       customer: {
         firstName,
@@ -44,6 +52,12 @@ export const makePayment = async (req, res) => {
         address,
       },
     };
+
+ 
+
+    const amount = Number(verifiedTotalPrice * 100);
+
+    
     const response = await fetch(
       "https://api.paystack.co/transaction/initialize",
       {
@@ -133,6 +147,10 @@ export const webHook = async (req, res) => {
         received: metadata.totalPrice,
       });
     }
+
+
+
+
     // Step 3: Save Checkout
     const newCheckout = await Checkout.create({
       user: metadata.userId,

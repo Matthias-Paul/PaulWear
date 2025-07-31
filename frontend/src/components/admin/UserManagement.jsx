@@ -76,10 +76,10 @@ const UserManagement = () => {
         {/* Admin search bar */}
         <AdminSearchBar />
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-4 mb-10 gap-y-4 mt-14 md:mt-18 ">
+        <div className="grid mr-3 grid-cols-2 md:grid-cols-4 gap-x-4 mb-10 gap-y-4 mt-14 md:mt-18 ">
           <button
             onClick={() => handleFilterChange("all")}
-            className={`font-bold border max-w-[12rem] sm:max-w-full border-gray-300 text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
+            className={`font-bold border max-w-full border-gray-300 text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
            ${
              filter === "all"
                ? "bg-gray-900 text-gray-100"
@@ -91,7 +91,7 @@ const UserManagement = () => {
           </button>
           <button
             onClick={() => handleFilterChange("customer")}
-            className={`font-bold border border-gray-300  max-w-[12rem] sm:max-w-full text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
+            className={`font-bold border border-gray-300  max-w-full text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
            ${
              filter === "customer"
                ? "bg-gray-900 text-gray-100"
@@ -103,7 +103,7 @@ const UserManagement = () => {
           </button>
           <button
             onClick={() => handleFilterChange("vendor")}
-            className={`font-bold border border-gray-300  max-w-[12rem] sm:max-w-full text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
+            className={`font-bold border border-gray-300  max-w-full text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
            ${
              filter === "vendor"
                ? "bg-gray-900 text-gray-100"
@@ -115,7 +115,7 @@ const UserManagement = () => {
           </button>
           <button
             onClick={() => handleFilterChange("admin")}
-            className={`font-bold border border-gray-300 max-w-[12rem] sm:max-w-full text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
+            className={`font-bold border border-gray-300 max-w-full text-md sm:text-lg lg:text-xl cursor-pointer py-2 sm:py-3 px-1 rounded-lg text-center
            ${
              filter === "admin"
                ? "bg-gray-900 text-gray-100"
