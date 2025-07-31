@@ -255,10 +255,7 @@ export const validateCheckout = [
     .notEmpty()
     .withMessage("Payment method is required"),
 
-  body("totalPrice")
-    .isNumeric()
-    .withMessage("Total price must be a number"),
-
+  
   body("paymentStatus")
     .optional()
     .isIn(["pending", "paid", "failed"])

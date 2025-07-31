@@ -19,32 +19,23 @@ dotenv.config();
 
 export const makePayment = async (req, res) => {
   try {
-    const {
-      email,
-      userId,
-      cartId,
-      myCart,
-      firstName,
-      lastName,
-      phone,
-      address,
-    } = req.body;
+    const { email, userId, cartId, firstName, lastName, phone, address } =
+      req.body;
 
-
-       const cart = await Cart.findById(cartId)
-     if (!cart) {
+    const cart = await Cart.findById(cartId);
+    if (!cart) {
       return res.status(400).json({
         success: false,
         message: "Cart not found.",
       });
     }
 
-        const verifiedTotalPrice = cart.totalPrice;
+    const verifiedTotalPrice = cart.totalPrice;
     const metadata = {
       userId,
       cartId,
-      totalPrice:verifiedTotalPrice * 100,
-      cartItems: myCart,
+      totalPrice: verifiedTotalPrice * 100,
+      cartItems: cart.products,
       customer: {
         firstName,
         lastName,
@@ -53,11 +44,8 @@ export const makePayment = async (req, res) => {
       },
     };
 
- 
+    const amount = verifiedTotalPrice * 100;
 
-    const amount = Number(verifiedTotalPrice * 100);
-
-    
     const response = await fetch(
       "https://api.paystack.co/transaction/initialize",
       {
@@ -66,18 +54,25 @@ export const makePayment = async (req, res) => {
           Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, amount, metadata }),
+        body: JSON.stringify({        
+          email,   
+          amount,
+          metadata,  
+          callback_url:
+            `${process.env.VITE_BACKEND_URL}/order-confirmation`,
+        }),     
       }
-    );
+    );   
     const data = await response.json();
     console.log("data", data);
-    if (!data.status) {
+    if (!data.status) {  
       throw new Error(data.message);
-    }
+    }   
 
     res.status(200).json({
       access_code: data.data.access_code,
       reference: data.data.reference,
+      authorization_url: data.data.authorization_url,
     });
     console.log("access code", data.data.access_code);
     console.log("reference code", data.data.reference);
@@ -147,9 +142,6 @@ export const webHook = async (req, res) => {
         received: metadata.totalPrice,
       });
     }
-
-
-
 
     // Step 3: Save Checkout
     const newCheckout = await Checkout.create({
