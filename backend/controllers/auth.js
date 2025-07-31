@@ -20,12 +20,10 @@ export const registerUser = async (req, res, next) => {
       message: errors.array()[0].msg,
     });
   }
-
+      
   try {
-    const { name, email, password } = matchedData(req);
-
-
-  
+    const { name, email, password } = matchedData(req);      
+       
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({
@@ -33,7 +31,7 @@ export const registerUser = async (req, res, next) => {
         message: "Email is already in use.",
       });
     }
-
+  
     const user = new User({
       name,
       email,

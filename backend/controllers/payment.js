@@ -54,20 +54,19 @@ export const makePayment = async (req, res) => {
           Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({        
-          email,   
+        body: JSON.stringify({
+          email,
           amount,
-          metadata,  
-          callback_url:
-            `${process.env.VITE_BACKEND_URL}/order-confirmation`,
-        }),     
+          metadata,
+          callback_url: `${process.env.VITE_BACKEND_URL}/order-confirmation`,
+        }),
       }
-    );   
+    );
     const data = await response.json();
     console.log("data", data);
-    if (!data.status) {  
+    if (!data.status) {
       throw new Error(data.message);
-    }   
+    }
 
     res.status(200).json({
       access_code: data.data.access_code,
@@ -740,9 +739,11 @@ export const markAsDelivered = async (req, res) => {
           </div>
         </div>
       `,
-    };
+    };                            
 
-    await transporter.sendMail(mailOptions);
+    if (!order.isReceived || !order.receivedAt) {
+      await transporter.sendMail(mailOptions);
+    }
 
     // Trigger payout only if buyer has already confirmed receipt
     if (order.isReceived && order.receivedAt) {

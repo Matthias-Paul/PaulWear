@@ -132,6 +132,8 @@ const OrderDetailsPage = () => {
             {" "}
             Order Details{" "}
           </h2>
+          {/* Info Note */}
+
           {/* Trigger button */}
           {!orderDetails?.isReceived &&
             !orderDetails?.isCanceled &&
@@ -191,8 +193,8 @@ const OrderDetailsPage = () => {
         {!orderDetails ? (
           <p className="  "> Loading order details... </p>
         ) : (
-          <div className="p-4 sm:p-6 shadow-md  ">
-            <div className="flex flex-col sm:flex-row justify-between  ">
+          <div className="p-4 sm:p-6  shadow-md  ">
+            <div className="  grid  sm:grid-cols-2 gap-x-3  ">
               <div className="   ">
                 <h3 className="text:lg  md:text-xl font-semibold    ">
                   Order ID: #{orderDetails?._id}
@@ -202,6 +204,17 @@ const OrderDetailsPage = () => {
                   {" "}
                   {new Date(orderDetails?.createdAt).toLocaleDateString()}{" "}
                 </p>
+                {!orderDetails?.isReceived &&
+                  !orderDetails?.isCanceled &&
+                  !isLoading && (
+                    <div className="text-green-600 mt-1 text-[12px] sm:text-sm ">
+                      Please remember to mark your order as{" "}
+                      <strong>received</strong> after it arrives. This helps us
+                      confirm delivery and ensures the vendor gets paid.
+                      <strong>NOTE:</strong> You can only cancel the order if it
+                      hasn’t been marked as received.
+                    </div>
+                  )}
               </div>
 
               <div className="flex flex-col items-start sm:items-end mt-4 sm:mt-0  ">

@@ -208,6 +208,7 @@ const NavBar = () => {
                       loginUser?.profileImage ||
                       "https://res.cloudinary.com/drkxtuaeg/image/upload/v1735897100/Image_4_jb0cpq.png"
                     }
+                    alt="profile image"
                   />
                 }
               </div>
