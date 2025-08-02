@@ -43,7 +43,7 @@ export const triggerPayout = async (order) => {
       status: "failure",
     });
   }
-
+  
   await VendorPayout.create({
     vendor: order.vendor,
     user: order.user,

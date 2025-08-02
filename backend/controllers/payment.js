@@ -31,6 +31,14 @@ export const makePayment = async (req, res) => {
     }
 
     const verifiedTotalPrice = cart.totalPrice;
+
+    if (verifiedTotalPrice > 10000000) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "You can only checkout items worth up to ₦10 million at a time due to payment limits.",
+      });
+    }
     const metadata = {
       userId,
       cartId,
@@ -82,7 +90,7 @@ export const makePayment = async (req, res) => {
       message: "Internal Server Error",
     });
   }
-};
+};    
 
 export const webHook = async (req, res) => {
   const secret = process.env.PAYSTACK_SECRET_KEY;
@@ -739,7 +747,7 @@ export const markAsDelivered = async (req, res) => {
           </div>
         </div>
       `,
-    };                            
+    };
 
     if (!order.isReceived || !order.receivedAt) {
       await transporter.sendMail(mailOptions);

@@ -31,27 +31,27 @@ const Footer = () => {
             <h3 className="font-medium text-xl text-gray-800 mb-4  "> Shop </h3>
             <ul className="space-y-2 text-gray-600 ">
               <li>
-                <Link to="/collecctions/all" className="hover:text-gray-500">
+                <Link to="/collections/all" className="hover:text-gray-500">
                   {" "}
                   Thrifted wears{" "}
                 </Link>
               </li>
               <li>
-                <Link to="/collecctions/all" className="hover:text-gray-500">
+                <Link to="/collections/all" className="hover:text-gray-500">
                   {" "}
                   Customized t-shirts{" "}
                 </Link>
               </li>
 
               <li>
-                <Link to="/collecctions/all" className="hover:text-gray-500">
+                <Link to="/collections/all" className="hover:text-gray-500">
                   {" "}
                   Lip gloss{" "}
                 </Link>
               </li>
 
               <li>
-                <Link to="/collecctions/all" className="hover:text-gray-500">
+                <Link to="/collections/all" className="hover:text-gray-500">
                   {" "}
                   Imported handbags etc{" "}
                 </Link>

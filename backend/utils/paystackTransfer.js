@@ -9,14 +9,14 @@ export const transferToVendor = async ({ amount, recipient, reason }) => {
       headers: {
         Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
         "Content-Type": "application/json",
-      },
+      },  
       body: JSON.stringify({
         source: "balance",
         amount: amount * 100, // convert to kobo
-        recipient,
+        recipient,      
         reason,
       }),
-    });
+    });   
 
     const data = await response.json();
 
