@@ -71,7 +71,6 @@ export const makePayment = async (req, res) => {
       }
     );
     const data = await response.json();
-    console.log("data", data);
     if (!data.status) {
       throw new Error(data.message);
     }
@@ -81,10 +80,7 @@ export const makePayment = async (req, res) => {
       reference: data.data.reference,
       authorization_url: data.data.authorization_url,
     });
-    console.log("access code", data.data.access_code);
-    console.log("reference code", data.data.reference);
   } catch (error) {
-    console.log(error.message);
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -104,7 +100,6 @@ export const webHook = async (req, res) => {
     const signature = req.headers["x-paystack-signature"];
 
     if (hash !== signature) {
-      console.log("Invalid signature");
       return res.status(401).send("Unauthorized");
     }
 
@@ -117,14 +112,11 @@ export const webHook = async (req, res) => {
     const data = event.data;
     const metadata = data.metadata;
 
-    console.log("Received metadata:", metadata);
-
     // Step 1: Check if transaction already processed
     const existingTransaction = await Transaction.findOne({
       reference: data.reference,
     });
     if (existingTransaction) {
-      console.log("Duplicate webhook call for reference:", data.reference);
       return res.status(200).send("Already processed");
     }
 
@@ -162,7 +154,6 @@ export const webHook = async (req, res) => {
       paymentDetails: data,
       paidAt: Date.now(),
     });
-    console.log("New checkout", newCheckout);
     //  Step 4: Group by vendor, including variant info
     const vendorGroups = {};
     for (const item of cartItems) {
@@ -175,7 +166,6 @@ export const webHook = async (req, res) => {
       if (!vendorGroups[vendorId]) {
         vendorGroups[vendorId] = { vendor: vendorId, items: [], total: 0 };
       }
-      console.log("vendor  id", vendorId);
 
       vendorGroups[vendorId].items.push({
         productId: product._id,
@@ -189,10 +179,8 @@ export const webHook = async (req, res) => {
 
       const price = Number(item.price);
       if (isNaN(price)) {
-        console.log("Invalid price:", item.price);
         continue;
       }
-      console.log("price", price);
 
       vendorGroups[vendorId].total += price;
     }
@@ -205,7 +193,6 @@ export const webHook = async (req, res) => {
       if (!vendorDoc) continue;
 
       const group = vendorGroups[vendorId];
-      console.log("Group", group);
       const newOrder = await Order.create({
         user: metadata.userId,
         vendor: vendorDoc._id,
@@ -221,7 +208,6 @@ export const webHook = async (req, res) => {
         paymentStatus: "paid",
         paymentDetails: newCheckout.paymentDetails,
       });
-      console.log("New order", newOrder);
 
       createdOrders.push(newOrder);
     }
@@ -234,7 +220,6 @@ export const webHook = async (req, res) => {
     if (metadata.cartId) {
       await Cart.findByIdAndDelete(metadata.cartId);
     }
-    console.log("Created order", createdOrders);
 
     // Step 7: Save transaction to prevent future duplicates
     await Transaction.create({
@@ -333,7 +318,6 @@ export const webHook = async (req, res) => {
 
       const vendorDoc = await Vendor.findOne({ user: vendorId });
       if (!vendorDoc) {
-        console.log(`Vendor not found for user ID: ${vendorId}`);
         continue;
       }
 
@@ -341,7 +325,6 @@ export const webHook = async (req, res) => {
         vendor: vendorDoc._id,
       });
       if (!vendorAccount) {
-        console.log(`VendorAccount not found for vendor ID: ${vendorDoc._id}`);
         continue;
       }
 
@@ -351,9 +334,6 @@ export const webHook = async (req, res) => {
 
       // Ensure no negative balances
       if (payoutAmount < 0) {
-        console.log(
-          `Payout amount is negative for vendor ${vendorId}, skipping.`
-        );
         continue;
       }
 
@@ -484,7 +464,6 @@ export const accountCreation = async (req, res) => {
     }
 
     const recipientCode = data.data.recipient_code;
-    console.log("recipient code", recipientCode);
     // Create vendor account
     const newAccount = new VendorAccount({
       vendor: vendor._id,
@@ -579,7 +558,6 @@ export const accountUpdate = async (req, res) => {
     }
 
     const recipientCode = data.data.recipient_code;
-    console.log("recipient code", recipientCode);
 
     vendorAccount.accountName = userBankName;
     vendorAccount.bankAccountNumber = accountNumber;
@@ -953,7 +931,6 @@ export const payoutHistory = async (req, res) => {
       .limit(limit);
 
     const hasNextPage = page * limit < totalPayoutHistory;
-    console.log(totalPayoutHistory);
     return res.status(200).json({
       success: true,
       vendorPayoutHistory,

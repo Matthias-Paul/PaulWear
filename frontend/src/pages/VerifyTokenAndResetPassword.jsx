@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const VerifyTokenAndResetPassword = () => {
   const navigate = useNavigate();
@@ -13,6 +14,8 @@ const VerifyTokenAndResetPassword = () => {
   const [token, setToken] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const resetPassword = useMutation({
     mutationFn: async () => {
@@ -93,28 +96,48 @@ const VerifyTokenAndResetPassword = () => {
             <label htmlFor="password" className="block text-sm font-semibold mb-1">
               Password
             </label>
-            <input
-              id="password"
-              placeholder="Enter Your New Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border px-2 py-3 w-full border-gray-400 rounded-md"
-              type="password"
-            />
+            <div className="relative">
+              <input
+                id="password"
+                placeholder="Enter Your New Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="border px-2 py-3 w-full border-gray-400 rounded-md pr-10"
+                type={showPassword ? "text" : "password"}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+              </button>
+            </div>
           </div>
 
           <div className="mb-3">
             <label htmlFor="confirmPassword" className="block text-sm font-semibold mb-1">
               Confirm Password
             </label>
-            <input
-              id="confirmPassword"
-              placeholder="Enter Your Confirm Password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="border px-2 py-3 w-full border-gray-400 rounded-md"
-              type="password"
-            />
+            <div className="relative">
+              <input
+                id="confirmPassword"
+                placeholder="Enter Your Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="border px-2 py-3 w-full border-gray-400 rounded-md pr-10"
+                type={showConfirmPassword ? "text" : "password"}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+                aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+              >
+                {showConfirmPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+              </button>
+            </div>
           </div>
 
           <button

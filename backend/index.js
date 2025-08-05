@@ -33,15 +33,15 @@ app.use(cookieParser());
 
 app.use(         
   cors({        
-    origin: ["http://localhost:5173", "https://stylenest-ax2d.onrender.com"],   
+    origin: ["http://localhost:5174", "https://stylenest-ax2d.onrender.com"],   
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
+    credentials: true 
   })
-);                               
-             
+);                                     
+                     
 app.use("/api", paymentRoute)
   
-app.use(express.json());
+app.use(express.json());    
                    
                          
 const _dirname = path.resolve()        

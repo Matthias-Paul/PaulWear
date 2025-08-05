@@ -6,6 +6,7 @@ import { useMutation, useQueryClient} from "@tanstack/react-query";
 import { signInSuccess, setMyCart, setCartQuantity, generateNewGuestId }from "../redux/slice/userSlice.js"; 
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   
   // Mutation to merge carts after login
@@ -145,14 +147,24 @@ const Login = () => {
                 {" "}
                 Password{" "}
               </label>
-              <input
-                id="password"
-                placeholder="Enter Your Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="border px-2 py-3 w-full border-gray-400 rounded-md "
-                type="password"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  placeholder="Enter Your Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="border px-2 py-3 w-full border-gray-400 rounded-md pr-10"
+                  type={showPassword ? "text" : "password"}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                </button>
+              </div>
             </div>
 
             <Link to="/forget-password" className="text-blue-600 "  >

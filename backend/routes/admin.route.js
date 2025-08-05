@@ -13,12 +13,12 @@ import {
   getVendors,
   getOrders,
   markOrderAsReceived,     
-  getDeletedOrders,
-  getOrderDetails,   
+  getDeletedOrders,  
+  getOrderDetails,    
   getVendorsAccount,
   getTransactions,
   getTransactionDetails,
-  getProducts,
+  getProducts, 
 } from "../controllers/admin.js";
 
 import { registerValidation } from "../middleware/validation.js";

@@ -31,8 +31,7 @@ export const triggerPayout = async (order) => {
     recipient: vendorAccount.recipientCode,
     reason: `Order payout for order ${order._id}`,
   });
-  console.log("vendor recipient code", vendorAccount.recipientCode);
-  console.log("result", result);
+
 
   if (result.status !== "success") {
     await ActivityLog.create({
@@ -74,4 +73,4 @@ export const triggerPayout = async (order) => {
     vendorAccount.totalBalance += payoutAmount;
     await vendorAccount.save();
   }
-};
+};       

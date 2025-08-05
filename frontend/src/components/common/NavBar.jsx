@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import {
   HiOutlineUser,
   HiOutlineShoppingBag,
@@ -121,18 +121,37 @@ const NavBar = () => {
           </Link>
 
           <div className="hidden md:flex items-center font-medium text-sm uppercase gap-x-5  ">
-            <Link to="/" className=" text-gray-700 hover:text-black ">
-              Home{" "}
-            </Link>
-            <Link
-              to="/collections/all"
-              className=" text-gray-700 hover:text-black "
+            <NavLink 
+              to="/" 
+              className={({ isActive }) => 
+                isActive 
+                  ? "text-white bg-gradient-to-r from-gray-800 to-black px-3 py-1 rounded-sm shadow-md transform scale-105 transition-all duration-300 font-semibold" 
+                  : "text-gray-700 hover:text-black hover:bg-gray-100 px-3 py-1 rounded-sm transition-all duration-300 hover:scale-105"
+              }
+              end
             >
-              Shop{""}
-            </Link>
-            <Link to="/stores" className=" text-gray-700 hover:text-black ">
-              Stores{" "}
-            </Link>
+              Home
+            </NavLink>
+            <NavLink
+              to="/collections/all"
+              className={({ isActive }) => 
+                isActive 
+                   ? "text-white bg-gradient-to-r from-gray-800 to-black px-3 py-1 rounded-sm shadow-md transform scale-105 transition-all duration-300 font-semibold" 
+                  : "text-gray-700 hover:text-black hover:bg-gray-100 px-3 py-1 rounded-sm transition-all duration-300 hover:scale-105"
+              }
+            >
+              Shop
+            </NavLink>
+            <NavLink 
+              to="/stores" 
+              className={({ isActive }) => 
+                isActive 
+                 ? "text-white bg-gradient-to-r from-gray-800 to-black px-3 py-1 rounded-sm shadow-md transform scale-105 transition-all duration-300 font-semibold" 
+                  : "text-gray-700 hover:text-black hover:bg-gray-100 px-3 py-1 rounded-sm transition-all duration-300 hover:scale-105"
+              }
+            >
+              Stores
+            </NavLink>
 
             {/* <Link to="" className=" text-gray-700 hover:text-black ">
               About{" "}
