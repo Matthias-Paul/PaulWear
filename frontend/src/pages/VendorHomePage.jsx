@@ -100,12 +100,12 @@ const VendorHomePage = () => {
   return (
     <>
       <div className="w-full pt-[60px] md:pt-0 mx-auto pr-[12px] md:pr-0 ">
-        <h1 className="text-2xl lg:text-3xl font-bold mb-4 mt-3  ">
+        <h1 className="hidden md:flex text-2xl lg:text-3xl font-bold mb-4 mt-3  ">
           {" "}
           Vendor Dashboard{" "}
         </h1>
 
-        <h4 className="text-lg mb-5 font-semibold text-gray-800">
+        <h4 className="text-lg mb-5 mt-5 md:mt-0 font-semibold text-gray-800">
           👋 Welcome back, {loginUser?.name?.split(" ")[0] || "Guest"}
         </h4>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
